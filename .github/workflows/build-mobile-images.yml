@@ -1,0 +1,87 @@
+name: Build mobile panorama images
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+    paths:
+      - "M7A_GitHub_Website_Full_Resolution/m7a-building/assets-mobile/*.glb"
+      - ".github/workflows/build-mobile-images.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Sharp
+        run: npm install sharp
+
+      - name: Extract and resize panorama images
+        shell: bash
+        run: |
+          cat > extract-mobile-images.mjs <<'EOF'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import sharp from 'sharp';
+
+          const src='M7A_GitHub_Website_Full_Resolution/m7a-building/assets-mobile';
+          const out='M7A_GitHub_Website_Full_Resolution/m7a-building/panoramas-mobile';
+          fs.rmSync(out,{recursive:true,force:true});
+          fs.mkdirSync(out,{recursive:true});
+
+          function parseGLB(file){
+            const b=fs.readFileSync(file);
+            if(b.readUInt32LE(0)!==0x46546c67) throw new Error('Not GLB: '+file);
+            let off=12, json=null, bin=null;
+            while(off<b.length){
+              const len=b.readUInt32LE(off);
+              const type=b.readUInt32LE(off+4);
+              const data=b.subarray(off+8,off+8+len);
+              if(type===0x4E4F534A) json=JSON.parse(data.toString('utf8').replace(/\0+$/,'').trim());
+              if(type===0x004E4942) bin=data;
+              off+=8+len;
+            }
+            if(!json||!bin) throw new Error('Missing GLB chunks: '+file);
+            const image=json.images?.[0];
+            if(!image?.bufferView) throw new Error('No embedded panorama image: '+file);
+            const view=json.bufferViews[image.bufferView];
+            const start=(view.byteOffset||0);
+            return bin.subarray(start,start+view.byteLength);
+          }
+
+          for(const name of fs.readdirSync(src).filter(x=>x.endsWith('.glb')).sort()){
+            const input=path.join(src,name);
+            const raw=parseGLB(input);
+            const target=path.join(out,name.replace(/\.glb$/,'.jpg'));
+            await sharp(raw)
+              .resize(2048,1024,{fit:'fill'})
+              .jpeg({quality:82,mozjpeg:true,progressive:true})
+              .toFile(target);
+            const size=fs.statSync(target).size;
+            console.log(name,'=>',path.basename(target),Math.round(size/1024)+' KB');
+          }
+          EOF
+          node extract-mobile-images.mjs
+
+      - name: Commit mobile images
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add M7A_GitHub_Website_Full_Resolution/m7a-building/panoramas-mobile
+          if git diff --cached --quiet; then
+            echo "Mobile panorama images already up to date."
+            exit 0
+          fi
+          git commit -m "Generate standalone mobile panorama images"
+          git push
