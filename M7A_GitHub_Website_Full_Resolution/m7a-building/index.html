@@ -321,7 +321,8 @@ function preloadCheckpoint(i,warmTexture=false){
     if(warmTexture)task.then(gltf=>{if(gltf)prepareCheckpointScene(gltf,i,true);});
     return task;
   }
-  const task=loader.loadAsync(DATA[i]).then(gltf=>{
+  const networkWarm=coarsePointer?(networkPrefetches.get(i)??prefetchNetwork(i)):null;
+  const task=(networkWarm??Promise.resolve()).then(()=>loader.loadAsync(DATA[i])).then(gltf=>{
     prepareCheckpointScene(gltf,i,warmTexture);
     return gltf;
   }).catch(err=>{
