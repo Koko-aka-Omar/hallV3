@@ -53,7 +53,7 @@ jobs:
             }
             if(!json||!bin) throw new Error('Missing GLB chunks: '+file);
             const image=json.images?.[0];
-            if(!image?.bufferView) throw new Error('No embedded panorama image: '+file);
+            if(image?.bufferView==null) throw new Error('No embedded panorama image: '+file);
             const view=json.bufferViews[image.bufferView];
             const start=(view.byteOffset||0);
             return bin.subarray(start,start+view.byteLength);
