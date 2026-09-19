@@ -1,9 +1,11 @@
-const CACHE_NAME='m7a-tour-v6';
+const CACHE_NAME='m7a-tour-v7';
 const CORE_ASSETS=[
   './',
   './index.html',
   './favicon.svg',
-  './manifest.webmanifest'
+  './manifest.webmanifest',
+  './apple-touch-icon.png',
+  './social-preview.png'
 ];
 
 self.addEventListener('install',event=>{
