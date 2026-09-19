@@ -391,48 +391,51 @@ const pointer=new THREE.Vector2();
 const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
 let ready=false;
 let current=0, object=null, yaw=0, pitch=0, dragging=false, sx=0, sy=0, syaw=0, spitch=0, transitioning=false, downX=0, downY=0;
+// Bearings are local to each panorama: angle = horizontal image fraction * 2PI.
+// Aim at corridor vanishing points / doorway centres, not floor-tile seams.
+// Reverse routes must be calibrated in their own image, not by adding PI.
 const LOCATIONS=[
   {
     id:'entrance',area:'Main Hall',name:'Entrance',back:null,view:1.25,
     routes:[
       {to:1,angle:2.10,label:'Main Hall · Study Rooms'},
-      {to:3,angle:3.78,label:'Stairs · M7A Top Floor',kind:'stairs'}
+      {to:3,angle:3.70,label:'Stairs · M7A Top Floor',kind:'stairs'}
     ]
   },
   {
     id:'study-junction',area:'Main Hall',name:'Study Rooms',back:0,view:3.14,
     routes:[
-      {to:0,angle:0,label:'Main Hall · Entrance',back:true},
-      {to:2,angle:Math.PI,label:'Main Hall · Hall End'},
-      {to:6,angle:4.72,label:'M7A-001'},
+      {to:0,angle:0.15,label:'Main Hall · Entrance',back:true},
+      {to:2,angle:3.24,label:'Main Hall · Hall End'},
+      {to:6,angle:4.80,label:'M7A-001'},
       {to:7,angle:1.68,label:'M7A-004'}
     ]
   },
   {
     id:'hall-end',area:'Main Hall',name:'Hall End',back:1,view:1.57,
     routes:[
-      {to:1,angle:Math.PI/2,label:'Main Hall · Study Rooms',back:true},
-      {to:8,angle:3.16,label:'M7A-003'},
-      {to:9,angle:5.94,label:'M7A-002'}
+      {to:1,angle:1.53,label:'Main Hall · Study Rooms',back:true},
+      {to:8,angle:3.12,label:'M7A-003'},
+      {to:9,angle:6.10,label:'M7A-002'}
     ]
   },
   {
     id:'top-floor-landing',area:'Top Floor',name:'Stair Landing',back:0,view:1.72,
     routes:[
-      {to:0,angle:4.45,label:'Ground Floor · Entrance',back:true,kind:'stairs'},
+      {to:0,angle:4.40,label:'Ground Floor · Entrance',back:true,kind:'stairs'},
       {to:4,angle:1.72,label:'Top Floor · Faculty Offices'}
     ]
   },
   {
     id:'top-floor-2',area:'Top Floor',name:'Faculty Offices',back:3,view:2.99,
     routes:[
-      {to:3,angle:4.64,label:'Top Floor · Stair Landing',back:true},
+      {to:3,angle:4.66,label:'Top Floor · Stair Landing',back:true},
       {to:5,angle:1.42,label:'Faculty Offices · Seating Area'}
     ]
   },
   {
     id:'top-floor-1',area:'Top Floor',name:'Faculty Offices · Seating Area',back:4,view:6.08,
-    routes:[{to:4,angle:4.45,label:'Top Floor · Faculty Offices',back:true}]
+    routes:[{to:4,angle:4.57,label:'Top Floor · Faculty Offices',back:true}]
   },
   {
     id:'m7a-001',area:'Ground Floor',name:'M7A-001',back:1,view:5.0,
@@ -440,15 +443,15 @@ const LOCATIONS=[
   },
   {
     id:'m7a-004',area:'Ground Floor',name:'M7A-004',back:1,view:0.55,
-    routes:[{to:1,angle:1.44,label:'Main Hall · Study Rooms',back:true}]
+    routes:[{to:1,angle:1.46,label:'Main Hall · Study Rooms',back:true}]
   },
   {
     id:'m7a-003',area:'Ground Floor',name:'M7A-003',back:2,view:3.16,
-    routes:[{to:2,angle:5.82,label:'Main Hall · Hall End',back:true}]
+    routes:[{to:2,angle:6.08,label:'Main Hall · Hall End',back:true}]
   },
   {
     id:'m7a-002',area:'Ground Floor',name:'M7A-002',back:2,view:1.95,
-    routes:[{to:2,angle:2.46,label:'Main Hall · Hall End',back:true}]
+    routes:[{to:2,angle:2.48,label:'Main Hall · Hall End',back:true}]
   }
 ];
 
@@ -567,6 +570,8 @@ function placeOne(root,route){
   const angle=route.angle;
   const dist=route.kind==='stairs'?1.08:1.02;
   root.position.set(Math.sin(angle)*dist,FLOOR_Y,-Math.cos(angle)*dist);
+  // Shape +Y becomes local -Z after the floor rotation. Negative yaw points
+  // that tip along the SAME bearing used for placement and camera travel.
   root.rotation.y=-angle;
 }
 
@@ -730,7 +735,7 @@ function setInitialProgress(value){
   const pct=Math.round(THREE.MathUtils.clamp(value,0,1)*100);
   loadProgressBar.style.width=pct+'%';
   progressTrack.setAttribute('aria-valuenow',String(pct));
-  loadProgressText.textContent='Loading M7A · '+pct+'%';
+  loadProgressText.textContent=pct===100?'Preparing M7A view…':'Loading M7A · '+pct+'%';
 }
 async function loadCheckpoint(i, prepared=null, onProgress=null){
   let replacement;
@@ -782,7 +787,7 @@ async function transitionTo(i,selectedRoute=null){
   travelFrame.style.transformOrigin=ox+'% '+oy+'%';
   travelFrame.style.transform='scale(1.008)';travelFrame.style.opacity='1';travelFrame.style.display='block';
 
-  const slowLoad=setTimeout(()=>{status.textContent='Loading next view…';},850);
+  const slowLoad=setTimeout(()=>{if(!status.textContent)status.textContent='Loading next view…';},850);
   try{
     // Let the snapshot paint first.
     await new Promise(resolve=>requestAnimationFrame(resolve));
@@ -814,7 +819,7 @@ async function transitionTo(i,selectedRoute=null){
       const warming=networkPrefetches.get(i);
       if(coarsePointer && warming)await warming;
       const gltf=cached?await cached:await loadGLTF(i,p=>{
-        status.textContent=p==null?'Loading next view…':'Loading next view · '+Math.round(p*100)+'%';
+        status.textContent=p==null?'Loading next view…':p>=1?'Preparing next view…':'Loading next view · '+Math.min(99,Math.round(p*100))+'%';
       });
       preloadCache.delete(i);
       if(!gltf)throw new Error('Checkpoint preload failed');
