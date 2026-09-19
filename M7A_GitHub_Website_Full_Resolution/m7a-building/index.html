@@ -152,7 +152,7 @@
   <div id="map-ground" class="map-floor active" data-floor-view="ground" role="tabpanel" aria-labelledby="map-tab-ground">
     <svg class="map-canvas" viewBox="0 0 340 300" role="img" aria-labelledby="ground-map-title ground-map-desc">
       <title id="ground-map-title">Ground floor map</title>
-      <desc id="ground-map-desc">Facing into the hallway from the entrance at the bottom: M7A-001 is on the right and M7A-004 is on the left at Study Rooms. At Hall End, M7A-003 is on the left and M7A-002 is on the right. The stairs connect the entrance to the top floor. Schematic, not to scale.</desc>
+      <desc id="ground-map-desc">Facing into the hallway from the entrance at the bottom: M7A-001 is on the right and M7A-004 is on the left at Study Rooms. At Hall End, M7A-003 is on the left and M7A-002 is on the right. The stairs are on the right below M7A-001 and connect the entrance to the top floor. Elevators are on the left of the entrance. Schematic, not to scale.</desc>
       <rect class="map-corridor" x="145" y="39" width="50" height="218" rx="22"/>
       <path class="map-edge" d="M170 242V65 M104 65H236 M104 160H236"/>
       <g class="map-node" data-location="8"><rect class="map-room" x="16" y="44" width="88" height="42" rx="10"/><text x="60" y="69">M7A-003</text></g>
@@ -161,9 +161,12 @@
       <g class="map-node" data-location="7"><rect class="map-room" x="16" y="139" width="88" height="42" rx="10"/><text x="60" y="164">M7A-004</text></g>
       <g class="map-node" data-location="6"><rect class="map-room" x="236" y="139" width="88" height="42" rx="10"/><text x="280" y="164">M7A-001</text></g>
       <g class="map-node" data-location="1"><circle cx="170" cy="160" r="8"/><text x="170" y="127">Study Rooms</text></g>
-      <path class="map-edge stairs" d="M170 242H103"/>
-      <rect class="map-corridor" x="16" y="221" width="87" height="42" rx="10"/>
-      <text class="map-floor-cue" x="59" y="239" text-anchor="middle">Stairs ↑</text><text class="map-floor-cue" x="59" y="253" text-anchor="middle">Top Floor</text>
+      <path class="map-edge stairs" d="M170 242H236"/>
+      <rect class="map-corridor" x="236" y="221" width="88" height="42" rx="10"/>
+      <text class="map-floor-cue" x="280" y="239" text-anchor="middle">Stairs ↑</text><text class="map-floor-cue" x="280" y="253" text-anchor="middle">Top Floor</text>
+      <path class="map-edge" d="M104 242H158"/>
+      <rect class="map-corridor" x="16" y="221" width="88" height="42" rx="10"/>
+      <text class="map-floor-cue" x="60" y="239" text-anchor="middle">↑ ↓</text><text class="map-floor-cue" x="60" y="253" text-anchor="middle">Elevators</text>
       <g class="map-node" data-location="0"><circle cx="170" cy="242" r="10"/><text x="170" y="279">Entrance</text></g>
       <path d="M165 214L170 207L175 214" fill="none" stroke="#79aaa9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
