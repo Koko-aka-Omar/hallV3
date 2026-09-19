@@ -3,7 +3,20 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Building M7A | Virtual Tour</title>
+<title>M7A Building — Virtual Tour | University of Sharjah</title>
+<meta name="description" content="Interactive 360° virtual tour of University of Sharjah Building M7A." />
+<meta name="theme-color" content="#007d80" />
+<meta property="og:title" content="M7A Building — Virtual Tour" />
+<meta property="og:description" content="Explore University of Sharjah Building M7A in an interactive 360° walkthrough." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://koko-aka-omar.github.io/hallV3/" />
+<meta property="og:image" content="https://koko-aka-omar.github.io/hallV3/social-preview.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+<link rel="manifest" href="./manifest.webmanifest" />
 <style>
   :root{
     color-scheme:dark;
@@ -59,6 +72,19 @@
   #route-tip.show{opacity:1;transform:translate(-50%,-100%) translateY(-16px) scale(1)}
   #route-tip:after{content:"";position:absolute;left:50%;bottom:-5px;width:9px;height:9px;background:rgba(0,48,53,.94);border-right:1px solid rgba(196,246,243,.2);border-bottom:1px solid rgba(196,246,243,.2);transform:translateX(-50%) rotate(45deg)}
 
+  .panel{position:fixed;z-index:24;right:clamp(14px,2vw,28px);top:max(88px,calc(env(safe-area-inset-top) + 74px));width:min(350px,calc(100vw - 28px));padding:14px;border:1px solid rgba(185,239,235,.2);border-radius:18px;background:linear-gradient(145deg,rgba(0,66,71,.96),rgba(2,39,44,.96));box-shadow:0 16px 46px rgba(0,0,0,.34);backdrop-filter:blur(22px) saturate(120%);-webkit-backdrop-filter:blur(22px) saturate(120%);opacity:0;transform:translateY(-8px) scale(.985);pointer-events:none;visibility:hidden;transition:opacity .18s ease,transform .18s ease,visibility .18s ease}
+  .panel.open{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;visibility:visible}
+  .panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:11px}.panel-head strong{display:block;font-size:14px;letter-spacing:-.02em}.panel-head small{display:block;margin-top:3px;color:#b8dedd;font-size:9px;line-height:1.3}.panel-close{width:30px;height:30px;border:1px solid rgba(192,244,240,.18);border-radius:50%;background:rgba(255,255,255,.06);font-size:17px}
+  .map-tabs{display:flex;gap:6px;margin-bottom:10px}.map-tab{flex:1;height:32px;border:1px solid rgba(190,241,237,.16);border-radius:10px;background:rgba(255,255,255,.05);font-size:9px;font-weight:750;letter-spacing:.06em;text-transform:uppercase}.map-tab.active{background:#0c8c88;border-color:#8ee1dc;color:#fff}
+  .map-floor{display:none}.map-floor.active{display:block}.map-canvas{width:100%;height:auto;display:block;border:1px solid rgba(190,241,237,.12);border-radius:14px;background:rgba(2,30,34,.52)}
+  .map-edge{stroke:#74bbb7;stroke-width:3;stroke-linecap:round;opacity:.48}.map-edge.stairs{stroke-dasharray:6 6;opacity:.62}
+  .map-node circle{fill:#153f43;stroke:#8bd8d3;stroke-width:2}.map-node text{fill:#e8faf8;font:600 10px Inter,system-ui,sans-serif;text-anchor:middle}.map-node .room-label{font-size:9px}.map-node.current circle{fill:#70f0d3;stroke:#e8fffa;stroke-width:3;filter:drop-shadow(0 0 6px rgba(112,240,211,.85))}.map-node.current text{fill:#fff;font-weight:800}.map-floor-cue{fill:#91d6d1;font:650 9px Inter,system-ui,sans-serif}
+  .map-note{margin:9px 2px 0;color:#a9cfcd;font-size:9px;line-height:1.4}
+  .info-copy{color:#def4f2;font-size:11px;line-height:1.55}.info-copy p{margin:0 0 10px}.info-facts{display:grid;grid-template-columns:1fr 1fr;gap:7px}.info-fact{padding:9px;border-radius:11px;background:rgba(255,255,255,.055);border:1px solid rgba(190,241,237,.1)}.info-fact b{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#9bd9d5;margin-bottom:3px}.info-fact span{font-size:10px;color:#f4fffd}
+  .info-tool{font-family:Georgia,serif;font-weight:700;font-style:italic}
+  .progress-track{width:220px;max-width:64vw;height:4px;margin:18px auto 8px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden}.progress-track span{display:block;width:0;height:100%;border-radius:inherit;background:linear-gradient(90deg,#56cfc5,#99f0df);transition:width .16s ease}
+  #load-progress-text{min-height:16px}
+
   #status{position:fixed;z-index:30;top:max(92px,calc(env(safe-area-inset-top) + 80px));left:50%;transform:translate(-50%,-6px);max-width:min(520px,90vw);padding:10px 14px;border:1px solid rgba(185,239,235,.2);border-radius:12px;background:rgba(0,57,62,.94);box-shadow:0 10px 28px rgba(0,0,0,.28);font-size:11px;line-height:1.35;text-align:center;opacity:1;transition:opacity .2s ease,transform .2s ease}
   #status:empty{opacity:0;pointer-events:none;transform:translate(-50%,-12px)}
 
@@ -74,9 +100,10 @@
   body.moving .tools,body.moving .nav{pointer-events:none}
   body.moving #hint{opacity:.55;transform:translateY(2px)}
 
+  @media(max-width:600px){.panel{top:max(66px,calc(env(safe-area-inset-top) + 58px));right:10px;width:min(340px,calc(100vw - 20px));padding:12px;border-radius:16px}.map-canvas{max-height:230px}.info-copy{font-size:10px}}
   @media(max-width:600px){
     .topbar{left:10px;right:10px;top:max(10px,env(safe-area-inset-top));gap:8px}
-    .brand{min-width:0;max-width:calc(100vw - 174px);padding:10px 12px 10px 14px;border-radius:15px}
+    .brand{min-width:0;max-width:calc(100vw - 214px);padding:10px 12px 10px 14px;border-radius:15px}
     .brand .eyebrow{font-size:7px;letter-spacing:.14em;margin-bottom:5px}
     .brand strong{font-size:16px}.floor-badge{font-size:7px;min-height:18px;padding:0 6px}.brand small{font-size:9px;margin-top:4px}
     .tools{gap:3px;padding:3px}.tool{width:36px;height:36px;font-size:16px}.tools #zoom-in,.tools #zoom-out{display:none}
@@ -88,7 +115,7 @@
     #route-tip{display:none}
     #status{top:max(70px,calc(env(safe-area-inset-top) + 64px));font-size:10px}
   }
-  @media(max-width:390px){.brand{max-width:calc(100vw - 154px)}.tool{width:33px;height:33px}.tools{gap:2px}.brand strong{font-size:15px}.brand small{font-size:8px}}
+  @media(max-width:390px){.brand{max-width:calc(100vw - 202px)}.tool{width:33px;height:33px}.tools{gap:2px}.brand strong{font-size:15px}.brand small{font-size:8px}}
   @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}.spinner{animation:none}.tool,.step,#route-tip,#loading,#hint{transition:none!important}}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script>
@@ -105,23 +132,71 @@
   </div>
   <div class="tools" aria-label="View controls">
     <button class="tool" id="motion" title="Use phone motion" aria-label="Enable phone motion view" hidden>◎</button>
+    <button class="tool" id="map-toggle" title="Tour map" aria-label="Open tour map" aria-pressed="false">▦</button>
+    <button class="tool info-tool" id="info-toggle" title="Tour information" aria-label="Open tour information" aria-pressed="false">i</button>
     <button class="tool" id="reset" title="Reset view" aria-label="Reset and level view">↺</button>
-    <button class="tool" id="zoom-in" title="Zoom in" aria-label="Zoom in">+</button>
-    <button class="tool" id="zoom-out" title="Zoom out" aria-label="Zoom out">−</button>
     <button class="tool" id="fullscreen" title="Full screen" aria-label="Full screen">⛶</button>
   </div>
 </header>
+
+<aside id="map-panel" class="panel" aria-hidden="true" aria-label="Tour map">
+  <div class="panel-head"><div><strong>M7A Tour Map</strong><small>Orientation only · movement stays connected</small></div><button class="panel-close" data-close-panel aria-label="Close map">×</button></div>
+  <div class="map-tabs" role="tablist" aria-label="Map floor">
+    <button class="map-tab active" data-map-floor="ground" role="tab" aria-selected="true">Ground Floor</button>
+    <button class="map-tab" data-map-floor="top" role="tab" aria-selected="false">Top Floor</button>
+  </div>
+  <div class="map-floor active" data-floor-view="ground">
+    <svg class="map-canvas" viewBox="0 0 320 210" role="img" aria-label="Ground floor tour connections">
+      <line class="map-edge" x1="45" y1="105" x2="145" y2="105"/><line class="map-edge" x1="145" y1="105" x2="255" y2="105"/>
+      <line class="map-edge" x1="145" y1="105" x2="145" y2="38"/><line class="map-edge" x1="145" y1="105" x2="145" y2="172"/>
+      <line class="map-edge" x1="255" y1="105" x2="255" y2="38"/><line class="map-edge" x1="255" y1="105" x2="255" y2="172"/>
+      <line class="map-edge stairs" x1="45" y1="105" x2="45" y2="165"/>
+      <text class="map-floor-cue" x="45" y="194" text-anchor="middle">↑ stairs to top floor</text>
+      <g class="map-node" data-location="0"><circle cx="45" cy="105" r="10"/><text x="45" y="84">Entrance</text></g>
+      <g class="map-node" data-location="1"><circle cx="145" cy="105" r="10"/><text x="145" y="84">Study Rooms</text></g>
+      <g class="map-node" data-location="2"><circle cx="255" cy="105" r="10"/><text x="255" y="84">Hall End</text></g>
+      <g class="map-node" data-location="6"><circle cx="145" cy="38" r="9"/><text class="room-label" x="145" y="20">M7A-001</text></g>
+      <g class="map-node" data-location="7"><circle cx="145" cy="172" r="9"/><text class="room-label" x="145" y="202">M7A-004</text></g>
+      <g class="map-node" data-location="8"><circle cx="255" cy="38" r="9"/><text class="room-label" x="255" y="20">M7A-003</text></g>
+      <g class="map-node" data-location="9"><circle cx="255" cy="172" r="9"/><text class="room-label" x="255" y="202">M7A-002</text></g>
+    </svg>
+  </div>
+  <div class="map-floor" data-floor-view="top">
+    <svg class="map-canvas" viewBox="0 0 320 180" role="img" aria-label="Top floor tour connections">
+      <line class="map-edge" x1="55" y1="90" x2="160" y2="90"/><line class="map-edge" x1="160" y1="90" x2="265" y2="90"/>
+      <line class="map-edge stairs" x1="55" y1="90" x2="55" y2="145"/>
+      <text class="map-floor-cue" x="55" y="166" text-anchor="middle">↓ stairs to entrance</text>
+      <g class="map-node" data-location="3"><circle cx="55" cy="90" r="10"/><text x="55" y="68">Stair Landing</text></g>
+      <g class="map-node" data-location="4"><circle cx="160" cy="90" r="10"/><text x="160" y="68">Faculty Offices</text></g>
+      <g class="map-node" data-location="5"><circle cx="265" cy="90" r="10"/><text x="265" y="68">Seating Area</text></g>
+    </svg>
+  </div>
+  <div class="map-note">The map shows how tour points connect. Use the arrows in the panorama to move between locations.</div>
+</aside>
+
+<aside id="info-panel" class="panel" aria-hidden="true" aria-label="Tour information">
+  <div class="panel-head"><div><strong>About this tour</strong><small>University of Sharjah · Building M7A</small></div><button class="panel-close" data-close-panel aria-label="Close information">×</button></div>
+  <div class="info-copy">
+    <p>Drag to look around, then tap an arrow to move to a connected space. On supported phones, motion view lets you look around by moving your device.</p>
+    <div class="info-facts">
+      <div class="info-fact"><b>Coverage</b><span>Ground + Top Floor</span></div>
+      <div class="info-fact"><b>Rooms</b><span>M7A-001 to M7A-004</span></div>
+      <div class="info-fact"><b>Imagery</b><span>Full-resolution 360°</span></div>
+      <div class="info-fact"><b>Navigation</b><span>Connected route points</span></div>
+    </div>
+  </div>
+</aside>
 <div id="status" role="status" aria-live="polite"></div>
 <div id="route-tip" role="tooltip"></div>
 <div class="bottom">
-  <div id="hint">Drag left and right to explore · tap a floor arrow to move</div>
+  <div id="hint">Drag to look around · tap an arrow to move</div>
   <nav class="nav" aria-label="Tour navigation" title="Tap a floor arrow to move · Backspace: back · Home: reset view">
     <button id="previous" class="step" disabled><span aria-hidden="true">←</span> Back</button>
     <div class="location-chip" aria-live="polite"><span class="location-dot" aria-hidden="true"></span><span id="route-label">Main Hall · Entrance</span></div>
   </nav>
 </div>
-<div id="loading"><div class="loading-card"><span class="eyebrow">University of Sharjah</span><div class="loader-title">Building M7A</div><div class="spinner"></div><p>Preparing the virtual tour…</p></div></div>
-<script>setTimeout(()=>{const l=document.getElementById('loading');if(l&&!l.classList.contains('done')){const p=l.querySelector('p');if(p)p.textContent='Still preparing the panorama…';}},18000);</script><script type="module">
+<div id="loading"><div class="loading-card"><span class="eyebrow">University of Sharjah</span><div class="loader-title">Building M7A</div><div class="spinner"></div><div class="progress-track" aria-hidden="true"><span id="load-progress-bar"></span></div><p id="load-progress-text">Loading panorama · 0%</p></div></div>
+<script>setTimeout(()=>{const l=document.getElementById('loading');if(l&&!l.classList.contains('done')){const p=document.getElementById('load-progress-text');if(p&&!p.textContent.includes('%'))p.textContent='Still loading the panorama…';}},18000);</script><script type="module">
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
@@ -137,11 +212,26 @@ const DATA = [
   "./assets/room-m7a-003.glb",
   "./assets/room-m7a-002.glb"
 ];
+
+const VISUAL_CALIBRATION=[
+  [0.98,1.00,1.06],
+  [0.985,1.00,1.04],
+  [0.985,1.00,1.035],
+  [0.99,1.00,1.02],
+  [1.00,1.00,1.015],
+  [1.00,1.00,1.015],
+  [1.055,1.055,1.055],
+  [1.045,1.045,1.045],
+  [1.035,1.035,1.035],
+  [1.055,1.055,1.055]
+];
 const app=document.getElementById('app');
 const loading=document.getElementById('loading');
 const cp=document.getElementById('cp');
 const floorBadge=document.getElementById('floor-badge');
 const routeTip=document.getElementById('route-tip');
+const loadProgressBar=document.getElementById('load-progress-bar');
+const loadProgressText=document.getElementById('load-progress-text');
 const coarsePointer=matchMedia('(pointer:coarse)').matches;
 
 const scene=new THREE.Scene();
@@ -172,8 +262,8 @@ const loader=new GLTFLoader();
 const preloadCache=new Map();
 const networkPrefetches=new Map();
 const recentScenes=new Map();
-const DECODED_PRELOAD_LIMIT=coarsePointer?1:2;
-const RECENT_SCENE_LIMIT=coarsePointer?1:2;
+const DECODED_PRELOAD_LIMIT=1;
+const RECENT_SCENE_LIMIT=coarsePointer?0:1;
 
 function prefetchNetwork(i){
   if(i<0 || i>=DATA.length || i===current || networkPrefetches.has(i))return networkPrefetches.get(i);
@@ -242,7 +332,7 @@ function scheduleLikelyPreload(){
 
   const run=()=>{
     prioritized.slice(0,DECODED_PRELOAD_LIMIT).forEach((target,index)=>{
-      const load=()=>preloadCheckpoint(target,index===0);
+      const load=()=>preloadCheckpoint(target,!coarsePointer&&index===0);
       if(index===0)load();else setTimeout(load,180*index);
     });
   };
@@ -254,7 +344,7 @@ function queueRoutePreload(target){
   if(target==null || target===current || recentScenes.has(target))return;
   prefetchNetwork(target);
   clearTimeout(hoverPreloadTimer);
-  hoverPreloadTimer=setTimeout(()=>preloadCheckpoint(target,true),55);
+  hoverPreloadTimer=setTimeout(()=>preloadCheckpoint(target,!coarsePointer),55);
 }
 const raycaster=new THREE.Raycaster();
 const pointer=new THREE.Vector2();
@@ -323,6 +413,38 @@ const LOCATIONS=[
 ];
 
 const FLOOR_Y=0.03;
+
+const mapPanel=document.getElementById('map-panel');
+const infoPanel=document.getElementById('info-panel');
+const mapToggle=document.getElementById('map-toggle');
+const infoToggle=document.getElementById('info-toggle');
+function closePanels(){
+  for(const [panel,button] of [[mapPanel,mapToggle],[infoPanel,infoToggle]]){
+    panel.classList.remove('open');panel.setAttribute('aria-hidden','true');button.setAttribute('aria-pressed','false');
+  }
+}
+function togglePanel(panel,button){
+  const open=!panel.classList.contains('open');
+  closePanels();
+  if(open){panel.classList.add('open');panel.setAttribute('aria-hidden','false');button.setAttribute('aria-pressed','true');}
+}
+mapToggle.onclick=()=>togglePanel(mapPanel,mapToggle);
+infoToggle.onclick=()=>togglePanel(infoPanel,infoToggle);
+document.querySelectorAll('[data-close-panel]').forEach(btn=>btn.addEventListener('click',closePanels));
+function setMapFloor(floor){
+  document.querySelectorAll('[data-floor-view]').forEach(el=>el.classList.toggle('active',el.dataset.floorView===floor));
+  document.querySelectorAll('[data-map-floor]').forEach(btn=>{
+    const active=btn.dataset.mapFloor===floor;
+    btn.classList.toggle('active',active);btn.setAttribute('aria-selected',String(active));
+  });
+}
+document.querySelectorAll('[data-map-floor]').forEach(btn=>btn.addEventListener('click',()=>setMapFloor(btn.dataset.mapFloor)));
+function updateMap(){
+  document.querySelectorAll('.map-node.current').forEach(node=>node.classList.remove('current'));
+  document.querySelectorAll('.map-node[data-location="'+current+'"]').forEach(node=>node.classList.add('current'));
+  setMapFloor(LOCATIONS[current]?.area==='Top Floor'?'top':'ground');
+}
+
 const panoramaGeometry=new THREE.SphereGeometry(10,192,96);
 panoramaGeometry.scale(-1,1,1);panoramaGeometry.rotateY(Math.PI/2);
 {const uv=panoramaGeometry.attributes.uv;for(let n=0;n<uv.count;n++)uv.setY(n,1-uv.getY(n));uv.needsUpdate=true;}
@@ -332,15 +454,16 @@ scene.add(hotspotGroup);
 const hotspotRoots=[];
 let hoverHotspot=null;
 
-function prep(root){
+function prep(root,i){
   const aniso=renderer.capabilities.getMaxAnisotropy();
+  const gain=VISUAL_CALIBRATION[i]??[1,1,1];
   root.traverse(o=>{
     if(!o.isMesh) return;
     const oldMats=Array.isArray(o.material)?o.material:[o.material];
     const newMats=oldMats.map(m=>{
       const bm=new THREE.MeshBasicMaterial({
         map:m && m.map ? m.map : null,
-        color:0xffffff,
+        color:new THREE.Color(gain[0],gain[1],gain[2]),
         side:THREE.DoubleSide,
         toneMapped:false
       });
@@ -469,7 +592,8 @@ function updateControls(){
   previous.disabled=!ready || transitioning || backTarget()==null;
   document.getElementById('route-label').textContent=locationLabel();
   floorBadge.textContent=floorLabel();
-  document.getElementById('hint').textContent=motionEnabled?'Move your phone or drag left and right · tap a floor arrow to move':'Drag left and right to explore · tap a floor arrow to move';
+  updateMap();
+  document.getElementById('hint').textContent=motionEnabled?'Move your phone or drag to look around · tap an arrow to move':'Drag to look around · tap an arrow to move';
 }
 function resetView(){
   const bearing=LOCATIONS[current]?.view ?? LOCATIONS[current]?.routes?.[0]?.angle ?? 0;
@@ -480,7 +604,7 @@ function dispose(root){root.traverse(o=>{if(o.geometry&&o.geometry!==panoramaGeo
 function prepareCheckpointScene(gltf,i,warmTexture=false){
   const replacement=gltf.scene;
   if(!replacement.userData.panoramaPrepared){
-    prep(replacement);
+    prep(replacement,i);
     replacement.traverse(mesh=>{
       if(!mesh.isMesh)return;
       mesh.geometry.dispose();
@@ -520,11 +644,26 @@ function takeRecentScene(i){
   if(root)recentScenes.delete(i);
   return root;
 }
-async function loadCheckpoint(i, prepared=null){
+function loadGLTF(i,onProgress=null){
+  return new Promise((resolve,reject)=>{
+    loader.load(DATA[i],resolve,xhr=>{
+      if(!onProgress)return;
+      if(xhr.total>0)onProgress(THREE.MathUtils.clamp(xhr.loaded/xhr.total,0,1));
+      else onProgress(null);
+    },reject);
+  });
+}
+function setInitialProgress(value){
+  if(value==null){loadProgressText.textContent='Loading panorama…';return;}
+  const pct=Math.round(THREE.MathUtils.clamp(value,0,1)*100);
+  loadProgressBar.style.width=pct+'%';
+  loadProgressText.textContent='Loading panorama · '+pct+'%';
+}
+async function loadCheckpoint(i, prepared=null, onProgress=null){
   let replacement;
   if(prepared?.isObject3D)replacement=prepared;
   else{
-    const gltf=prepared ?? await loader.loadAsync(DATA[i]);
+    const gltf=prepared ?? await loadGLTF(i,onProgress);
     replacement=prepareCheckpointScene(gltf,i,false);
   }
   if(object){
@@ -570,7 +709,7 @@ async function transitionTo(i,selectedRoute=null){
   travelFrame.style.transformOrigin=ox+'% '+oy+'%';
   travelFrame.style.transform='scale(1.008)';travelFrame.style.opacity='1';travelFrame.style.display='block';
 
-  const slowLoad=setTimeout(()=>{status.textContent='Preparing next view…';},850);
+  const slowLoad=setTimeout(()=>{status.textContent='Loading next view…';},850);
   try{
     // Let the snapshot paint, then decode/load without inserting an artificial animation delay.
     await new Promise(resolve=>requestAnimationFrame(resolve));
@@ -583,7 +722,9 @@ async function transitionTo(i,selectedRoute=null){
       }
     }else{
       const cached=preloadCache.get(i);
-      const gltf=cached?await cached:await loader.loadAsync(DATA[i]);
+      const gltf=cached?await cached:await loadGLTF(i,p=>{
+        status.textContent=p==null?'Loading next view…':'Loading next view · '+Math.round(p*100)+'%';
+      });
       preloadCache.delete(i);
       if(!gltf)throw new Error('Checkpoint preload failed');
       prepared=gltf;
@@ -689,12 +830,11 @@ function zoom(delta){if(!ready || transitioning)return;camera.fov=THREE.MathUtil
 el.addEventListener('wheel',e=>{e.preventDefault();zoom(e.deltaY*0.03);},{passive:false});
 previous.onclick=()=>{const back=backTarget();if(back!=null)transitionTo(back);};
 document.getElementById('reset').onclick=()=>{if(ready&&!transitioning)resetView();};
-document.getElementById('zoom-in').onclick=()=>zoom(-8);document.getElementById('zoom-out').onclick=()=>zoom(8);
 const fullscreen=document.getElementById('fullscreen');
 fullscreen.hidden=!document.fullscreenEnabled;
 fullscreen.onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{document.getElementById('status').textContent='Full screen is unavailable in this browser.';}};
 document.addEventListener('fullscreenchange',()=>fullscreen.setAttribute('aria-label',document.fullscreenElement?'Exit full screen':'Full screen'));
-addEventListener('keydown',e=>{if(e.target.closest('button,input,textarea,select')||e.altKey||e.ctrlKey||e.metaKey)return;if(e.key==='Backspace'||e.key==='Escape'){const back=backTarget();if(back!=null){e.preventDefault();routeTip.classList.remove('show');transitionTo(back);}}
+addEventListener('keydown',e=>{if(e.target.closest('button,input,textarea,select')||e.altKey||e.ctrlKey||e.metaKey)return;if(e.key==='Escape'&&(mapPanel.classList.contains('open')||infoPanel.classList.contains('open'))){e.preventDefault();closePanels();return;}if(e.key==='Backspace'||e.key==='Escape'){const back=backTarget();if(back!=null){e.preventDefault();routeTip.classList.remove('show');transitionTo(back);}}
   if(e.key==='Home' && ready && !transitioning){e.preventDefault();resetView();}
   if(e.key==='+' || e.key==='='){e.preventDefault();zoom(-8);}
   if(e.key==='-'){e.preventDefault();zoom(8);}
@@ -710,7 +850,11 @@ function animate(now=0){ requestAnimationFrame(animate); updateHotspotVisuals(no
 animate();
 setCanvasFx(1,0,1);
 el.style.cursor='grab';
-loadCheckpoint(0).then(()=>scheduleLikelyPreload()).catch(err=>{
+setInitialProgress(0);
+if('serviceWorker' in navigator){
+  addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(err=>console.warn('Offline cache unavailable',err)),{once:true});
+}
+loadCheckpoint(0,null,p=>setInitialProgress(p)).then(()=>{setInitialProgress(1);scheduleLikelyPreload();}).catch(err=>{
   loading.classList.remove('done');loading.style.display='grid';loading.innerHTML='<div class="loading-card error"><b>Could not load the tour.</b><p>Check your connection and reload this page.</p><button class="tool" onclick="location.reload()" aria-label="Retry">↻</button></div>';
   console.error(err);
 });
