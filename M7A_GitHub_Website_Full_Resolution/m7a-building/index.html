@@ -195,8 +195,8 @@
     <div class="location-chip" aria-live="polite"><span class="location-dot" aria-hidden="true"></span><span id="route-label">Main Hall · Entrance</span></div>
   </nav>
 </div>
-<div id="loading"><div class="loading-card"><span class="eyebrow">University of Sharjah</span><div class="loader-title">Building M7A</div><div class="spinner"></div><div class="progress-track" aria-hidden="true"><span id="load-progress-bar"></span></div><p id="load-progress-text">Loading panorama · 0%</p></div></div>
-<script>setTimeout(()=>{const l=document.getElementById('loading');if(l&&!l.classList.contains('done')){const p=document.getElementById('load-progress-text');if(p&&!p.textContent.includes('%'))p.textContent='Still loading the panorama…';}},18000);</script><script type="module">
+<div id="loading"><div class="loading-card"><span class="eyebrow">University of Sharjah</span><div class="loader-title">Building M7A</div><div class="spinner"></div><div class="progress-track" role="progressbar" aria-label="Loading M7A" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="load-progress-bar"></span></div><p id="load-progress-text">Loading M7A · 0%</p></div></div>
+<script>setTimeout(()=>{const l=document.getElementById('loading');if(l&&!l.classList.contains('done')){const p=document.getElementById('load-progress-text');if(p&&!p.textContent.includes('%'))p.textContent='Still loading M7A…';}},18000);</script><script type="module">
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
@@ -654,10 +654,15 @@ function loadGLTF(i,onProgress=null){
   });
 }
 function setInitialProgress(value){
-  if(value==null){loadProgressText.textContent='Loading panorama…';return;}
+  const progressTrack=loadProgressBar.parentElement;
+  if(value==null){
+    progressTrack.removeAttribute('aria-valuenow');
+    loadProgressText.textContent='Loading M7A…';return;
+  }
   const pct=Math.round(THREE.MathUtils.clamp(value,0,1)*100);
   loadProgressBar.style.width=pct+'%';
-  loadProgressText.textContent='Loading panorama · '+pct+'%';
+  progressTrack.setAttribute('aria-valuenow',String(pct));
+  loadProgressText.textContent='Loading M7A · '+pct+'%';
 }
 async function loadCheckpoint(i, prepared=null, onProgress=null){
   let replacement;
