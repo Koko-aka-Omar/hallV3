@@ -1,0 +1,18 @@
+{
+  "name": "M7A Building Virtual Tour",
+  "short_name": "M7A Tour",
+  "description": "Interactive 360° walkthrough of University of Sharjah Building M7A.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#041719",
+  "theme_color": "#007d80",
+  "icons": [
+    {
+      "src": "./favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
