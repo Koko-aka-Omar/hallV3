@@ -1,0 +1,60 @@
+name: Build mobile panorama assets
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+    paths:
+      - "M7A_GitHub_Website_Full_Resolution/m7a-building/assets/*.glb"
+      - ".github/workflows/build-mobile-assets.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install glTF Transform
+        run: npm install --global @gltf-transform/cli@4.5.0
+
+      - name: Generate phone panoramas
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC="M7A_GitHub_Website_Full_Resolution/m7a-building/assets"
+          OUT="M7A_GitHub_Website_Full_Resolution/m7a-building/assets-mobile"
+          rm -rf "$OUT"
+          mkdir -p "$OUT"
+
+          for input in "$SRC"/*.glb; do
+            name="$(basename "$input")"
+            echo "Optimizing $name for phones"
+            gltf-transform resize "$input" "$OUT/$name" --width 3072 --height 1536
+          done
+
+          echo
+          echo "Mobile asset sizes:"
+          du -h "$OUT"/*.glb
+
+      - name: Commit generated assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add M7A_GitHub_Website_Full_Resolution/m7a-building/assets-mobile
+          if git diff --cached --quiet; then
+            echo "Mobile assets already up to date."
+            exit 0
+          fi
+          git commit -m "Generate lightweight mobile panoramas"
+          git push
