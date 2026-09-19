@@ -1,14 +1,19 @@
 const CACHE_PREFIX='m7a-tour:'+self.registration.scope+':';
-const SHELL_CACHE=CACHE_PREFIX+'shell-v8';
+const SHELL_CACHE=CACHE_PREFIX+'shell-v9';
 // Bump only when panorama files change; UI releases retain full-resolution downloads.
-const PANORAMA_CACHE=CACHE_PREFIX+'panoramas-v1';
+const PANORAMA_CACHE=CACHE_PREFIX+'panoramas-v2';
 const LEGACY_CACHE='m7a-tour-v7';
 const CORE_ASSETS=['./','./index.html','./favicon.svg','./manifest.webmanifest','./apple-touch-icon.png','./social-preview.png'];
-const PANORAMAS=new Set([
+const PANORAMA_NAMES=[
   'ground-entrance','ground-study-rooms','ground-hall-end',
   'top-stair-landing','top-faculty-offices','top-seating-area',
   'room-m7a-001','room-m7a-004','room-m7a-003','room-m7a-002'
-].map(name=>new URL('./assets/'+name+'.glb',self.registration.scope).href));
+];
+const PANORAMAS=new Set(
+  ['assets','assets-mobile'].flatMap(dir=>
+    PANORAMA_NAMES.map(name=>new URL('./'+dir+'/'+name+'.glb',self.registration.scope).href)
+  )
+);
 const INDEX_URL=new URL('./index.html',self.registration.scope).href;
 
 async function cached(name,request){
