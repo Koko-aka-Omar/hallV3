@@ -856,10 +856,18 @@ animate();
 setCanvasFx(1,0,1);
 el.style.cursor='grab';
 setInitialProgress(0);
-if('serviceWorker' in navigator){
-  addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(err=>console.warn('Offline cache unavailable',err)),{once:true});
-}
-loadCheckpoint(0,null,p=>setInitialProgress(p)).then(()=>{setInitialProgress(1);scheduleLikelyPreload();}).catch(err=>{
+const tourWorker='serviceWorker' in navigator
+  ? navigator.serviceWorker.register('./service-worker.js')
+      .then(()=>navigator.serviceWorker.ready)
+      .catch(err=>{console.warn('Offline cache unavailable',err);return null;})
+  : Promise.resolve(null);
+loadCheckpoint(0,null,p=>setInitialProgress(p)).then(()=>{
+  setInitialProgress(1);scheduleLikelyPreload();
+  // Backfill the first panorama from HTTP cache if it loaded before worker activation.
+  tourWorker.then(registration=>registration?.active?.postMessage({
+    type:'CACHE_VIEWED_PANORAMA',url:new URL(DATA[0],location.href).href
+  })).catch(err=>console.warn('Initial panorama cache unavailable',err));
+}).catch(err=>{
   loading.classList.remove('done');loading.style.display='grid';loading.innerHTML='<div class="loading-card error"><b>Could not load the tour.</b><p>Check your connection and reload this page.</p><button class="tool" onclick="location.reload()" aria-label="Retry">↻</button></div>';
   console.error(err);
 });
