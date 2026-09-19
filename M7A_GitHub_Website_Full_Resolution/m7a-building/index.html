@@ -216,17 +216,17 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-const DATA = [
-  "./assets/ground-entrance.glb",
-  "./assets/ground-study-rooms.glb",
-  "./assets/ground-hall-end.glb",
-  "./assets/top-stair-landing.glb",
-  "./assets/top-faculty-offices.glb",
-  "./assets/top-seating-area.glb",
-  "./assets/room-m7a-001.glb",
-  "./assets/room-m7a-004.glb",
-  "./assets/room-m7a-003.glb",
-  "./assets/room-m7a-002.glb"
+const PANORAMA_FILES = [
+  "ground-entrance.glb",
+  "ground-study-rooms.glb",
+  "ground-hall-end.glb",
+  "top-stair-landing.glb",
+  "top-faculty-offices.glb",
+  "top-seating-area.glb",
+  "room-m7a-001.glb",
+  "room-m7a-004.glb",
+  "room-m7a-003.glb",
+  "room-m7a-002.glb"
 ];
 
 const VISUAL_CALIBRATION=[
@@ -249,6 +249,8 @@ const routeTip=document.getElementById('route-tip');
 const loadProgressBar=document.getElementById('load-progress-bar');
 const loadProgressText=document.getElementById('load-progress-text');
 const coarsePointer=matchMedia('(pointer:coarse)').matches;
+// Phones/tablets use dedicated 3072×1536 panoramas. Desktop keeps the full 8K originals.
+const DATA=PANORAMA_FILES.map(file=>(coarsePointer?'./assets-mobile/':'./assets/')+file);
 
 const scene=new THREE.Scene();
 const camera=new THREE.PerspectiveCamera(72,innerWidth/innerHeight,0.01,50);
@@ -276,12 +278,12 @@ const loader=new GLTFLoader();
 // Two levels of caching:
 // 1) on desktop, connected GLBs are fetched into the browser HTTP cache;
 // 2) on desktop, a likely destination stays decoded/prepared in memory.
-// Phones load only the selected destination; the service worker still caches viewed files.
-// This keeps the full 8192×4096 quality without trying to keep every huge texture on the GPU at once.
+// Desktop keeps one full-resolution destination prepared.
+// Phones use separate 3072×1536 files and keep one likely destination prepared for instant travel.
 const preloadCache=new Map();
 const networkPrefetches=new Map();
 const recentScenes=new Map();
-const DECODED_PRELOAD_LIMIT=coarsePointer?0:1;
+const DECODED_PRELOAD_LIMIT=1;
 const RECENT_SCENE_LIMIT=coarsePointer?0:1;
 
 function prefetchNetwork(i){
@@ -311,7 +313,6 @@ function trimDecodedPreloads(keep=null){
 }
 
 function preloadCheckpoint(i,warmTexture=false){
-  if(coarsePointer)return null;
   if(i<0 || i>=DATA.length || i===current || recentScenes.has(i))return null;
   prefetchNetwork(i);
   if(preloadCache.has(i)){
@@ -345,11 +346,16 @@ function scheduleLikelyPreload(){
     ...routes.filter(r=>r.back).map(r=>r.to)
   ].filter((v,i,a)=>v!=null && a.indexOf(v)===i && !recentScenes.has(v));
 
-  // Phones only warm the most likely next file. This removes the first-tap network stall
-  // without decoding another 8K panorama or downloading every branch at once.
+  // Mobile panoramas are small enough to keep one likely destination decoded and
+  // GPU-ready. This makes the common forward tap a scene swap instead of a decode.
   if(coarsePointer){
     const likely=prioritized[0];
-    if(likely!=null)prefetchNetwork(likely);
+    if(likely!=null){
+      prefetchNetwork(likely);
+      const run=()=>preloadCheckpoint(likely,true);
+      if('requestIdleCallback' in window)requestIdleCallback(run,{timeout:700});
+      else setTimeout(run,120);
+    }
     return;
   }
 
@@ -371,7 +377,11 @@ let hoverPreloadTimer=null;
 function queueRoutePreload(target){
   if(target==null || target===current || recentScenes.has(target))return;
   prefetchNetwork(target);
-  if(coarsePointer)return;
+  if(coarsePointer){
+    // Reuse the same in-flight decode if the visitor taps before the idle preload finished.
+    preloadCheckpoint(target,true);
+    return;
+  }
   clearTimeout(hoverPreloadTimer);
   hoverPreloadTimer=setTimeout(()=>preloadCheckpoint(target,!coarsePointer),55);
 }
