@@ -285,7 +285,6 @@ const DECODED_PRELOAD_LIMIT=coarsePointer?0:1;
 const RECENT_SCENE_LIMIT=coarsePointer?0:1;
 
 function prefetchNetwork(i){
-  if(coarsePointer)return null;
   if(i<0 || i>=DATA.length || i===current || networkPrefetches.has(i))return networkPrefetches.get(i);
   const task=fetch(DATA[i],{cache:'force-cache'})
     .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.arrayBuffer();})
@@ -339,18 +338,25 @@ function connectedTargets(){
 }
 
 function scheduleLikelyPreload(){
-  if(coarsePointer)return;
   const routes=LOCATIONS[current]?.routes??[];
   const targets=connectedTargets();
-
-  // Warm the browser cache for every arrow from this checkpoint.
-  targets.forEach(prefetchNetwork);
-
-  // Fully decode the most likely destinations. Keep this bounded so phones do not run out of memory.
   const prioritized=[
     ...routes.filter(r=>!r.back).map(r=>r.to),
     ...routes.filter(r=>r.back).map(r=>r.to)
   ].filter((v,i,a)=>v!=null && a.indexOf(v)===i && !recentScenes.has(v));
+
+  // Phones only warm the most likely next file. This removes the first-tap network stall
+  // without decoding another 8K panorama or downloading every branch at once.
+  if(coarsePointer){
+    const likely=prioritized[0];
+    if(likely!=null)prefetchNetwork(likely);
+    return;
+  }
+
+  // Desktop can warm every connected file because it has a larger memory/network budget.
+  targets.forEach(prefetchNetwork);
+
+  // Fully decode the most likely destinations on desktop only.
 
   const run=()=>{
     prioritized.slice(0,DECODED_PRELOAD_LIMIT).forEach((target,index)=>{
@@ -363,9 +369,9 @@ function scheduleLikelyPreload(){
 
 let hoverPreloadTimer=null;
 function queueRoutePreload(target){
-  if(coarsePointer)return;
   if(target==null || target===current || recentScenes.has(target))return;
   prefetchNetwork(target);
+  if(coarsePointer)return;
   clearTimeout(hoverPreloadTimer);
   hoverPreloadTimer=setTimeout(()=>preloadCheckpoint(target,!coarsePointer),55);
 }
@@ -485,7 +491,7 @@ const hotspotRoots=[];
 let hoverHotspot=null;
 
 function prep(root,i){
-  const aniso=Math.min(renderer.capabilities.getMaxAnisotropy(),coarsePointer?4:Infinity);
+  const aniso=Math.min(renderer.capabilities.getMaxAnisotropy(),coarsePointer?1:Infinity);
   const gain=VISUAL_CALIBRATION[i]??[1,1,1];
   root.traverse(o=>{
     if(!o.isMesh) return;
@@ -500,8 +506,15 @@ function prep(root,i){
       if(bm.map){
         bm.map.colorSpace=THREE.SRGBColorSpace;
         bm.map.anisotropy=aniso;
-        bm.map.generateMipmaps=true;
-        bm.map.minFilter=THREE.LinearMipmapLinearFilter;
+        if(coarsePointer){
+          // 8K mipmaps add roughly one-third more GPU texture memory and are expensive
+          // for iPhone Safari to generate during a scene switch.
+          bm.map.generateMipmaps=false;
+          bm.map.minFilter=THREE.LinearFilter;
+        }else{
+          bm.map.generateMipmaps=true;
+          bm.map.minFilter=THREE.LinearMipmapLinearFilter;
+        }
         bm.map.magFilter=THREE.LinearFilter;
         bm.map.needsUpdate=true;
 
@@ -747,7 +760,7 @@ async function transitionTo(i,selectedRoute=null){
 
   // Capture the current view immediately so a tap always gets visual feedback while the next panorama decodes.
   hotspotGroup.visible=false;renderer.render(scene,camera);
-  const snapScale=coarsePointer?0.62:0.84;
+  const snapScale=coarsePointer?0.50:0.84;
   travelFrame.width=Math.max(1,Math.round(el.width*snapScale));
   travelFrame.height=Math.max(1,Math.round(el.height*snapScale));
   travelContext.drawImage(el,0,0,travelFrame.width,travelFrame.height);
@@ -760,8 +773,22 @@ async function transitionTo(i,selectedRoute=null){
 
   const slowLoad=setTimeout(()=>{status.textContent='Loading next view…';},850);
   try{
-    // Let the snapshot paint, then decode/load without inserting an artificial animation delay.
+    // Let the snapshot paint first.
     await new Promise(resolve=>requestAnimationFrame(resolve));
+
+    // On phones, release the outgoing 8K texture before decoding the incoming panorama.
+    // The captured travel frame is already covering the WebGL canvas, so there is no visual flash.
+    // This avoids having two full-resolution panoramas resident during the heaviest part of the switch.
+    if(coarsePointer && object){
+      const outgoing=object;
+      scene.remove(outgoing);
+      object=null;
+      dispose(outgoing);
+      if(renderer.renderLists?.dispose)renderer.renderLists.dispose();
+      try{renderer.getContext().flush();}catch{}
+      await new Promise(resolve=>requestAnimationFrame(resolve));
+    }
+
     let prepared=takeRecentScene(i);
     if(prepared){
       const redundant=preloadCache.get(i);
@@ -771,6 +798,10 @@ async function transitionTo(i,selectedRoute=null){
       }
     }else{
       const cached=preloadCache.get(i);
+      // If a mobile network prefetch is still finishing, reuse it instead of racing
+      // another request for the same 6–8 MB GLB.
+      const warming=networkPrefetches.get(i);
+      if(coarsePointer && warming)await warming;
       const gltf=cached?await cached:await loadGLTF(i,p=>{
         status.textContent=p==null?'Loading next view…':'Loading next view · '+Math.round(p*100)+'%';
       });
@@ -790,7 +821,16 @@ async function transitionTo(i,selectedRoute=null){
       travelFrame.style.opacity=String(1-THREE.MathUtils.smoothstep(t,reducedMotion?0:0.08,1));
     });
   }catch(err){
-    console.error(err);status.textContent='This location could not load. Please try again.';
+    console.error(err);
+    status.textContent='This location could not load. Please try again.';
+    // Mobile may have released the previous panorama to stay within Safari's GPU budget.
+    // Restore it from cache if the destination failed to load.
+    if(coarsePointer && !object){
+      try{
+        await loadCheckpoint(from);
+        yaw=oldYaw;pitch=oldPitch;camera.fov=oldFov;camera.updateProjectionMatrix();camera.rotation.set(pitch,yaw,0);
+      }catch(restoreError){console.warn('Could not restore previous view',restoreError);}
+    }
   }finally{
     clearTimeout(slowLoad);travelFrame.style.display='none';travelContext.clearRect(0,0,travelFrame.width,travelFrame.height);
     camera.position.set(0,CAMERA_HEIGHT,0);hotspotGroup.visible=true;
