@@ -164,31 +164,97 @@ app.appendChild(renderer.domElement);
 const el=renderer.domElement;
 
 const loader=new GLTFLoader();
+
+// Two levels of caching:
+// 1) every directly connected GLB is fetched into the browser HTTP cache;
+// 2) a small number of likely destinations stay fully decoded/prepared in memory.
+// This keeps the full 8192×4096 quality without trying to keep every huge texture on the GPU at once.
 const preloadCache=new Map();
-let preloadWanted=null;
-function preloadCheckpoint(i){
-  if(i<0 || i>=DATA.length || i===current || (preloadWanted===i&&preloadCache.has(i)))return;
-  preloadWanted=i;
-  for(const key of preloadCache.keys())if(key!==i)preloadCache.delete(key);
+const networkPrefetches=new Map();
+const recentScenes=new Map();
+const DECODED_PRELOAD_LIMIT=coarsePointer?1:2;
+const RECENT_SCENE_LIMIT=coarsePointer?1:2;
+
+function prefetchNetwork(i){
+  if(i<0 || i>=DATA.length || i===current || networkPrefetches.has(i))return networkPrefetches.get(i);
+  const task=fetch(DATA[i],{cache:'force-cache'})
+    .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.arrayBuffer();})
+    .catch(err=>{console.warn('Network prefetch failed for checkpoint',i+1,err);return null;})
+    .finally(()=>networkPrefetches.delete(i));
+  networkPrefetches.set(i,task);
+  return task;
+}
+
+function evictDecodedPreload(i){
+  const task=preloadCache.get(i);
+  preloadCache.delete(i);
+  if(task)task.then(gltf=>{
+    if(gltf && i!==current && !recentScenes.has(i))dispose(gltf.scene);
+  }).catch(()=>{});
+}
+
+function trimDecodedPreloads(keep=null){
+  while(preloadCache.size>DECODED_PRELOAD_LIMIT){
+    const victim=[...preloadCache.keys()].find(k=>k!==keep && k!==current);
+    if(victim==null)break;
+    evictDecodedPreload(victim);
+  }
+}
+
+function preloadCheckpoint(i,warmTexture=false){
+  if(i<0 || i>=DATA.length || i===current || recentScenes.has(i))return null;
+  prefetchNetwork(i);
+  if(preloadCache.has(i)){
+    const task=preloadCache.get(i);
+    preloadCache.delete(i);preloadCache.set(i,task);
+    if(warmTexture)task.then(gltf=>{if(gltf)prepareCheckpointScene(gltf,i,true);});
+    return task;
+  }
   const task=loader.loadAsync(DATA[i]).then(gltf=>{
-    if(preloadWanted!==i){dispose(gltf.scene);return null;}
-    prepareCheckpointScene(gltf,i,true);
+    prepareCheckpointScene(gltf,i,warmTexture);
     return gltf;
-  }).catch(err=>{preloadCache.delete(i);console.warn('Preload failed for checkpoint',i+1,err);return null;});
+  }).catch(err=>{
+    preloadCache.delete(i);
+    console.warn('Preload failed for checkpoint',i+1,err);
+    return null;
+  });
   preloadCache.set(i,task);
+  trimDecodedPreloads(i);
+  return task;
 }
+
+function connectedTargets(){
+  return [...new Set((LOCATIONS[current]?.routes??[]).map(r=>r.to).filter(i=>i!=null && i!==current))];
+}
+
 function scheduleLikelyPreload(){
-  const route=LOCATIONS[current]?.routes?.find(r=>!r.back) ?? LOCATIONS[current]?.routes?.[0];
-  const target=route?.to;
-  if(target==null)return;
-  const run=()=>preloadCheckpoint(target);
-  if('requestIdleCallback' in window)requestIdleCallback(run,{timeout:900});else setTimeout(run,250);
+  const routes=LOCATIONS[current]?.routes??[];
+  const targets=connectedTargets();
+
+  // Warm the browser cache for every arrow from this checkpoint.
+  targets.forEach(prefetchNetwork);
+
+  // Fully decode the most likely destinations. Keep this bounded so phones do not run out of memory.
+  const prioritized=[
+    ...routes.filter(r=>!r.back).map(r=>r.to),
+    ...routes.filter(r=>r.back).map(r=>r.to)
+  ].filter((v,i,a)=>v!=null && a.indexOf(v)===i && !recentScenes.has(v));
+
+  const run=()=>{
+    prioritized.slice(0,DECODED_PRELOAD_LIMIT).forEach((target,index)=>{
+      const load=()=>preloadCheckpoint(target,index===0);
+      if(index===0)load();else setTimeout(load,180*index);
+    });
+  };
+  if('requestIdleCallback' in window)requestIdleCallback(run,{timeout:450});else setTimeout(run,90);
 }
+
 let hoverPreloadTimer=null;
 function queueRoutePreload(target){
-  if(target==null || target===current || preloadCache.has(target))return;
+  if(target==null || target===current || recentScenes.has(target))return;
+  prefetchNetwork(target);
   clearTimeout(hoverPreloadTimer);
-  hoverPreloadTimer=setTimeout(()=>preloadCheckpoint(target),120);
+  hoverPreloadTimer=setTimeout(()=>preloadCheckpoint(target,true),55);
 }
 const raycaster=new THREE.Raycaster();
 const pointer=new THREE.Vector2();
@@ -434,10 +500,38 @@ function prepareCheckpointScene(gltf,i,warmTexture=false){
   }
   return replacement;
 }
+function cacheRecentScene(i,root){
+  if(!root || i==null)return;
+  if(recentScenes.has(i)){
+    const old=recentScenes.get(i);
+    recentScenes.delete(i);
+    if(old!==root)dispose(old);
+  }
+  recentScenes.set(i,root);
+  while(recentScenes.size>RECENT_SCENE_LIMIT){
+    const victim=recentScenes.keys().next().value;
+    const stale=recentScenes.get(victim);
+    recentScenes.delete(victim);
+    if(stale)dispose(stale);
+  }
+}
+function takeRecentScene(i){
+  const root=recentScenes.get(i)??null;
+  if(root)recentScenes.delete(i);
+  return root;
+}
 async function loadCheckpoint(i, prepared=null){
-  const gltf=prepared ?? await loader.loadAsync(DATA[i]);
-  const replacement=prepareCheckpointScene(gltf,i,false);
-  if(object){scene.remove(object);dispose(object);}
+  let replacement;
+  if(prepared?.isObject3D)replacement=prepared;
+  else{
+    const gltf=prepared ?? await loader.loadAsync(DATA[i]);
+    replacement=prepareCheckpointScene(gltf,i,false);
+  }
+  if(object){
+    const oldIndex=current;
+    scene.remove(object);
+    cacheRecentScene(oldIndex,object);
+  }
   object=replacement;current=i;scene.add(object);
   camera.position.set(0,CAMERA_HEIGHT,0);resetView();
   cp.textContent=locationLabel(i);
@@ -480,14 +574,24 @@ async function transitionTo(i,selectedRoute=null){
   try{
     // Let the snapshot paint, then decode/load without inserting an artificial animation delay.
     await new Promise(resolve=>requestAnimationFrame(resolve));
-    const cached=preloadCache.get(i);
-    const gltf=cached?await cached:await loader.loadAsync(DATA[i]);
-    preloadCache.delete(i);if(preloadWanted===i)preloadWanted=null;
-    if(!gltf)throw new Error('Checkpoint preload failed');
+    let prepared=takeRecentScene(i);
+    if(prepared){
+      const redundant=preloadCache.get(i);
+      if(redundant){
+        preloadCache.delete(i);
+        redundant.then(gltf=>{if(gltf)dispose(gltf.scene);}).catch(()=>{});
+      }
+    }else{
+      const cached=preloadCache.get(i);
+      const gltf=cached?await cached:await loader.loadAsync(DATA[i]);
+      preloadCache.delete(i);
+      if(!gltf)throw new Error('Checkpoint preload failed');
+      prepared=gltf;
+    }
     clearTimeout(slowLoad);status.textContent='';
-    await loadCheckpoint(i,gltf);
+    await loadCheckpoint(i,prepared);
     yaw=arrivalYaw;pitch=oldPitch;camera.fov=oldFov;camera.updateProjectionMatrix();camera.rotation.set(pitch,yaw,0);
-    await tween(reducedMotion?120:(coarsePointer?300:380),(e,t)=>{
+    await tween(reducedMotion?100:(coarsePointer?180:220),(e,t)=>{
       if(!reducedMotion){
         const push=1+0.075*e*Math.max(0.35,facingTravel);
         travelFrame.style.transform='scale('+push+')';
