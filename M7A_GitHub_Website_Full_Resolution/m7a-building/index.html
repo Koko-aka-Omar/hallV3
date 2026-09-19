@@ -119,6 +119,7 @@
     #status{top:max(70px,calc(env(safe-area-inset-top) + 64px));font-size:10px}
   }
   @media(max-width:390px){.brand{max-width:calc(100vw - 202px)}.tool{width:33px;height:33px}.tools{gap:2px}.brand strong{font-size:15px}.brand small{font-size:8px}}
+  @media(pointer:coarse){.brand,.tools,.bottom #hint,.nav,.panel,.loading-card{backdrop-filter:none;-webkit-backdrop-filter:none}}
   @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}.spinner{animation:none}.tool,.step,#route-tip,#loading,#hint{transition:none!important}}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script>
@@ -255,12 +256,14 @@ const CAMERA_HEIGHT=0.45;
 camera.position.set(0,CAMERA_HEIGHT,0);
 camera.rotation.order='YXZ';
 
-const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
+const renderer=new THREE.WebGLRenderer({antialias:!coarsePointer,powerPreference:'high-performance'});
 function renderQuality(){
-  // Supersample ordinary displays; cap the drawing buffer on large screens.
-  const pixelBudget=coarsePointer?2800000:6000000;
+  // Keep phone rendering within a smaller GPU budget; preserve desktop supersampling.
+  const pixelBudget=coarsePointer?1000000:6000000;
   const budget=Math.sqrt(pixelBudget/(innerWidth*innerHeight));
-  renderer.setPixelRatio(Math.max(1,Math.min(Math.max(devicePixelRatio,1.35),2,budget)));
+  renderer.setPixelRatio(coarsePointer
+    ? Math.min(devicePixelRatio||1,1.5,budget)
+    : Math.max(1,Math.min(Math.max(devicePixelRatio,1.35),2,budget)));
 }
 renderQuality();
 renderer.setSize(innerWidth,innerHeight);
@@ -271,16 +274,18 @@ const el=renderer.domElement;
 const loader=new GLTFLoader();
 
 // Two levels of caching:
-// 1) every directly connected GLB is fetched into the browser HTTP cache;
-// 2) a small number of likely destinations stay fully decoded/prepared in memory.
+// 1) on desktop, connected GLBs are fetched into the browser HTTP cache;
+// 2) on desktop, a likely destination stays decoded/prepared in memory.
+// Phones load only the selected destination; the service worker still caches viewed files.
 // This keeps the full 8192×4096 quality without trying to keep every huge texture on the GPU at once.
 const preloadCache=new Map();
 const networkPrefetches=new Map();
 const recentScenes=new Map();
-const DECODED_PRELOAD_LIMIT=1;
+const DECODED_PRELOAD_LIMIT=coarsePointer?0:1;
 const RECENT_SCENE_LIMIT=coarsePointer?0:1;
 
 function prefetchNetwork(i){
+  if(coarsePointer)return null;
   if(i<0 || i>=DATA.length || i===current || networkPrefetches.has(i))return networkPrefetches.get(i);
   const task=fetch(DATA[i],{cache:'force-cache'})
     .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.arrayBuffer();})
@@ -307,6 +312,7 @@ function trimDecodedPreloads(keep=null){
 }
 
 function preloadCheckpoint(i,warmTexture=false){
+  if(coarsePointer)return null;
   if(i<0 || i>=DATA.length || i===current || recentScenes.has(i))return null;
   prefetchNetwork(i);
   if(preloadCache.has(i)){
@@ -333,6 +339,7 @@ function connectedTargets(){
 }
 
 function scheduleLikelyPreload(){
+  if(coarsePointer)return;
   const routes=LOCATIONS[current]?.routes??[];
   const targets=connectedTargets();
 
@@ -356,6 +363,7 @@ function scheduleLikelyPreload(){
 
 let hoverPreloadTimer=null;
 function queueRoutePreload(target){
+  if(coarsePointer)return;
   if(target==null || target===current || recentScenes.has(target))return;
   prefetchNetwork(target);
   clearTimeout(hoverPreloadTimer);
@@ -477,7 +485,7 @@ const hotspotRoots=[];
 let hoverHotspot=null;
 
 function prep(root,i){
-  const aniso=renderer.capabilities.getMaxAnisotropy();
+  const aniso=Math.min(renderer.capabilities.getMaxAnisotropy(),coarsePointer?4:Infinity);
   const gain=VISUAL_CALIBRATION[i]??[1,1,1];
   root.traverse(o=>{
     if(!o.isMesh) return;
@@ -501,6 +509,7 @@ function prep(root,i){
       return bm;
     });
     o.material=Array.isArray(o.material)?newMats:newMats[0];
+    oldMats.forEach(m=>m?.dispose());
   });
 }
 
@@ -550,8 +559,8 @@ function updateHotspotVisuals(now=0){
   for(const hs of hotspotRoots){
     const u=hs.userData;
     u.emphasis+=((hs===hoverHotspot&&!dragging?1:0)-u.emphasis)*blend;
-    const e=u.emphasis,quiet=dragging?0.62:1;
-    const pulse=reducedMotion?0:(0.5+0.5*Math.sin(now*0.0028))*0.045;
+    const e=coarsePointer?0:u.emphasis,quiet=dragging?0.62:1;
+    const pulse=(reducedMotion||coarsePointer)?0:(0.5+0.5*Math.sin(now*0.0028))*0.045;
     hs.scale.setScalar(0.64*(1+0.05*e+pulse));
     const stairBoost=u.route?.kind==='stairs'?0.06:0;
     u.inner.material.opacity=(0.16+0.15*e+stairBoost)*quiet;
@@ -622,7 +631,20 @@ function resetView(){
   yaw=-bearing;pitch=0;camera.fov=72;camera.updateProjectionMatrix();camera.rotation.set(pitch,yaw,0);
   if(motionEnabled)motionNeedsCalibrate=true;
 }
-function dispose(root){root.traverse(o=>{if(o.geometry&&o.geometry!==panoramaGeometry)o.geometry.dispose();if(o.material){for(const m of (Array.isArray(o.material)?o.material:[o.material])){m.map?.dispose();m.dispose();}}});}
+function dispose(root){
+  const textures=new Set(),images=new Set(),materials=new Set(),geometries=new Set();
+  root.traverse(o=>{
+    if(o.geometry&&o.geometry!==panoramaGeometry)geometries.add(o.geometry);
+    if(o.material)for(const m of (Array.isArray(o.material)?o.material:[o.material])){
+      materials.add(m);
+      if(m.map){textures.add(m.map);if(m.map.image)images.add(m.map.image);}
+    }
+  });
+  textures.forEach(texture=>texture.dispose());
+  images.forEach(image=>{if(typeof image.close==='function')image.close();});
+  materials.forEach(material=>material.dispose());
+  geometries.forEach(geometry=>geometry.dispose());
+}
 function prepareCheckpointScene(gltf,i,warmTexture=false){
   const replacement=gltf.scene;
   if(!replacement.userData.panoramaPrepared){
@@ -759,6 +781,7 @@ async function transitionTo(i,selectedRoute=null){
     clearTimeout(slowLoad);status.textContent='';
     await loadCheckpoint(i,prepared);
     yaw=arrivalYaw;pitch=oldPitch;camera.fov=oldFov;camera.updateProjectionMatrix();camera.rotation.set(pitch,yaw,0);
+    if(coarsePointer){updateHotspotVisuals(performance.now());renderer.render(scene,camera);}
     await tween(reducedMotion?100:(coarsePointer?180:220),(e,t)=>{
       if(!reducedMotion){
         const push=1+0.075*e*Math.max(0.35,facingTravel);
@@ -873,7 +896,21 @@ addEventListener('resize', ()=>{
   camera.updateProjectionMatrix();
   renderer.setSize(innerWidth,innerHeight);
 });
-function animate(now=0){ requestAnimationFrame(animate); updateHotspotVisuals(now); renderer.render(scene,camera); }
+let lastMobileFrame='';
+function animate(now=0){
+  requestAnimationFrame(animate);
+  if(document.hidden||!ready)return;
+  if(coarsePointer){
+    // The snapshot covers transitions; redraw a still view only when it changes.
+    if(transitioning){lastMobileFrame='';return;}
+    const q=camera.quaternion;
+    const frame=[q.x,q.y,q.z,q.w,camera.fov,innerWidth,innerHeight,current,dragging].join(',');
+    if(frame===lastMobileFrame)return;
+    lastMobileFrame=frame;
+  }
+  updateHotspotVisuals(now);renderer.render(scene,camera);
+}
+document.addEventListener('visibilitychange',()=>{lastMobileFrame='';});
 animate();
 setCanvasFx(1,0,1);
 el.style.cursor='grab';
