@@ -65,6 +65,9 @@ run.onclick=async()=>{run.disabled=true;const lines=[];const check=(v,s)=>{if(!v
   check(document.querySelector('.map-node[data-location="1"]').getAttribute('aria-label').includes('قاعات الدراسة'),'Arabic map accessibility labels');
   currentLanguage='en';applyLanguage();closePanels();
   check(document.documentElement.lang==='en'&&cp.textContent==='Main Hall · Entrance','English restores without navigation');
+  const shared=new URL(sceneLink());
+  check(shared.searchParams.get('scene')==='entrance'&&sceneLinkElement.href===shared.href,'share link targets current scene');
+  check(shareLocation.textContent===locationLabel(),'share card shows current location');
   result.textContent+='\\nALL CHECKS PASSED';
 }catch(e){result.textContent+='\\nFAIL '+e.stack}finally{run.disabled=false}};
 `;

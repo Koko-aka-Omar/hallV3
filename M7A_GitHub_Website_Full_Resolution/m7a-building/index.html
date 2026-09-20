@@ -92,7 +92,7 @@
   .map-node:focus-visible circle:not(.map-hit){stroke:#fff;stroke-width:4}
   .map-node .map-hit{fill:transparent;stroke:none;filter:none;pointer-events:all}
   .map-note{margin:10px 2px 0;color:#b9d9d6;font-size:10px;line-height:1.5}
-  .info-copy{color:#def4f2;font-size:11px;line-height:1.55}.info-copy p{margin:0 0 10px}.info-facts{display:grid;grid-template-columns:1fr 1fr;gap:7px}.info-fact{padding:9px;border-radius:11px;background:rgba(255,255,255,.055);border:1px solid rgba(190,241,237,.1)}.info-fact b{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#9bd9d5;margin-bottom:3px}.info-fact span{font-size:10px;color:#f4fffd}
+  .info-copy{color:#def4f2;font-size:11px;line-height:1.55}.info-copy p{margin:0 0 12px}.share-card{padding:11px;border-radius:13px;background:rgba(112,240,211,.07);border:1px solid rgba(112,240,211,.18)}.share-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.share-copy{min-width:0}.share-copy b{display:block;font-size:11px;color:#f4fffd}.share-copy span{display:block;margin-top:2px;color:#9bd9d5;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.share-button{flex:none;min-height:32px;padding:0 10px;border:1px solid rgba(174,255,237,.28);border-radius:10px;background:#0b8582;color:#fff;font-size:9px;font-weight:750}.share-button:hover{background:#109895}.scene-link{display:block;margin-top:9px;padding-top:8px;border-top:1px solid rgba(174,255,237,.12);color:#bce8e4;font-size:9px;line-height:1.3;direction:ltr;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none}.scene-link:hover{color:#fff;text-decoration:underline}
   .info-tool{font-family:Georgia,serif;font-weight:700;font-style:italic}
   .progress-track{width:220px;max-width:64vw;height:4px;margin:18px auto 8px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden}.progress-track span{display:block;width:0;height:100%;border-radius:inherit;background:linear-gradient(90deg,#56cfc5,#99f0df);transition:width .16s ease}
   #load-progress-text{min-height:16px}
@@ -112,7 +112,7 @@
   body.moving .tools,body.moving .nav{pointer-events:none}
   body.moving #hint{opacity:.55;transform:translateY(2px)}
   html[dir="rtl"] .brand,html[dir="rtl"] .panel-head>div,html[dir="rtl"] .map-position>div,html[dir="rtl"] .map-note,html[dir="rtl"] .info-copy,html[dir="rtl"] #hint,html[dir="rtl"] #route-tip,html[dir="rtl"] #route-label{direction:rtl;text-align:right}
-  html[dir="rtl"] .topbar,html[dir="rtl"] .brand-row,html[dir="rtl"] .tools,html[dir="rtl"] .nav,html[dir="rtl"] .panel-head,html[dir="rtl"] .map-position,html[dir="rtl"] .map-tabs,html[dir="rtl"] .info-facts,html[dir="rtl"] .map-canvas{direction:ltr}
+  html[dir="rtl"] .topbar,html[dir="rtl"] .brand-row,html[dir="rtl"] .tools,html[dir="rtl"] .nav,html[dir="rtl"] .panel-head,html[dir="rtl"] .map-position,html[dir="rtl"] .map-tabs,html[dir="rtl"] .share-head,html[dir="rtl"] .map-canvas{direction:ltr}
   html[dir="rtl"] #hint{text-align:center}
   html[dir="rtl"] .map-node text,html[dir="rtl"] .map-floor-cue{font-size:9px}
 
@@ -206,12 +206,10 @@
 <aside id="info-panel" class="panel" aria-hidden="true" aria-label="Tour information" data-i18n-aria="tourInfo">
   <div class="panel-head"><div><strong data-i18n="aboutTitle">About this tour</strong><small data-i18n="aboutSubtitle">University of Sharjah · Building M7A</small></div><button class="panel-close" data-close-panel aria-label="Close information" data-i18n-aria="closeInfo">×</button></div>
   <div class="info-copy">
-    <p data-i18n="aboutCopy">Drag to look around, then tap an arrow to move to a connected space. You can also tap a location on the tour map. On supported phones, motion view lets you look around by moving your device.</p>
-    <div class="info-facts">
-      <div class="info-fact"><b data-i18n="coverage">Coverage</b><span data-i18n="coverageValue">Ground + Top Floor</span></div>
-      <div class="info-fact"><b data-i18n="rooms">Rooms</b><span data-i18n="roomsValue">M7A-001 to M7A-004</span></div>
-      <div class="info-fact"><b data-i18n="imagery">Imagery</b><span data-i18n="imageryValue">Full-resolution 360°</span></div>
-      <div class="info-fact"><b data-i18n="navigation">Navigation</b><span data-i18n="navigationValue">Connected route points</span></div>
+    <p data-i18n="aboutCopy">Drag to look around. Use a floor arrow or the map to move between locations. On supported phones, you can also look around by moving your device.</p>
+    <div class="share-card">
+      <div class="share-head"><div class="share-copy"><b data-i18n="shareTitle">Share this location</b><span id="share-location">Main Hall · Entrance</span></div><button class="share-button" id="share-scene" type="button" data-i18n="copyLink">Copy link</button></div>
+      <a class="scene-link" id="scene-link" href="?scene=entrance" target="_blank" rel="noopener">?scene=entrance</a>
     </div>
   </div>
 </aside>
@@ -270,7 +268,7 @@ const I18N={
     viewControls:'View controls',motionTitle:'Use phone motion',motionEnable:'Enable phone motion view',motionDisable:'Disable phone motion view',tourMap:'Tour map',openMap:'Open tour map',tourInfo:'Tour information',openInfo:'Open tour information',resetView:'Reset and level view',fullScreen:'Full screen',exitFullScreen:'Exit full screen',
     mapTitle:'M7A Tour Map',mapSubtitle:'Find your place in the building',closeMap:'Close map',youAreHere:'You are here',mapFloor:'Map floor',groundFloor:'Ground Floor',topFloor:'Top Floor',groundFloorBadge:'Ground Floor',topFloorBadge:'Top Floor',groundMapTitle:'Ground floor map',groundMapDesc:'Facing into the hallway from the entrance at the bottom: M7A-001 is on the right and M7A-004 is on the left at Study Rooms. At Hall End, M7A-003 is on the left and M7A-002 is on the right. The stairs are on the right below M7A-001 and connect the entrance to the top floor. Elevators are on the left of the entrance. Schematic, not to scale.',topMapTitle:'Top floor map',topMapDesc:'Stairs from the entrance lead to Stair Landing, then Faculty Offices, then Seating Area. Schematic, not to scale.',
     hallEnd:'Hall End',studyRooms:'Study Rooms',stairsUp:'Stairs ↑',elevators:'Elevators',entrance:'Entrance',seatingArea:'Seating Area',facultyOffices:'Faculty Offices',stairLanding:'Stair Landing',entranceGround:'↓ Entrance · Ground Floor',groundMapNote:'Facing into the hall from the entrance. M7A-001 is on your right.',topMapNote:'The stairs connect this floor to the ground-floor entrance.',mapHelp:'Tap a location to go there. Highlighted location = you are here. Schematic · not to scale.',
-    aboutTitle:'About this tour',aboutSubtitle:'University of Sharjah · Building M7A',closeInfo:'Close information',aboutCopy:'Drag to look around, then tap an arrow to move to a connected space. You can also tap a location on the tour map. On supported phones, motion view lets you look around by moving your device.',coverage:'Coverage',coverageValue:'Ground + Top Floor',rooms:'Rooms',roomsValue:'M7A-001 to M7A-004',imagery:'Imagery',imageryValue:'Full-resolution 360°',navigation:'Navigation',navigationValue:'Connected route points',
+    aboutTitle:'About this tour',aboutSubtitle:'University of Sharjah · Building M7A',closeInfo:'Close information',aboutCopy:'Drag to look around. Use a floor arrow or the map to move between locations. On supported phones, you can also look around by moving your device.',shareTitle:'Share this location',copyLink:'Copy link',linkCopied:'Link copied',copyFailed:'Could not copy the link.',
     tourNavigation:'Tour navigation',navigationTitle:'Tap a floor arrow to move · Backspace: back · Home: reset view',back:'Back',loadingM7A:'Loading M7A',loading:'Loading M7A…',loadingPct:p=>`Loading M7A · ${p}%`,preparing:'Preparing M7A view…',stillLoading:'Still loading M7A…',
     drag:'Drag to look around.',moveOrDrag:'Move your phone or drag to look around.',tapArrow:'Tap a floor arrow to move.',goTo:n=>`Go to ${n}`,downstairs:'Downstairs · Entrance',upstairs:'Upstairs · Stair Landing',loadingNext:'Loading next view…',loadingNextPct:p=>`Loading next view · ${p}%`,preparingNext:'Preparing next view…',loadLocationError:'This location could not load. Please try again.',
     motionOff:'Phone motion view off.',motionOn:'Phone motion view on · move your phone to look around.',motionDenied:'Phone motion access was not allowed. You can still drag to look around.',fullscreenUnavailable:'Full screen is unavailable in this browser.',tourLoadError:'Could not load the tour.',checkConnection:'Check your connection and reload this page.',retry:'Retry',switchLanguage:'Switch to Arabic'
@@ -280,7 +278,7 @@ const I18N={
     viewControls:'أدوات العرض',motionTitle:'استخدام حركة الهاتف',motionEnable:'تفعيل العرض بحركة الهاتف',motionDisable:'إيقاف العرض بحركة الهاتف',tourMap:'خريطة الجولة',openMap:'فتح خريطة الجولة',tourInfo:'معلومات الجولة',openInfo:'فتح معلومات الجولة',resetView:'إعادة ضبط العرض وتسويته',fullScreen:'ملء الشاشة',exitFullScreen:'الخروج من ملء الشاشة',
     mapTitle:'خريطة جولة M7A',mapSubtitle:'تعرّف على موقعك داخل المبنى',closeMap:'إغلاق الخريطة',youAreHere:'موقعك الحالي',mapFloor:'طابق الخريطة',groundFloor:'الطابق الأرضي',topFloor:'الطابق العلوي',groundFloorBadge:'الأرضي',topFloorBadge:'العلوي',groundMapTitle:'خريطة الطابق الأرضي',groundMapDesc:'عند النظر إلى الممر من المدخل في الأسفل: تقع M7A-001 على اليمين وM7A-004 على اليسار عند قاعات الدراسة. عند نهاية الردهة تقع M7A-003 على اليسار وM7A-002 على اليمين. يقع الدرج على اليمين أسفل M7A-001 ويربط المدخل بالطابق العلوي. تقع المصاعد على يسار المدخل. الخريطة توضيحية وغير مرسومة بمقياس.',topMapTitle:'خريطة الطابق العلوي',topMapDesc:'يؤدي الدرج من المدخل إلى بسطة الدرج، ثم مكاتب أعضاء هيئة التدريس، ثم منطقة الجلوس. الخريطة توضيحية وغير مرسومة بمقياس.',
     hallEnd:'نهاية الردهة',studyRooms:'قاعات الدراسة',stairsUp:'الدرج ↑',elevators:'المصاعد',entrance:'المدخل',seatingArea:'منطقة الجلوس',facultyOffices:'مكاتب أعضاء هيئة التدريس',stairLanding:'بسطة الدرج',entranceGround:'↓ المدخل · الطابق الأرضي',groundMapNote:'انظر إلى داخل الردهة من المدخل. تقع M7A-001 على يمينك.',topMapNote:'يربط الدرج هذا الطابق بمدخل الطابق الأرضي.',mapHelp:'اضغط على موقع للانتقال إليه. الموقع المميز هو موقعك الحالي. الخريطة توضيحية وغير مرسومة بمقياس.',
-    aboutTitle:'حول هذه الجولة',aboutSubtitle:'جامعة الشارقة · مبنى M7A',closeInfo:'إغلاق المعلومات',aboutCopy:'اسحب للنظر حولك، ثم اضغط على سهم للانتقال إلى مساحة متصلة. يمكنك أيضًا الضغط على موقع في خريطة الجولة. في الهواتف المدعومة، يتيح لك عرض الحركة النظر حولك بتحريك جهازك.',coverage:'التغطية',coverageValue:'الطابق الأرضي + العلوي',rooms:'القاعات',roomsValue:'من M7A-001 إلى M7A-004',imagery:'الصور',imageryValue:'صور 360° بدقة كاملة',navigation:'التنقل',navigationValue:'نقاط مسار مترابطة',
+    aboutTitle:'حول هذه الجولة',aboutSubtitle:'جامعة الشارقة · مبنى M7A',closeInfo:'إغلاق المعلومات',aboutCopy:'اسحب للنظر حولك. استخدم سهمًا أرضيًا أو الخريطة للتنقل بين المواقع. في الهواتف المدعومة، يمكنك أيضًا النظر حولك بتحريك جهازك.',shareTitle:'مشاركة هذا الموقع',copyLink:'نسخ الرابط',linkCopied:'تم نسخ الرابط',copyFailed:'تعذّر نسخ الرابط.',
     tourNavigation:'التنقل في الجولة',navigationTitle:'اضغط على سهم أرضي للانتقال · مسافة للخلف: رجوع · الرئيسية: إعادة ضبط العرض',back:'رجوع',loadingM7A:'جارٍ تحميل M7A',loading:'جارٍ تحميل M7A…',loadingPct:p=>`جارٍ تحميل M7A · ${p}%`,preparing:'جارٍ تجهيز مشهد M7A…',stillLoading:'لا يزال تحميل M7A جاريًا…',
     drag:'اسحب للنظر حولك.',moveOrDrag:'حرّك هاتفك أو اسحب للنظر حولك.',tapArrow:'اضغط على سهم أرضي للانتقال.',goTo:n=>`الانتقال إلى ${n}`,downstairs:'إلى الأسفل · المدخل',upstairs:'إلى الأعلى · بسطة الدرج',loadingNext:'جارٍ تحميل المشهد التالي…',loadingNextPct:p=>`جارٍ تحميل المشهد التالي · ${p}%`,preparingNext:'جارٍ تجهيز المشهد التالي…',loadLocationError:'تعذّر تحميل هذا الموقع. حاول مرة أخرى.',
     motionOff:'تم إيقاف العرض بحركة الهاتف.',motionOn:'تم تفعيل العرض بحركة الهاتف · حرّك هاتفك للنظر حولك.',motionDenied:'لم يُسمح بالوصول إلى حركة الهاتف. لا يزال بإمكانك السحب للنظر حولك.',fullscreenUnavailable:'ملء الشاشة غير متاح في هذا المتصفح.',tourLoadError:'تعذّر تحميل الجولة.',checkConnection:'تحقق من اتصالك ثم أعد تحميل الصفحة.',retry:'إعادة المحاولة',switchLanguage:'التبديل إلى الإنجليزية'
@@ -497,6 +495,9 @@ const LOCATIONS=[
 const LOCATION_AR=[
   ['الردهة الرئيسية','المدخل'],['الردهة الرئيسية','قاعات الدراسة'],['الردهة الرئيسية','نهاية الردهة'],['الطابق العلوي','بسطة الدرج'],['الطابق العلوي','مكاتب أعضاء هيئة التدريس'],['الطابق العلوي','مكاتب أعضاء هيئة التدريس · منطقة الجلوس'],['الطابق الأرضي','M7A-001'],['الطابق الأرضي','M7A-004'],['الطابق الأرضي','M7A-003'],['الطابق الأرضي','M7A-002']
 ];
+const requestedScene=new URLSearchParams(location.search).get('scene');
+const requestedSceneIndex=LOCATIONS.findIndex(loc=>loc.id===requestedScene);
+const INITIAL_SCENE=requestedSceneIndex>=0?requestedSceneIndex:0;
 
 const FLOOR_Y=0.03;
 
@@ -772,6 +773,9 @@ function tween(ms, update){
 
 
 const previous=document.getElementById('previous');
+const shareScene=document.getElementById('share-scene');
+const sceneLinkElement=document.getElementById('scene-link');
+const shareLocation=document.getElementById('share-location');
 function localizedLocation(i=current){
   const loc=LOCATIONS[i];
   if(currentLanguage==='ar'&&LOCATION_AR[i])return {area:LOCATION_AR[i][0],name:LOCATION_AR[i][1]};
@@ -782,12 +786,20 @@ function backTarget(){return LOCATIONS[current]?.back ?? null;}
 function floorLabel(i=current){
   return LOCATIONS[i]?.area==='Top Floor'?t('topFloorBadge'):t('groundFloorBadge');
 }
+function sceneLink(i=current){
+  const url=new URL(location.href);url.search='';url.hash='';url.searchParams.set('scene',LOCATIONS[i].id);return url.href;
+}
+function updateSceneShare(){
+  const url=sceneLink();
+  shareLocation.textContent=locationLabel();sceneLinkElement.href=url;sceneLinkElement.textContent=url;
+}
 function updateControls(){
   previous.disabled=!ready || transitioning || backTarget()==null;
   document.getElementById('route-label').textContent=locationLabel();
   floorBadge.textContent=floorLabel();
   updateMap();
   updateGuidance();
+  updateSceneShare();
 }
 function applyLanguage(persist=true){
   document.documentElement.lang=currentLanguage;
@@ -807,6 +819,18 @@ function applyLanguage(persist=true){
   if(persist)try{localStorage.setItem(languageKey,currentLanguage);}catch{}
 }
 languageToggle.onclick=()=>{currentLanguage=currentLanguage==='en'?'ar':'en';applyLanguage();};
+shareScene.onclick=async()=>{
+  const url=sceneLink();
+  try{
+    if(navigator.clipboard?.writeText)await navigator.clipboard.writeText(url);
+    else{
+      const field=document.createElement('textarea');field.value=url;field.style.position='fixed';field.style.opacity='0';document.body.append(field);field.select();
+      const copied=document.execCommand('copy');field.remove();if(!copied)throw new Error('copy failed');
+    }
+    const message=t('linkCopied');shareScene.textContent=message;document.getElementById('status').textContent=message+'.';
+    setTimeout(()=>{if(shareScene.textContent===message)shareScene.textContent=t('copyLink');if(document.getElementById('status').textContent===message+'.')document.getElementById('status').textContent='';},1400);
+  }catch{document.getElementById('status').textContent=t('copyFailed');}
+};
 function resetView(){
   const bearing=LOCATIONS[current]?.view ?? LOCATIONS[current]?.routes?.[0]?.angle ?? 0;
   yaw=-bearing;pitch=0;camera.fov=72;camera.updateProjectionMatrix();camera.rotation.set(pitch,yaw,0);
@@ -1134,11 +1158,11 @@ const tourWorker='serviceWorker' in navigator
       .then(()=>navigator.serviceWorker.ready)
       .catch(err=>{console.warn('Offline cache unavailable',err);return null;})
   : Promise.resolve(null);
-loadCheckpoint(0,null,p=>setInitialProgress(p)).then(()=>{
+loadCheckpoint(INITIAL_SCENE,null,p=>setInitialProgress(p)).then(()=>{
   setInitialProgress(1);scheduleLikelyPreload();
   // Backfill the first panorama from HTTP cache if it loaded before worker activation.
   tourWorker.then(registration=>registration?.active?.postMessage({
-    type:'CACHE_VIEWED_PANORAMA',url:new URL(DATA[0],location.href).href
+    type:'CACHE_VIEWED_PANORAMA',url:new URL(DATA[INITIAL_SCENE],location.href).href
   })).catch(err=>console.warn('Initial panorama cache unavailable',err));
 }).catch(err=>{
   loading.classList.remove('done');loading.style.display='grid';loading.innerHTML='<div class="loading-card error"><b>'+t('tourLoadError')+'</b><p>'+t('checkConnection')+'</p><button class="tool" onclick="location.reload()" aria-label="'+t('retry')+'">↻</button></div>';
