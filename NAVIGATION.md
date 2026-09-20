@@ -46,8 +46,6 @@ The **Inspect route** selector faces each route for visual inspection.
 - Profile decoding and GPU upload on a physical iPhone before claiming the
   reported freeze is fixed. The standalone `panoramas-mobile` JPEGs exist but
   the current runtime still loads mobile GLBs.
-- Add keyboard-accessible destination controls and touch-visible destination
-  labels; the current destination tooltips rely on hovering over canvas arrows.
 - Add distinct M7A-002 photography and further checkpoints if available.
 
 This release preserves the existing arrow shape, colours, initial view, layout
@@ -55,3 +53,28 @@ and navigation behaviour. It corrects route bearings and labels the
 post-download phase “Preparing … view” instead of showing “Loading 100%”.
 It does not claim to eliminate the decode stall. The shell cache version changes
 without invalidating downloaded panorama assets.
+
+## Map, labels and first-visit guidance
+
+- The existing map locations (including both stairs links) are now buttons.
+  Tap or use Enter/Space to visit any checkpoint, including another floor.
+  The current location is marked and cannot be selected again. Elevators remain
+  informational because the tour has no elevator checkpoint.
+- Map jumps reuse the existing panorama loading, error recovery and fade, with
+  the destination's original opening view. Floor-arrow travel and the Back
+  button still follow the original route graph. Repeated taps during travel
+  are ignored.
+- A single HTML destination pill follows the arrow within roughly 26 degrees
+  of the viewing direction. Desktop hovering can select a different visible
+  arrow. Labels hide while dragging, travelling, or viewing a panel, and avoid
+  the header and bottom controls. They do not trigger extra downloads.
+- The existing bottom hint becomes a first-visit guide: look around, then tap
+  an arrow. It fades after the first successful move, and completion is stored
+  locally for this tour path. Failed moves do not dismiss it. If browser storage
+  is unavailable, guidance still works for the current visit.
+- The local browser harness additionally checks every map destination, duplicate
+  taps, invalid destinations, failed-load recovery, guidance completion and
+  destination-label visibility. One simulated load error is expected in its log.
+
+The new controls retain the existing colours, map drawing, arrow meshes,
+panorama assets, mobile resolution budget and edge smoothing.

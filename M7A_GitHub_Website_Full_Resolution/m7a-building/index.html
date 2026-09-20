@@ -59,6 +59,8 @@
 
   .bottom{position:fixed;z-index:20;left:50%;bottom:max(clamp(14px,2vw,24px),env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:9px;width:min(720px,calc(100% - 24px));pointer-events:none}
   #hint{max-width:100%;padding:7px 13px;border:1px solid rgba(192,244,240,.16);border-radius:999px;background:rgba(2,42,46,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 6px 22px rgba(0,0,0,.2);font-size:11px;font-weight:550;color:#eefdfc;text-align:center;text-shadow:0 1px 4px rgba(0,0,0,.4);transition:opacity .25s ease,transform .25s ease}
+  #hint.guidance-active{border-color:rgba(153,240,223,.6);background:rgba(2,65,69,.92);box-shadow:0 0 0 2px rgba(121,255,224,.08)}
+  #hint.guidance-done,body.moving #hint.guidance-done{opacity:0;visibility:hidden;transform:translateY(3px);transition:opacity .25s ease,transform .25s ease,visibility 0s linear .25s}
   .nav{pointer-events:auto;display:flex;align-items:center;gap:9px;padding:7px;border:1px solid var(--line);border-radius:17px;background:var(--glass-strong);box-shadow:var(--shadow);backdrop-filter:blur(20px) saturate(120%);-webkit-backdrop-filter:blur(20px) saturate(120%)}
   .step{height:42px;border:0;border-radius:12px;padding:0 13px;background:rgba(255,255,255,.065);display:flex;align-items:center;gap:8px;font-size:12px;font-weight:650;transition:background .16s ease,transform .16s ease}
   .step:hover:not(:disabled){background:rgba(121,213,208,.14)}
@@ -68,7 +70,7 @@
   .location-dot{width:8px;height:8px;flex:none;border-radius:50%;background:#79ffe0;box-shadow:0 0 0 4px rgba(121,255,224,.18),0 0 16px rgba(121,255,224,.62),0 0 28px rgba(45,232,171,.44)}
   #route-label{overflow:hidden;text-overflow:ellipsis;text-shadow:0 0 10px rgba(121,255,224,.22)}
 
-  #route-tip{position:fixed;z-index:25;left:0;top:0;pointer-events:none;opacity:0;transform:translate(-50%,-100%) translateY(-12px) scale(.96);padding:8px 11px;border:1px solid rgba(196,246,243,.2);border-radius:11px;background:rgba(0,48,53,.94);box-shadow:0 10px 28px rgba(0,0,0,.3);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);font-size:10px;font-weight:650;color:#f1fffe;white-space:nowrap;transition:opacity .12s ease,transform .12s ease}
+  #route-tip{position:fixed;z-index:25;left:0;top:0;pointer-events:none;opacity:0;transform:translate(-50%,-100%) translateY(-12px) scale(.96);padding:8px 11px;border:1px solid rgba(196,246,243,.2);border-radius:11px;background:rgba(0,48,53,.94);box-shadow:0 10px 28px rgba(0,0,0,.3);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);font-size:10px;font-weight:650;color:#f1fffe;white-space:nowrap;max-width:min(240px,calc(100vw - 32px));overflow:hidden;text-overflow:ellipsis;transition:opacity .12s ease,transform .12s ease}
   #route-tip.show{opacity:1;transform:translate(-50%,-100%) translateY(-16px) scale(1)}
   #route-tip:after{content:"";position:absolute;left:50%;bottom:-5px;width:9px;height:9px;background:rgba(0,48,53,.94);border-right:1px solid rgba(196,246,243,.2);border-bottom:1px solid rgba(196,246,243,.2);transform:translateX(-50%) rotate(45deg)}
 
@@ -82,6 +84,11 @@
   .map-corridor{fill:rgba(121,213,208,.06);stroke:rgba(121,213,208,.14);stroke-width:1}
   .map-edge{stroke:#74bbb7;stroke-width:3;stroke-linecap:round;opacity:.5}.map-edge.stairs{stroke-dasharray:4 5;opacity:.8}
   .map-node circle{fill:#153f43;stroke:#8bd8d3;stroke-width:2}.map-node text{fill:#e8faf8;font:600 11px Inter,system-ui,sans-serif;text-anchor:middle}.map-node .map-room{fill:#123d42;stroke:#528a8b;stroke-width:1}.map-node.current circle{fill:#70f0d3;stroke:#e8fffa;stroke-width:3;filter:drop-shadow(0 0 5px rgba(112,240,211,.65))}.map-node.current .map-room{fill:#11594f;stroke:#70f0d3;stroke-width:2}.map-node.current text{fill:#fff;font-weight:800}.map-floor-cue{fill:#a9ded9;font:600 10px Inter,system-ui,sans-serif}.map-caption{fill:#79aaa9;font:500 9px Inter,system-ui,sans-serif;text-anchor:middle}
+  .map-node[role="button"]{cursor:pointer;outline:none}
+  .map-node[aria-disabled="true"]{cursor:default}
+  .map-node:not([aria-disabled="true"]):hover .map-room,.map-node:focus-visible .map-room{stroke:#b6fff1;stroke-width:2}
+  .map-node:focus-visible circle:not(.map-hit){stroke:#fff;stroke-width:4}
+  .map-node .map-hit{fill:transparent;stroke:none;filter:none;pointer-events:all}
   .map-note{margin:10px 2px 0;color:#b9d9d6;font-size:10px;line-height:1.5}
   .info-copy{color:#def4f2;font-size:11px;line-height:1.55}.info-copy p{margin:0 0 10px}.info-facts{display:grid;grid-template-columns:1fr 1fr;gap:7px}.info-fact{padding:9px;border-radius:11px;background:rgba(255,255,255,.055);border:1px solid rgba(190,241,237,.1)}.info-fact b{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#9bd9d5;margin-bottom:3px}.info-fact span{font-size:10px;color:#f4fffd}
   .info-tool{font-family:Georgia,serif;font-weight:700;font-style:italic}
@@ -115,7 +122,7 @@
     .nav{padding:6px;border-radius:15px;width:auto;max-width:100%;gap:6px}
     .step{width:40px;height:40px;padding:0;justify-content:center;font-size:0}.step span{font-size:18px}
     .location-chip{min-height:40px;max-width:calc(100vw - 88px);padding:0 10px;font-size:9px}
-    #route-tip{display:none}
+    #route-tip{font-size:10px;padding:7px 10px}
     #status{top:max(70px,calc(env(safe-area-inset-top) + 64px));font-size:10px}
   }
   @media(max-width:390px){.brand{max-width:calc(100vw - 202px)}.tool{width:33px;height:33px}.tools{gap:2px}.brand strong{font-size:15px}.brand small{font-size:8px}}
@@ -151,7 +158,7 @@
     <button id="map-tab-top" class="map-tab" data-map-floor="top" role="tab" aria-controls="map-top" aria-selected="false" tabindex="-1">Top Floor</button>
   </div>
   <div id="map-ground" class="map-floor active" data-floor-view="ground" role="tabpanel" aria-labelledby="map-tab-ground">
-    <svg class="map-canvas" viewBox="0 0 340 300" role="img" aria-labelledby="ground-map-title ground-map-desc">
+    <svg class="map-canvas" viewBox="0 0 340 300" role="group" aria-labelledby="ground-map-title ground-map-desc">
       <title id="ground-map-title">Ground floor map</title>
       <desc id="ground-map-desc">Facing into the hallway from the entrance at the bottom: M7A-001 is on the right and M7A-004 is on the left at Study Rooms. At Hall End, M7A-003 is on the left and M7A-002 is on the right. The stairs are on the right below M7A-001 and connect the entrance to the top floor. Elevators are on the left of the entrance. Schematic, not to scale.</desc>
       <rect class="map-corridor" x="145" y="39" width="50" height="218" rx="22"/>
@@ -163,8 +170,8 @@
       <g class="map-node" data-location="6"><rect class="map-room" x="236" y="139" width="88" height="42" rx="10"/><text x="280" y="164">M7A-001</text></g>
       <g class="map-node" data-location="1"><circle cx="170" cy="160" r="8"/><text x="170" y="127">Study Rooms</text></g>
       <path class="map-edge stairs" d="M170 242H236"/>
-      <rect class="map-corridor" x="236" y="221" width="88" height="42" rx="10"/>
-      <text class="map-floor-cue" x="280" y="239" text-anchor="middle">Stairs ↑</text><text class="map-floor-cue" x="280" y="253" text-anchor="middle">Top Floor</text>
+      <g class="map-node" data-location="3"><rect class="map-room" x="236" y="221" width="88" height="42" rx="10"/>
+      <text class="map-floor-cue" x="280" y="239" text-anchor="middle">Stairs ↑</text><text class="map-floor-cue" x="280" y="253" text-anchor="middle">Top Floor</text></g>
       <path class="map-edge" d="M104 242H158"/>
       <rect class="map-corridor" x="16" y="221" width="88" height="42" rx="10"/>
       <text class="map-floor-cue" x="60" y="239" text-anchor="middle">↑ ↓</text><text class="map-floor-cue" x="60" y="253" text-anchor="middle">Elevators</text>
@@ -174,7 +181,7 @@
     <div class="map-note">Facing into the hall from the entrance. M7A-001 is on your right.</div>
   </div>
   <div id="map-top" class="map-floor" data-floor-view="top" role="tabpanel" aria-labelledby="map-tab-top">
-    <svg class="map-canvas" viewBox="0 0 340 300" role="img" aria-labelledby="top-map-title top-map-desc">
+    <svg class="map-canvas" viewBox="0 0 340 300" role="group" aria-labelledby="top-map-title top-map-desc">
       <title id="top-map-title">Top floor map</title>
       <desc id="top-map-desc">Stairs from the entrance lead to Stair Landing, then Faculty Offices, then Seating Area. Schematic, not to scale.</desc>
       <rect class="map-corridor" x="57" y="35" width="46" height="222" rx="22"/>
@@ -183,17 +190,17 @@
       <g class="map-node" data-location="4"><rect class="map-room" x="125" y="126" width="190" height="42" rx="10"/><circle cx="80" cy="147" r="9"/><text x="220" y="151">Faculty Offices</text></g>
       <g class="map-node" data-location="3"><rect class="map-room" x="125" y="215" width="190" height="42" rx="10"/><circle cx="80" cy="236" r="9"/><text x="220" y="240">Stair Landing</text></g>
       <path class="map-edge stairs" d="M80 247V275"/>
-      <text class="map-floor-cue" x="109" y="281">↓ Entrance · Ground Floor</text>
+      <g class="map-node" data-location="0"><rect class="map-hit" x="103" y="259" width="221" height="40"/><text class="map-floor-cue" x="109" y="281" style="text-anchor:start">↓ Entrance · Ground Floor</text></g>
     </svg>
     <div class="map-note">The stairs connect this floor to the ground-floor entrance.</div>
   </div>
-  <div class="map-note">Schematic · not to scale. Use the arrows in the tour to move.</div>
+  <div class="map-note">Tap a location to go there. Highlighted location = you are here. Schematic · not to scale.</div>
 </aside>
 
 <aside id="info-panel" class="panel" aria-hidden="true" aria-label="Tour information">
   <div class="panel-head"><div><strong>About this tour</strong><small>University of Sharjah · Building M7A</small></div><button class="panel-close" data-close-panel aria-label="Close information">×</button></div>
   <div class="info-copy">
-    <p>Drag to look around, then tap an arrow to move to a connected space. On supported phones, motion view lets you look around by moving your device.</p>
+    <p>Drag to look around, then tap an arrow to move to a connected space. You can also tap a location on the tour map. On supported phones, motion view lets you look around by moving your device.</p>
     <div class="info-facts">
       <div class="info-fact"><b>Coverage</b><span>Ground + Top Floor</span></div>
       <div class="info-fact"><b>Rooms</b><span>M7A-001 to M7A-004</span></div>
@@ -203,9 +210,9 @@
   </div>
 </aside>
 <div id="status" role="status" aria-live="polite"></div>
-<div id="route-tip" role="tooltip"></div>
+<div id="route-tip" role="tooltip" aria-hidden="true"></div>
 <div class="bottom">
-  <div id="hint">Drag to look around · tap an arrow to move</div>
+  <div id="hint" role="status" aria-live="polite">Drag to look around</div>
   <nav class="nav" aria-label="Tour navigation" title="Tap a floor arrow to move · Backspace: back · Home: reset view">
     <button id="previous" class="step" disabled><span aria-hidden="true">←</span> Back</button>
     <div class="location-chip" aria-live="polite"><span class="location-dot" aria-hidden="true"></span><span id="route-label">Main Hall · Entrance</span></div>
@@ -457,6 +464,27 @@ const LOCATIONS=[
 
 const FLOOR_Y=0.03;
 
+// Guidance uses local storage only; restricted/private storage must never block a tour.
+const hint=document.getElementById('hint');
+const guidanceKey='m7a-guidance-v1:'+location.pathname.replace(/[^/]*$/,'');
+let guidanceDone=false,guidanceLooked=false;
+try{guidanceDone=localStorage.getItem(guidanceKey)==='done';}catch{}
+function updateGuidance(){
+  hint.classList.toggle('guidance-active',!guidanceDone);
+  hint.classList.toggle('guidance-done',guidanceDone);
+  hint.setAttribute('aria-hidden',String(guidanceDone));
+  if(!guidanceDone)hint.textContent=guidanceLooked?'Tap a floor arrow to move.':motionEnabled?'Move your phone or drag to look around.':'Drag to look around.';
+}
+function noteLookAround(){
+  if(guidanceDone||guidanceLooked)return;
+  guidanceLooked=true;updateGuidance();
+}
+function completeGuidance(){
+  if(guidanceDone)return;
+  guidanceDone=true;updateGuidance();
+  try{localStorage.setItem(guidanceKey,'done');}catch{}
+}
+
 const mapPanel=document.getElementById('map-panel');
 const infoPanel=document.getElementById('info-panel');
 const mapToggle=document.getElementById('map-toggle');
@@ -464,16 +492,20 @@ const infoToggle=document.getElementById('info-toggle');
 function closePanels(){
   for(const [panel,button] of [[mapPanel,mapToggle],[infoPanel,infoToggle]]){
     panel.classList.remove('open');panel.setAttribute('aria-hidden','true');button.setAttribute('aria-pressed','false');
+    panel.inert=true;
   }
+  if(ready)updateRouteLabel();
 }
 function togglePanel(panel,button){
   const open=!panel.classList.contains('open');
   closePanels();
-  if(open){panel.classList.add('open');panel.setAttribute('aria-hidden','false');button.setAttribute('aria-pressed','true');}
+  if(open){panel.inert=false;panel.classList.add('open');panel.setAttribute('aria-hidden','false');button.setAttribute('aria-pressed','true');}
+  updateRouteLabel();
 }
 mapToggle.onclick=()=>togglePanel(mapPanel,mapToggle);
 infoToggle.onclick=()=>togglePanel(infoPanel,infoToggle);
-document.querySelectorAll('[data-close-panel]').forEach(btn=>btn.addEventListener('click',closePanels));
+document.querySelectorAll('[data-close-panel]').forEach(btn=>btn.addEventListener('click',()=>{const opener=btn.closest('aside')===mapPanel?mapToggle:infoToggle;closePanels();opener.focus();updateRouteLabel();}));
+mapPanel.inert=true;infoPanel.inert=true;
 function setMapFloor(floor){
   document.querySelectorAll('[data-floor-view]').forEach(el=>el.classList.toggle('active',el.dataset.floorView===floor));
   document.querySelectorAll('[data-map-floor]').forEach(btn=>{
@@ -490,10 +522,41 @@ document.querySelectorAll('[data-map-floor]').forEach(btn=>btn.addEventListener(
 }));
 function updateMap(){
   document.getElementById('map-current-location').textContent=locationLabel();
-  document.querySelectorAll('.map-node.current').forEach(node=>node.classList.remove('current'));
-  document.querySelectorAll('.map-node[data-location="'+current+'"]').forEach(node=>node.classList.add('current'));
+  document.querySelectorAll('.map-node[data-location]').forEach(node=>{
+    const here=Number(node.dataset.location)===current;
+    const disabled=here||!ready||transitioning;
+    node.classList.toggle('current',here);
+    node.setAttribute('aria-disabled',String(disabled));node.tabIndex=disabled?-1:0;
+    if(here)node.setAttribute('aria-current','location');else node.removeAttribute('aria-current');
+  });
   setMapFloor(LOCATIONS[current]?.area==='Top Floor'?'top':'ground');
 }
+
+async function navigateFromMap(target){
+  if(!ready||transitioning||!Number.isInteger(target)||!LOCATIONS[target]||target===current)return false;
+  closePanels();mapToggle.focus({preventScroll:true});
+  return transitionTo(target,null,true);
+}
+document.querySelectorAll('.map-node[data-location]').forEach(node=>{
+  const target=Number(node.dataset.location);
+  node.setAttribute('role','button');node.setAttribute('aria-label','Go to '+locationLabel(target));
+  // Invisible touch padding keeps the drawing unchanged, including small hallway dots.
+  const shape=node.querySelector('circle,rect');
+  if(shape&&!shape.classList.contains('map-hit')){
+    const hit=document.createElementNS('http://www.w3.org/2000/svg','rect');
+    const circle=shape.tagName.toLowerCase()==='circle';
+    const width=circle?48:Math.max(48,Number(shape.getAttribute('width')));
+    const height=circle?48:Math.max(48,Number(shape.getAttribute('height')));
+    hit.setAttribute('x',circle?Number(shape.getAttribute('cx'))-width/2:Number(shape.getAttribute('x'))-(width-Number(shape.getAttribute('width')))/2);
+    hit.setAttribute('y',circle?Number(shape.getAttribute('cy'))-height/2:Number(shape.getAttribute('y'))-(height-Number(shape.getAttribute('height')))/2);
+    hit.setAttribute('width',width);hit.setAttribute('height',height);hit.setAttribute('class','map-hit');node.prepend(hit);
+  }
+  node.addEventListener('click',()=>navigateFromMap(target));
+  node.addEventListener('keydown',event=>{
+    if(event.key!=='Enter'&&event.key!==' ')return;
+    event.preventDefault();event.stopPropagation();navigateFromMap(target);
+  });
+});
 
 const panoramaGeometry=new THREE.SphereGeometry(10,192,96);
 panoramaGeometry.scale(-1,1,1);panoramaGeometry.rotateY(Math.PI/2);
@@ -616,11 +679,40 @@ function checkHotspotHover(clientX, clientY){
   hoverHotspot = hits.length ? hotspotRootFromHit(hits[0].object) : null;
   el.style.cursor = hoverHotspot ? 'pointer' : (dragging ? 'grabbing' : 'grab');
   const route=hoverHotspot?.userData?.route ?? null;
-  if(route && !coarsePointer){
-    routeTip.textContent='Go to '+route.label;
-    routeTip.style.left=clientX+'px';routeTip.style.top=clientY+'px';routeTip.classList.add('show');
-    queueRoutePreload(route.to);
-  }else routeTip.classList.remove('show');
+  if(route&&!coarsePointer)queueRoutePreload(route.to);
+  updateRouteLabel();
+}
+
+const labelPoint=new THREE.Vector3(),labelFacing=new THREE.Vector3();
+let labelBounds={top:120,bottom:innerHeight-120};
+function measureLabelBounds(){
+  labelBounds.top=document.querySelector('.topbar').getBoundingClientRect().bottom+48;
+  labelBounds.bottom=document.querySelector('.bottom').getBoundingClientRect().top-8;
+}
+function updateRouteLabel(){
+  if(!ready||transitioning||dragging||mapPanel.classList.contains('open')||infoPanel.classList.contains('open')){routeTip.classList.remove('show');routeTip.setAttribute('aria-hidden','true');return;}
+  camera.updateMatrixWorld();camera.getWorldDirection(labelFacing);
+  const bearing=Math.atan2(labelFacing.x,-labelFacing.z);
+  let selected=null,best=Infinity,position=null;
+  for(const root of hotspotRoots){
+    if(!root.visible||!root.userData.route)continue;
+    const delta=Math.abs(wrapAngle(root.userData.route.angle-bearing));
+    const hovered=!coarsePointer&&root===hoverHotspot;
+    if(!hovered&&delta>0.45)continue;
+    labelPoint.copy(root.position).project(camera);
+    const x=(labelPoint.x+1)*innerWidth/2,y=(1-labelPoint.y)*innerHeight/2;
+    if(labelPoint.z< -1||labelPoint.z>1||x<24||x>innerWidth-24||y<labelBounds.top||y>labelBounds.bottom)continue;
+    const score=hovered?-1:delta;
+    if(score<best){best=score;selected=root;position={x,y};}
+  }
+  if(!selected){routeTip.classList.remove('show');routeTip.setAttribute('aria-hidden','true');return;}
+  const route=selected.userData.route;
+  const name=LOCATIONS[route.to].name.replace('Faculty Offices · ','');
+  const text=route.kind==='stairs'?(route.to===0?'Downstairs · Entrance':'Upstairs · Stair Landing'):name;
+  if(routeTip.textContent!==text)routeTip.textContent=text;
+  const halfWidth=routeTip.offsetWidth/2+12;
+  routeTip.style.left=THREE.MathUtils.clamp(position.x,halfWidth,innerWidth-halfWidth)+'px';
+  routeTip.style.top=(position.y-12)+'px';routeTip.classList.add('show');routeTip.setAttribute('aria-hidden','false');
 }
 
 function setCanvasFx(scale=1, blur=0, opacity=1){
@@ -653,7 +745,7 @@ function updateControls(){
   document.getElementById('route-label').textContent=locationLabel();
   floorBadge.textContent=floorLabel();
   updateMap();
-  document.getElementById('hint').textContent=motionEnabled?'Move your phone or drag to look around · tap an arrow to move':'Drag to look around · tap an arrow to move';
+  updateGuidance();
 }
 function resetView(){
   const bearing=LOCATIONS[current]?.view ?? LOCATIONS[current]?.routes?.[0]?.angle ?? 0;
@@ -759,8 +851,9 @@ const travelFrame=document.getElementById('travel-frame');
 const travelContext=travelFrame.getContext('2d');
 function routeFromTo(from,to){return LOCATIONS[from]?.routes?.find(r=>r.to===to) ?? null;}
 function wrapAngle(a){return THREE.MathUtils.euclideanModulo(a+Math.PI,Math.PI*2)-Math.PI;}
-async function transitionTo(i,selectedRoute=null){
-  const route=selectedRoute ?? routeFromTo(current,i);
+async function transitionTo(i,selectedRoute=null,fromMap=false){
+  // Map jumps reuse the existing load, rollback and fade; arrow travel stays connected.
+  const route=selectedRoute ?? routeFromTo(current,i) ?? (fromMap?{to:i,angle:-yaw}:null);
   if(!ready || transitioning || i<0 || i>=DATA.length || i===current || !route)return;
   const from=current,oldYaw=yaw,oldPitch=pitch,oldFov=camera.fov;
   const bearing=route.angle;
@@ -768,9 +861,9 @@ async function transitionTo(i,selectedRoute=null){
   const relativeView=wrapAngle(oldViewBearing-bearing);
   const returnRoute=routeFromTo(i,from);
   const arrivalForward=returnRoute ? returnRoute.angle+Math.PI : (LOCATIONS[i]?.view ?? 0);
-  const arrivalYaw=-(arrivalForward+relativeView);
+  const arrivalYaw=fromMap?-(LOCATIONS[i]?.view??0):-(arrivalForward+relativeView);
   const facingTravel=Math.cos(oldYaw+bearing);
-  transitioning=true;el.title='';dragging=false;gesture=null;touches.clear();pinchDistance=null;hoverHotspot=null;routeTip.classList.remove('show');updateControls();
+  transitioning=true;el.title='';dragging=false;gesture=null;touches.clear();pinchDistance=null;hoverHotspot=null;routeTip.classList.remove('show');routeTip.setAttribute('aria-hidden','true');updateControls();
   document.body.classList.add('moving');app.setAttribute('aria-busy','true');el.style.cursor='progress';
   const status=document.getElementById('status');status.textContent='';
 
@@ -827,15 +920,16 @@ async function transitionTo(i,selectedRoute=null){
     }
     clearTimeout(slowLoad);status.textContent='';
     await loadCheckpoint(i,prepared);
-    yaw=arrivalYaw;pitch=oldPitch;camera.fov=oldFov;camera.updateProjectionMatrix();camera.rotation.set(pitch,yaw,0);
+    yaw=arrivalYaw;pitch=fromMap?0:oldPitch;camera.fov=oldFov;camera.updateProjectionMatrix();camera.rotation.set(pitch,yaw,0);
     if(coarsePointer){updateHotspotVisuals(performance.now());renderer.render(scene,camera);}
     await tween(reducedMotion?100:(coarsePointer?180:220),(e,t)=>{
-      if(!reducedMotion){
+      if(!reducedMotion&&!fromMap){
         const push=1+0.075*e*Math.max(0.35,facingTravel);
         travelFrame.style.transform='scale('+push+')';
       }
       travelFrame.style.opacity=String(1-THREE.MathUtils.smoothstep(t,reducedMotion?0:0.08,1));
     });
+    completeGuidance();return true;
   }catch(err){
     console.error(err);
     status.textContent='This location could not load. Please try again.';
@@ -869,7 +963,7 @@ el.addEventListener('pointermove',e=>{
   if(gesture && gesture.id===e.pointerId){
     const dx=e.clientX-gesture.x,dy=e.clientY-gesture.y;
     if(Math.hypot(dx,dy)>8)gesture.moved=true;
-    if(gesture.moved){yaw=gesture.yaw-dx*0.004;pitch=THREE.MathUtils.clamp(gesture.pitch-dy*0.004,-1.45,1.45);camera.rotation.set(pitch,yaw,0);}
+    if(gesture.moved){noteLookAround();yaw=gesture.yaw-dx*0.004;pitch=THREE.MathUtils.clamp(gesture.pitch-dy*0.004,-1.45,1.45);camera.rotation.set(pitch,yaw,0);}
   }
   checkHotspotHover(e.clientX,e.clientY);
 });
@@ -881,13 +975,14 @@ function release(e,cancelled=false){
 el.addEventListener('pointerup',e=>release(e));
 el.addEventListener('pointercancel',e=>release(e,true));
 el.addEventListener('lostpointercapture',()=>{gesture=null;dragging=false;});
-el.addEventListener('pointerleave',()=>{hoverHotspot=null;routeTip.classList.remove('show');el.title='';el.style.cursor='grab';});
+el.addEventListener('pointerleave',()=>{hoverHotspot=null;updateRouteLabel();el.title='';el.style.cursor='grab';});
 
 // Optional phone-motion view. It is calibrated to the current camera direction,
 // so enabling it never snaps the visitor to an unrelated bearing.
 const motion=document.getElementById('motion');
 let motionEnabled=false, motionNeedsCalibrate=true;
 const motionReference=new THREE.Quaternion();
+const guidanceOrientation=new THREE.Quaternion();
 const sensorEuler=new THREE.Euler();
 const sensorQuat=new THREE.Quaternion();
 const sensorCorrection=new THREE.Quaternion(-Math.sqrt(0.5),0,0,Math.sqrt(0.5));
@@ -908,8 +1003,9 @@ function deviceQuaternion(e){
 addEventListener('deviceorientation',e=>{
   if(!motionEnabled || dragging || transitioning)return;
   const q=deviceQuaternion(e);if(!q)return;
-  if(motionNeedsCalibrate){motionReference.copy(camera.quaternion).multiply(q.clone().invert());motionNeedsCalibrate=false;}
+  if(motionNeedsCalibrate){guidanceOrientation.copy(camera.quaternion);motionReference.copy(camera.quaternion).multiply(q.clone().invert());motionNeedsCalibrate=false;}
   camera.quaternion.copy(motionReference).multiply(q);
+  if(!guidanceDone&&!guidanceLooked&&guidanceOrientation.angleTo(camera.quaternion)>0.10)noteLookAround();
   yaw=camera.rotation.y;pitch=camera.rotation.x;
 },true);
 if(screen.orientation?.addEventListener)screen.orientation.addEventListener('change',()=>{if(motionEnabled)motionNeedsCalibrate=true;});
@@ -940,17 +1036,17 @@ const fullscreen=document.getElementById('fullscreen');
 fullscreen.hidden=!document.fullscreenEnabled;
 fullscreen.onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{document.getElementById('status').textContent='Full screen is unavailable in this browser.';}};
 document.addEventListener('fullscreenchange',()=>fullscreen.setAttribute('aria-label',document.fullscreenElement?'Exit full screen':'Full screen'));
-addEventListener('keydown',e=>{if(e.target.closest('button,input,textarea,select')||e.altKey||e.ctrlKey||e.metaKey)return;if(e.key==='Escape'&&(mapPanel.classList.contains('open')||infoPanel.classList.contains('open'))){e.preventDefault();closePanels();return;}if(e.key==='Backspace'||e.key==='Escape'){const back=backTarget();if(back!=null){e.preventDefault();routeTip.classList.remove('show');transitionTo(back);}}
+addEventListener('keydown',e=>{if(e.key==='Escape'&&(mapPanel.classList.contains('open')||infoPanel.classList.contains('open'))){e.preventDefault();const opener=mapPanel.classList.contains('open')?mapToggle:infoToggle;closePanels();opener.focus();return;}if(e.target.closest('button,input,textarea,select,[role="button"]')||e.altKey||e.ctrlKey||e.metaKey)return;if(e.key==='Backspace'||e.key==='Escape'){const back=backTarget();if(back!=null){e.preventDefault();routeTip.classList.remove('show');routeTip.setAttribute('aria-hidden','true');transitionTo(back);}}
   if(e.key==='Home' && ready && !transitioning){e.preventDefault();resetView();}
   if(e.key==='+' || e.key==='='){e.preventDefault();zoom(-8);}
   if(e.key==='-'){e.preventDefault();zoom(8);}
 });
-updateControls();
+updateControls();measureLabelBounds();
 addEventListener('resize', ()=>{
   renderQuality();
   camera.aspect=innerWidth/innerHeight;
   camera.updateProjectionMatrix();
-  renderer.setSize(innerWidth,innerHeight);
+  renderer.setSize(innerWidth,innerHeight);measureLabelBounds();
 });
 let lastMobileFrame='';
 function animate(now=0){
@@ -964,7 +1060,7 @@ function animate(now=0){
     if(frame===lastMobileFrame)return;
     lastMobileFrame=frame;
   }
-  updateHotspotVisuals(now);renderer.render(scene,camera);
+  updateHotspotVisuals(now);renderer.render(scene,camera);updateRouteLabel();
 }
 document.addEventListener('visibilitychange',()=>{lastMobileFrame='';});
 animate();
