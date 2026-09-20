@@ -13,6 +13,7 @@ const inspections=LOCATIONS.flatMap((loc,from)=>loc.routes.map(route=>({from,rou
 inspections.forEach(({from,route},n)=>{const o=document.createElement('option');o.value=n;o.textContent=from+' to '+route.to+' '+route.label;inspect.append(o)});qa.append(inspect);
 inspect.onchange=async()=>{const {from,route}=inspections[+inspect.value];await loadCheckpoint(from);yaw=-route.angle;pitch=-.30;camera.rotation.set(pitch,yaw,0);updateHotspotVisuals();renderer.render(scene,camera);};
 run.onclick=async()=>{run.disabled=true;const lines=[];const check=(v,s)=>{if(!v)throw Error(s);lines.push('PASS '+s);result.textContent=lines.join('\\n')};try{
+  currentLanguage='en';applyLanguage();
   check(LOCATIONS.length===10,'10 checkpoints');
   const tip=new THREE.Vector3(0,1,0);
   for(const {from,route} of inspections){
@@ -55,8 +56,18 @@ run.onclick=async()=>{run.disabled=true;const lines=[];const check=(v,s)=>{if(!v
   closePanels();check(routeTip.classList.contains('show'),'closing map restores destination label');
   yaw+=Math.PI;camera.rotation.set(pitch,yaw,0);updateRouteLabel();
   check(!routeTip.classList.contains('show'),'offscreen route label is hidden');
+  const languageState={current,object,yaw,pitch,fov:camera.fov};
+  togglePanel(mapPanel,mapToggle);currentLanguage='ar';applyLanguage();
+  check(document.documentElement.lang==='ar'&&document.documentElement.dir==='rtl','Arabic language and direction');
+  check(cp.textContent==='الردهة الرئيسية · المدخل'&&floorBadge.textContent==='الأرضي','Arabic checkpoint labels');
+  check(document.querySelector('[data-i18n="mapTitle"]').textContent==='خريطة جولة M7A','Arabic interface copy');
+  check(mapPanel.classList.contains('open')&&current===languageState.current&&object===languageState.object&&yaw===languageState.yaw&&pitch===languageState.pitch&&camera.fov===languageState.fov,'language switch preserves open panel and tour state');
+  check(document.querySelector('.map-node[data-location="1"]').getAttribute('aria-label').includes('قاعات الدراسة'),'Arabic map accessibility labels');
+  currentLanguage='en';applyLanguage();closePanels();
+  check(document.documentElement.lang==='en'&&cp.textContent==='Main Hall · Entrance','English restores without navigation');
   result.textContent+='\\nALL CHECKS PASSED';
 }catch(e){result.textContent+='\\nFAIL '+e.stack}finally{run.disabled=false}};
 `;
 html=html.replace(/<\/script>\s*<\/body>/,harness+'\n</script>\n</body>');
 fs.writeFileSync(path.join(root,'qa.html'),html);
+

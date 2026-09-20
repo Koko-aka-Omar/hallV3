@@ -1,5 +1,5 @@
 const CACHE_PREFIX='m7a-tour:'+self.registration.scope+':';
-const SHELL_CACHE=CACHE_PREFIX+'shell-v12';
+const SHELL_CACHE=CACHE_PREFIX+'shell-v13';
 // Bump only when panorama files change; UI releases retain full-resolution downloads.
 const PANORAMA_CACHE=CACHE_PREFIX+'panoramas-v2';
 const LEGACY_CACHE='m7a-tour-v7';
@@ -121,3 +121,4 @@ self.addEventListener('message',event=>{
     await Promise.all(writes);
   })().catch(error=>console.warn('Viewed panorama could not be cached.',error)));
 });
+

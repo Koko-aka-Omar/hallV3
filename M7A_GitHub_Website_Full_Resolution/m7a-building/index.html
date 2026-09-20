@@ -49,6 +49,8 @@
   .brand-row{display:flex;align-items:center;gap:10px;min-width:0}
   .brand strong{font-size:20px;line-height:1.05;font-weight:650;letter-spacing:-.035em;white-space:nowrap}
   .floor-badge{display:inline-flex;align-items:center;min-height:22px;padding:0 8px;border-radius:999px;border:1px solid rgba(222,251,248,.2);background:rgba(220,250,248,.1);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#dff8f6;font-weight:750;white-space:nowrap}
+  .lang-toggle{flex:none;pointer-events:auto;min-width:30px;height:24px;padding:0 7px;border:1px solid rgba(222,251,248,.28);border-radius:999px;background:rgba(223,247,245,.11);color:#effffd;font-size:10px;font-weight:800;line-height:1;transition:background .16s ease,border-color .16s ease,transform .16s ease}
+  .lang-toggle:hover{background:rgba(223,247,245,.2);border-color:rgba(222,251,248,.48)}.lang-toggle:active{transform:scale(.96)}
   .brand small{display:block;color:#d5eeee;font-size:11px;line-height:1.3;margin-top:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
   .tools{display:flex;gap:7px;pointer-events:auto;padding:4px;border:1px solid rgba(186,240,237,.16);border-radius:999px;background:rgba(1,34,38,.48);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 8px 26px rgba(0,0,0,.24)}
@@ -65,7 +67,7 @@
   .step{height:42px;border:0;border-radius:12px;padding:0 13px;background:rgba(255,255,255,.065);display:flex;align-items:center;gap:8px;font-size:12px;font-weight:650;transition:background .16s ease,transform .16s ease}
   .step:hover:not(:disabled){background:rgba(121,213,208,.14)}
   .step:active:not(:disabled){transform:scale(.97)}
-  .step span{font-size:18px}
+  .step span{font-size:18px}.step .step-label{font-size:12px}
   .location-chip{min-height:42px;max-width:min(390px,55vw);display:flex;align-items:center;gap:9px;padding:0 13px;border-radius:12px;border:1px solid rgba(174,255,237,.34);background:linear-gradient(180deg,rgba(8,133,116,.42),rgba(0,92,88,.34));color:#f3fffd;font-size:11px;font-weight:700;white-space:nowrap;box-shadow:0 0 0 1px rgba(115,255,214,.10) inset,0 0 18px rgba(58,255,197,.20),0 10px 28px rgba(0,0,0,.25)}
   .location-dot{width:8px;height:8px;flex:none;border-radius:50%;background:#79ffe0;box-shadow:0 0 0 4px rgba(121,255,224,.18),0 0 16px rgba(121,255,224,.62),0 0 28px rgba(45,232,171,.44)}
   #route-label{overflow:hidden;text-overflow:ellipsis;text-shadow:0 0 10px rgba(121,255,224,.22)}
@@ -109,18 +111,22 @@
 
   body.moving .tools,body.moving .nav{pointer-events:none}
   body.moving #hint{opacity:.55;transform:translateY(2px)}
+  html[dir="rtl"] .brand,html[dir="rtl"] .panel-head>div,html[dir="rtl"] .map-position>div,html[dir="rtl"] .map-note,html[dir="rtl"] .info-copy,html[dir="rtl"] #hint,html[dir="rtl"] #route-tip,html[dir="rtl"] #route-label{direction:rtl;text-align:right}
+  html[dir="rtl"] .topbar,html[dir="rtl"] .brand-row,html[dir="rtl"] .tools,html[dir="rtl"] .nav,html[dir="rtl"] .panel-head,html[dir="rtl"] .map-position,html[dir="rtl"] .map-tabs,html[dir="rtl"] .info-facts,html[dir="rtl"] .map-canvas{direction:ltr}
+  html[dir="rtl"] #hint{text-align:center}
+  html[dir="rtl"] .map-node text,html[dir="rtl"] .map-floor-cue{font-size:9px}
 
   @media(max-width:600px){.panel{top:max(66px,calc(env(safe-area-inset-top) + 58px));right:10px;width:min(340px,calc(100vw - 20px));padding:12px;border-radius:16px}#map-panel{max-height:calc(100dvh - 82px)}.info-copy{font-size:10px}}
   @media(max-width:600px){
     .topbar{left:10px;right:10px;top:max(10px,env(safe-area-inset-top));gap:8px}
     .brand{min-width:0;max-width:calc(100vw - 214px);padding:10px 12px 10px 14px;border-radius:15px}
     .brand .eyebrow{font-size:7px;letter-spacing:.14em;margin-bottom:5px}
-    .brand strong{font-size:16px}.floor-badge{font-size:7px;min-height:18px;padding:0 6px}.brand small{font-size:9px;margin-top:4px}
+    .brand-row{gap:5px}.brand strong{font-size:16px}.floor-badge{font-size:7px;min-height:18px;padding:0 6px}.lang-toggle{min-width:25px;height:20px;padding:0 5px;font-size:9px}.brand small{font-size:9px;margin-top:4px}
     .tools{gap:3px;padding:3px}.tool{width:36px;height:36px;font-size:16px}.tools #zoom-in,.tools #zoom-out{display:none}
     .bottom{bottom:max(10px,env(safe-area-inset-bottom));gap:7px;width:calc(100% - 20px)}
     #hint{font-size:9px;line-height:1.2;padding:6px 10px;white-space:normal}
     .nav{padding:6px;border-radius:15px;width:auto;max-width:100%;gap:6px}
-    .step{width:40px;height:40px;padding:0;justify-content:center;font-size:0}.step span{font-size:18px}
+    .step{width:40px;height:40px;padding:0;justify-content:center;font-size:0}.step span{font-size:18px}.step .step-label{display:none}
     .location-chip{min-height:40px;max-width:calc(100vw - 88px);padding:0 10px;font-size:9px}
     #route-tip{font-size:10px;padding:7px 10px}
     #status{top:max(70px,calc(env(safe-area-inset-top) + 64px));font-size:10px}
@@ -137,75 +143,75 @@
 <div id="vignette" aria-hidden="true"></div>
 <header class="topbar">
   <div class="brand">
-    <span class="eyebrow">University of Sharjah · Virtual Tour</span>
-    <div class="brand-row"><strong>M7A Building</strong><span class="floor-badge" id="floor-badge">Ground Floor</span></div>
+    <span class="eyebrow" data-i18n="eyebrow">University of Sharjah · Virtual Tour</span>
+    <div class="brand-row"><strong data-i18n="building">M7A Building</strong><span class="floor-badge" id="floor-badge">Ground Floor</span><button class="lang-toggle" id="language-toggle" type="button" aria-label="Switch to Arabic" title="العربية">ع</button></div>
     <small id="cp" aria-live="polite">Main Hall · Entrance</small>
   </div>
-  <div class="tools" aria-label="View controls">
-    <button class="tool" id="motion" title="Use phone motion" aria-label="Enable phone motion view" hidden>◎</button>
-    <button class="tool" id="map-toggle" title="Tour map" aria-label="Open tour map" aria-pressed="false">▦</button>
-    <button class="tool info-tool" id="info-toggle" title="Tour information" aria-label="Open tour information" aria-pressed="false">i</button>
-    <button class="tool" id="reset" title="Reset view" aria-label="Reset and level view">↺</button>
-    <button class="tool" id="fullscreen" title="Full screen" aria-label="Full screen">⛶</button>
+  <div class="tools" aria-label="View controls" data-i18n-aria="viewControls">
+    <button class="tool" id="motion" title="Use phone motion" aria-label="Enable phone motion view" data-i18n-title="motionTitle" hidden>◎</button>
+    <button class="tool" id="map-toggle" title="Tour map" aria-label="Open tour map" data-i18n-title="tourMap" data-i18n-aria="openMap" aria-pressed="false">▦</button>
+    <button class="tool info-tool" id="info-toggle" title="Tour information" aria-label="Open tour information" data-i18n-title="tourInfo" data-i18n-aria="openInfo" aria-pressed="false">i</button>
+    <button class="tool" id="reset" title="Reset view" aria-label="Reset and level view" data-i18n-title="resetView" data-i18n-aria="resetView">↺</button>
+    <button class="tool" id="fullscreen" title="Full screen" aria-label="Full screen" data-i18n-title="fullScreen">⛶</button>
   </div>
 </header>
 
-<aside id="map-panel" class="panel" aria-hidden="true" aria-label="Tour map">
-  <div class="panel-head"><div><strong>M7A Tour Map</strong><small>Find your place in the building</small></div><button class="panel-close" data-close-panel aria-label="Close map">×</button></div>
-  <div class="map-position"><span class="map-position-dot" aria-hidden="true"></span><div><small>You are here</small><strong id="map-current-location" aria-live="polite">Main Hall · Entrance</strong></div></div>
-  <div class="map-tabs" role="tablist" aria-label="Map floor">
-    <button id="map-tab-ground" class="map-tab active" data-map-floor="ground" role="tab" aria-controls="map-ground" aria-selected="true">Ground Floor</button>
-    <button id="map-tab-top" class="map-tab" data-map-floor="top" role="tab" aria-controls="map-top" aria-selected="false" tabindex="-1">Top Floor</button>
+<aside id="map-panel" class="panel" aria-hidden="true" aria-label="Tour map" data-i18n-aria="tourMap">
+  <div class="panel-head"><div><strong data-i18n="mapTitle">M7A Tour Map</strong><small data-i18n="mapSubtitle">Find your place in the building</small></div><button class="panel-close" data-close-panel aria-label="Close map" data-i18n-aria="closeMap">×</button></div>
+  <div class="map-position"><span class="map-position-dot" aria-hidden="true"></span><div><small data-i18n="youAreHere">You are here</small><strong id="map-current-location" aria-live="polite">Main Hall · Entrance</strong></div></div>
+  <div class="map-tabs" role="tablist" aria-label="Map floor" data-i18n-aria="mapFloor">
+    <button id="map-tab-ground" class="map-tab active" data-map-floor="ground" role="tab" aria-controls="map-ground" aria-selected="true" data-i18n="groundFloor">Ground Floor</button>
+    <button id="map-tab-top" class="map-tab" data-map-floor="top" role="tab" aria-controls="map-top" aria-selected="false" tabindex="-1" data-i18n="topFloor">Top Floor</button>
   </div>
   <div id="map-ground" class="map-floor active" data-floor-view="ground" role="tabpanel" aria-labelledby="map-tab-ground">
     <svg class="map-canvas" viewBox="0 0 340 300" role="group" aria-labelledby="ground-map-title ground-map-desc">
-      <title id="ground-map-title">Ground floor map</title>
-      <desc id="ground-map-desc">Facing into the hallway from the entrance at the bottom: M7A-001 is on the right and M7A-004 is on the left at Study Rooms. At Hall End, M7A-003 is on the left and M7A-002 is on the right. The stairs are on the right below M7A-001 and connect the entrance to the top floor. Elevators are on the left of the entrance. Schematic, not to scale.</desc>
+      <title id="ground-map-title" data-i18n="groundMapTitle">Ground floor map</title>
+      <desc id="ground-map-desc" data-i18n="groundMapDesc">Facing into the hallway from the entrance at the bottom: M7A-001 is on the right and M7A-004 is on the left at Study Rooms. At Hall End, M7A-003 is on the left and M7A-002 is on the right. The stairs are on the right below M7A-001 and connect the entrance to the top floor. Elevators are on the left of the entrance. Schematic, not to scale.</desc>
       <rect class="map-corridor" x="145" y="39" width="50" height="218" rx="22"/>
       <path class="map-edge" d="M170 242V65 M104 65H236 M104 160H236"/>
       <g class="map-node" data-location="8"><rect class="map-room" x="16" y="44" width="88" height="42" rx="10"/><text x="60" y="69">M7A-003</text></g>
       <g class="map-node" data-location="9"><rect class="map-room" x="236" y="44" width="88" height="42" rx="10"/><text x="280" y="69">M7A-002</text></g>
-      <g class="map-node" data-location="2"><circle cx="170" cy="65" r="8"/><text x="170" y="29">Hall End</text></g>
+      <g class="map-node" data-location="2"><circle cx="170" cy="65" r="8"/><text x="170" y="29" data-i18n="hallEnd">Hall End</text></g>
       <g class="map-node" data-location="7"><rect class="map-room" x="16" y="139" width="88" height="42" rx="10"/><text x="60" y="164">M7A-004</text></g>
       <g class="map-node" data-location="6"><rect class="map-room" x="236" y="139" width="88" height="42" rx="10"/><text x="280" y="164">M7A-001</text></g>
-      <g class="map-node" data-location="1"><circle cx="170" cy="160" r="8"/><text x="170" y="127">Study Rooms</text></g>
+      <g class="map-node" data-location="1"><circle cx="170" cy="160" r="8"/><text x="170" y="127" data-i18n="studyRooms">Study Rooms</text></g>
       <path class="map-edge stairs" d="M170 242H236"/>
       <g class="map-node" data-location="3"><rect class="map-room" x="236" y="221" width="88" height="42" rx="10"/>
-      <text class="map-floor-cue" x="280" y="239" text-anchor="middle">Stairs ↑</text><text class="map-floor-cue" x="280" y="253" text-anchor="middle">Top Floor</text></g>
+      <text class="map-floor-cue" x="280" y="239" text-anchor="middle" data-i18n="stairsUp">Stairs ↑</text><text class="map-floor-cue" x="280" y="253" text-anchor="middle" data-i18n="topFloor">Top Floor</text></g>
       <path class="map-edge" d="M104 242H158"/>
       <rect class="map-corridor" x="16" y="221" width="88" height="42" rx="10"/>
-      <text class="map-floor-cue" x="60" y="239" text-anchor="middle">↑ ↓</text><text class="map-floor-cue" x="60" y="253" text-anchor="middle">Elevators</text>
-      <g class="map-node" data-location="0"><circle cx="170" cy="242" r="10"/><text x="170" y="279">Entrance</text></g>
+      <text class="map-floor-cue" x="60" y="239" text-anchor="middle">↑ ↓</text><text class="map-floor-cue" x="60" y="253" text-anchor="middle" data-i18n="elevators">Elevators</text>
+      <g class="map-node" data-location="0"><circle cx="170" cy="242" r="10"/><text x="170" y="279" data-i18n="entrance">Entrance</text></g>
       <path d="M165 214L170 207L175 214" fill="none" stroke="#79aaa9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
-    <div class="map-note">Facing into the hall from the entrance. M7A-001 is on your right.</div>
+    <div class="map-note" data-i18n="groundMapNote">Facing into the hall from the entrance. M7A-001 is on your right.</div>
   </div>
   <div id="map-top" class="map-floor" data-floor-view="top" role="tabpanel" aria-labelledby="map-tab-top">
     <svg class="map-canvas" viewBox="0 0 340 300" role="group" aria-labelledby="top-map-title top-map-desc">
-      <title id="top-map-title">Top floor map</title>
-      <desc id="top-map-desc">Stairs from the entrance lead to Stair Landing, then Faculty Offices, then Seating Area. Schematic, not to scale.</desc>
+      <title id="top-map-title" data-i18n="topMapTitle">Top floor map</title>
+      <desc id="top-map-desc" data-i18n="topMapDesc">Stairs from the entrance lead to Stair Landing, then Faculty Offices, then Seating Area. Schematic, not to scale.</desc>
       <rect class="map-corridor" x="57" y="35" width="46" height="222" rx="22"/>
       <path class="map-edge" d="M80 236V61"/>
-      <g class="map-node" data-location="5"><rect class="map-room" x="125" y="40" width="190" height="42" rx="10"/><circle cx="80" cy="61" r="9"/><text x="220" y="65">Seating Area</text></g>
-      <g class="map-node" data-location="4"><rect class="map-room" x="125" y="126" width="190" height="42" rx="10"/><circle cx="80" cy="147" r="9"/><text x="220" y="151">Faculty Offices</text></g>
-      <g class="map-node" data-location="3"><rect class="map-room" x="125" y="215" width="190" height="42" rx="10"/><circle cx="80" cy="236" r="9"/><text x="220" y="240">Stair Landing</text></g>
+      <g class="map-node" data-location="5"><rect class="map-room" x="125" y="40" width="190" height="42" rx="10"/><circle cx="80" cy="61" r="9"/><text x="220" y="65" data-i18n="seatingArea">Seating Area</text></g>
+      <g class="map-node" data-location="4"><rect class="map-room" x="125" y="126" width="190" height="42" rx="10"/><circle cx="80" cy="147" r="9"/><text x="220" y="151" data-i18n="facultyOffices">Faculty Offices</text></g>
+      <g class="map-node" data-location="3"><rect class="map-room" x="125" y="215" width="190" height="42" rx="10"/><circle cx="80" cy="236" r="9"/><text x="220" y="240" data-i18n="stairLanding">Stair Landing</text></g>
       <path class="map-edge stairs" d="M80 247V275"/>
-      <g class="map-node" data-location="0"><rect class="map-hit" x="103" y="259" width="221" height="40"/><text class="map-floor-cue" x="109" y="281" style="text-anchor:start">↓ Entrance · Ground Floor</text></g>
+      <g class="map-node" data-location="0"><rect class="map-hit" x="103" y="259" width="221" height="40"/><text class="map-floor-cue" x="109" y="281" style="text-anchor:start" data-i18n="entranceGround">↓ Entrance · Ground Floor</text></g>
     </svg>
-    <div class="map-note">The stairs connect this floor to the ground-floor entrance.</div>
+    <div class="map-note" data-i18n="topMapNote">The stairs connect this floor to the ground-floor entrance.</div>
   </div>
-  <div class="map-note">Tap a location to go there. Highlighted location = you are here. Schematic · not to scale.</div>
+  <div class="map-note" data-i18n="mapHelp">Tap a location to go there. Highlighted location = you are here. Schematic · not to scale.</div>
 </aside>
 
-<aside id="info-panel" class="panel" aria-hidden="true" aria-label="Tour information">
-  <div class="panel-head"><div><strong>About this tour</strong><small>University of Sharjah · Building M7A</small></div><button class="panel-close" data-close-panel aria-label="Close information">×</button></div>
+<aside id="info-panel" class="panel" aria-hidden="true" aria-label="Tour information" data-i18n-aria="tourInfo">
+  <div class="panel-head"><div><strong data-i18n="aboutTitle">About this tour</strong><small data-i18n="aboutSubtitle">University of Sharjah · Building M7A</small></div><button class="panel-close" data-close-panel aria-label="Close information" data-i18n-aria="closeInfo">×</button></div>
   <div class="info-copy">
-    <p>Drag to look around, then tap an arrow to move to a connected space. You can also tap a location on the tour map. On supported phones, motion view lets you look around by moving your device.</p>
+    <p data-i18n="aboutCopy">Drag to look around, then tap an arrow to move to a connected space. You can also tap a location on the tour map. On supported phones, motion view lets you look around by moving your device.</p>
     <div class="info-facts">
-      <div class="info-fact"><b>Coverage</b><span>Ground + Top Floor</span></div>
-      <div class="info-fact"><b>Rooms</b><span>M7A-001 to M7A-004</span></div>
-      <div class="info-fact"><b>Imagery</b><span>Full-resolution 360°</span></div>
-      <div class="info-fact"><b>Navigation</b><span>Connected route points</span></div>
+      <div class="info-fact"><b data-i18n="coverage">Coverage</b><span data-i18n="coverageValue">Ground + Top Floor</span></div>
+      <div class="info-fact"><b data-i18n="rooms">Rooms</b><span data-i18n="roomsValue">M7A-001 to M7A-004</span></div>
+      <div class="info-fact"><b data-i18n="imagery">Imagery</b><span data-i18n="imageryValue">Full-resolution 360°</span></div>
+      <div class="info-fact"><b data-i18n="navigation">Navigation</b><span data-i18n="navigationValue">Connected route points</span></div>
     </div>
   </div>
 </aside>
@@ -213,13 +219,13 @@
 <div id="route-tip" role="tooltip" aria-hidden="true"></div>
 <div class="bottom">
   <div id="hint" role="status" aria-live="polite">Drag to look around</div>
-  <nav class="nav" aria-label="Tour navigation" title="Tap a floor arrow to move · Backspace: back · Home: reset view">
-    <button id="previous" class="step" disabled><span aria-hidden="true">←</span> Back</button>
+  <nav class="nav" aria-label="Tour navigation" title="Tap a floor arrow to move · Backspace: back · Home: reset view" data-i18n-aria="tourNavigation" data-i18n-title="navigationTitle">
+    <button id="previous" class="step" disabled><span aria-hidden="true">←</span><span class="step-label" data-i18n="back">Back</span></button>
     <div class="location-chip" aria-live="polite"><span class="location-dot" aria-hidden="true"></span><span id="route-label">Main Hall · Entrance</span></div>
   </nav>
 </div>
-<div id="loading"><div class="loading-card"><span class="eyebrow">University of Sharjah</span><div class="loader-title">Building M7A</div><div class="spinner"></div><div class="progress-track" role="progressbar" aria-label="Loading M7A" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="load-progress-bar"></span></div><p id="load-progress-text">Loading M7A · 0%</p></div></div>
-<script>setTimeout(()=>{const l=document.getElementById('loading');if(l&&!l.classList.contains('done')){const p=document.getElementById('load-progress-text');if(p&&!p.textContent.includes('%'))p.textContent='Still loading M7A…';}},18000);</script><script type="module">
+<div id="loading"><div class="loading-card"><span class="eyebrow" data-i18n="university">University of Sharjah</span><div class="loader-title" data-i18n="buildingLoader">Building M7A</div><div class="spinner"></div><div class="progress-track" role="progressbar" aria-label="Loading M7A" data-i18n-aria="loadingM7A" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="load-progress-bar"></span></div><p id="load-progress-text">Loading M7A · 0%</p></div></div>
+<script>setTimeout(()=>{const l=document.getElementById('loading');if(l&&!l.classList.contains('done')){const p=document.getElementById('load-progress-text');if(p&&!p.textContent.includes('%')){let ar=false;try{ar=localStorage.getItem('m7a-language-v1')==='ar';}catch{}p.textContent=ar?'لا يزال تحميل M7A جاريًا…':'Still loading M7A…';}}},18000);</script><script type="module">
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
@@ -256,6 +262,33 @@ const routeTip=document.getElementById('route-tip');
 const loadProgressBar=document.getElementById('load-progress-bar');
 const loadProgressText=document.getElementById('load-progress-text');
 const coarsePointer=matchMedia('(pointer:coarse)').matches;
+const languageToggle=document.getElementById('language-toggle');
+const languageKey='m7a-language-v1';
+const I18N={
+  en:{
+    pageTitle:'M7A Building — Virtual Tour | University of Sharjah',eyebrow:'University of Sharjah · Virtual Tour',building:'M7A Building',university:'University of Sharjah',buildingLoader:'Building M7A',
+    viewControls:'View controls',motionTitle:'Use phone motion',motionEnable:'Enable phone motion view',motionDisable:'Disable phone motion view',tourMap:'Tour map',openMap:'Open tour map',tourInfo:'Tour information',openInfo:'Open tour information',resetView:'Reset and level view',fullScreen:'Full screen',exitFullScreen:'Exit full screen',
+    mapTitle:'M7A Tour Map',mapSubtitle:'Find your place in the building',closeMap:'Close map',youAreHere:'You are here',mapFloor:'Map floor',groundFloor:'Ground Floor',topFloor:'Top Floor',groundFloorBadge:'Ground Floor',topFloorBadge:'Top Floor',groundMapTitle:'Ground floor map',groundMapDesc:'Facing into the hallway from the entrance at the bottom: M7A-001 is on the right and M7A-004 is on the left at Study Rooms. At Hall End, M7A-003 is on the left and M7A-002 is on the right. The stairs are on the right below M7A-001 and connect the entrance to the top floor. Elevators are on the left of the entrance. Schematic, not to scale.',topMapTitle:'Top floor map',topMapDesc:'Stairs from the entrance lead to Stair Landing, then Faculty Offices, then Seating Area. Schematic, not to scale.',
+    hallEnd:'Hall End',studyRooms:'Study Rooms',stairsUp:'Stairs ↑',elevators:'Elevators',entrance:'Entrance',seatingArea:'Seating Area',facultyOffices:'Faculty Offices',stairLanding:'Stair Landing',entranceGround:'↓ Entrance · Ground Floor',groundMapNote:'Facing into the hall from the entrance. M7A-001 is on your right.',topMapNote:'The stairs connect this floor to the ground-floor entrance.',mapHelp:'Tap a location to go there. Highlighted location = you are here. Schematic · not to scale.',
+    aboutTitle:'About this tour',aboutSubtitle:'University of Sharjah · Building M7A',closeInfo:'Close information',aboutCopy:'Drag to look around, then tap an arrow to move to a connected space. You can also tap a location on the tour map. On supported phones, motion view lets you look around by moving your device.',coverage:'Coverage',coverageValue:'Ground + Top Floor',rooms:'Rooms',roomsValue:'M7A-001 to M7A-004',imagery:'Imagery',imageryValue:'Full-resolution 360°',navigation:'Navigation',navigationValue:'Connected route points',
+    tourNavigation:'Tour navigation',navigationTitle:'Tap a floor arrow to move · Backspace: back · Home: reset view',back:'Back',loadingM7A:'Loading M7A',loading:'Loading M7A…',loadingPct:p=>`Loading M7A · ${p}%`,preparing:'Preparing M7A view…',stillLoading:'Still loading M7A…',
+    drag:'Drag to look around.',moveOrDrag:'Move your phone or drag to look around.',tapArrow:'Tap a floor arrow to move.',goTo:n=>`Go to ${n}`,downstairs:'Downstairs · Entrance',upstairs:'Upstairs · Stair Landing',loadingNext:'Loading next view…',loadingNextPct:p=>`Loading next view · ${p}%`,preparingNext:'Preparing next view…',loadLocationError:'This location could not load. Please try again.',
+    motionOff:'Phone motion view off.',motionOn:'Phone motion view on · move your phone to look around.',motionDenied:'Phone motion access was not allowed. You can still drag to look around.',fullscreenUnavailable:'Full screen is unavailable in this browser.',tourLoadError:'Could not load the tour.',checkConnection:'Check your connection and reload this page.',retry:'Retry',switchLanguage:'Switch to Arabic'
+  },
+  ar:{
+    pageTitle:'مبنى M7A — جولة افتراضية | جامعة الشارقة',eyebrow:'جامعة الشارقة · جولة افتراضية',building:'مبنى M7A',university:'جامعة الشارقة',buildingLoader:'مبنى M7A',
+    viewControls:'أدوات العرض',motionTitle:'استخدام حركة الهاتف',motionEnable:'تفعيل العرض بحركة الهاتف',motionDisable:'إيقاف العرض بحركة الهاتف',tourMap:'خريطة الجولة',openMap:'فتح خريطة الجولة',tourInfo:'معلومات الجولة',openInfo:'فتح معلومات الجولة',resetView:'إعادة ضبط العرض وتسويته',fullScreen:'ملء الشاشة',exitFullScreen:'الخروج من ملء الشاشة',
+    mapTitle:'خريطة جولة M7A',mapSubtitle:'تعرّف على موقعك داخل المبنى',closeMap:'إغلاق الخريطة',youAreHere:'موقعك الحالي',mapFloor:'طابق الخريطة',groundFloor:'الطابق الأرضي',topFloor:'الطابق العلوي',groundFloorBadge:'الأرضي',topFloorBadge:'العلوي',groundMapTitle:'خريطة الطابق الأرضي',groundMapDesc:'عند النظر إلى الممر من المدخل في الأسفل: تقع M7A-001 على اليمين وM7A-004 على اليسار عند قاعات الدراسة. عند نهاية الردهة تقع M7A-003 على اليسار وM7A-002 على اليمين. يقع الدرج على اليمين أسفل M7A-001 ويربط المدخل بالطابق العلوي. تقع المصاعد على يسار المدخل. الخريطة توضيحية وغير مرسومة بمقياس.',topMapTitle:'خريطة الطابق العلوي',topMapDesc:'يؤدي الدرج من المدخل إلى بسطة الدرج، ثم مكاتب أعضاء هيئة التدريس، ثم منطقة الجلوس. الخريطة توضيحية وغير مرسومة بمقياس.',
+    hallEnd:'نهاية الردهة',studyRooms:'قاعات الدراسة',stairsUp:'الدرج ↑',elevators:'المصاعد',entrance:'المدخل',seatingArea:'منطقة الجلوس',facultyOffices:'مكاتب أعضاء هيئة التدريس',stairLanding:'بسطة الدرج',entranceGround:'↓ المدخل · الطابق الأرضي',groundMapNote:'انظر إلى داخل الردهة من المدخل. تقع M7A-001 على يمينك.',topMapNote:'يربط الدرج هذا الطابق بمدخل الطابق الأرضي.',mapHelp:'اضغط على موقع للانتقال إليه. الموقع المميز هو موقعك الحالي. الخريطة توضيحية وغير مرسومة بمقياس.',
+    aboutTitle:'حول هذه الجولة',aboutSubtitle:'جامعة الشارقة · مبنى M7A',closeInfo:'إغلاق المعلومات',aboutCopy:'اسحب للنظر حولك، ثم اضغط على سهم للانتقال إلى مساحة متصلة. يمكنك أيضًا الضغط على موقع في خريطة الجولة. في الهواتف المدعومة، يتيح لك عرض الحركة النظر حولك بتحريك جهازك.',coverage:'التغطية',coverageValue:'الطابق الأرضي + العلوي',rooms:'القاعات',roomsValue:'من M7A-001 إلى M7A-004',imagery:'الصور',imageryValue:'صور 360° بدقة كاملة',navigation:'التنقل',navigationValue:'نقاط مسار مترابطة',
+    tourNavigation:'التنقل في الجولة',navigationTitle:'اضغط على سهم أرضي للانتقال · مسافة للخلف: رجوع · الرئيسية: إعادة ضبط العرض',back:'رجوع',loadingM7A:'جارٍ تحميل M7A',loading:'جارٍ تحميل M7A…',loadingPct:p=>`جارٍ تحميل M7A · ${p}%`,preparing:'جارٍ تجهيز مشهد M7A…',stillLoading:'لا يزال تحميل M7A جاريًا…',
+    drag:'اسحب للنظر حولك.',moveOrDrag:'حرّك هاتفك أو اسحب للنظر حولك.',tapArrow:'اضغط على سهم أرضي للانتقال.',goTo:n=>`الانتقال إلى ${n}`,downstairs:'إلى الأسفل · المدخل',upstairs:'إلى الأعلى · بسطة الدرج',loadingNext:'جارٍ تحميل المشهد التالي…',loadingNextPct:p=>`جارٍ تحميل المشهد التالي · ${p}%`,preparingNext:'جارٍ تجهيز المشهد التالي…',loadLocationError:'تعذّر تحميل هذا الموقع. حاول مرة أخرى.',
+    motionOff:'تم إيقاف العرض بحركة الهاتف.',motionOn:'تم تفعيل العرض بحركة الهاتف · حرّك هاتفك للنظر حولك.',motionDenied:'لم يُسمح بالوصول إلى حركة الهاتف. لا يزال بإمكانك السحب للنظر حولك.',fullscreenUnavailable:'ملء الشاشة غير متاح في هذا المتصفح.',tourLoadError:'تعذّر تحميل الجولة.',checkConnection:'تحقق من اتصالك ثم أعد تحميل الصفحة.',retry:'إعادة المحاولة',switchLanguage:'التبديل إلى الإنجليزية'
+  }
+};
+let currentLanguage='en';
+try{if(localStorage.getItem(languageKey)==='ar')currentLanguage='ar';}catch{}
+function t(key,...args){const value=I18N[currentLanguage][key]??I18N.en[key]??key;return typeof value==='function'?value(...args):value;}
 // Phones/tablets use dedicated 3072×1536 panoramas. Desktop keeps the full 8K originals.
 const DATA=PANORAMA_FILES.map(file=>(coarsePointer?'./assets-mobile/':'./assets/')+file);
 
@@ -461,6 +494,9 @@ const LOCATIONS=[
     routes:[{to:2,angle:2.48,label:'Main Hall · Hall End',back:true}]
   }
 ];
+const LOCATION_AR=[
+  ['الردهة الرئيسية','المدخل'],['الردهة الرئيسية','قاعات الدراسة'],['الردهة الرئيسية','نهاية الردهة'],['الطابق العلوي','بسطة الدرج'],['الطابق العلوي','مكاتب أعضاء هيئة التدريس'],['الطابق العلوي','مكاتب أعضاء هيئة التدريس · منطقة الجلوس'],['الطابق الأرضي','M7A-001'],['الطابق الأرضي','M7A-004'],['الطابق الأرضي','M7A-003'],['الطابق الأرضي','M7A-002']
+];
 
 const FLOOR_Y=0.03;
 
@@ -473,7 +509,7 @@ function updateGuidance(){
   hint.classList.toggle('guidance-active',!guidanceDone);
   hint.classList.toggle('guidance-done',guidanceDone);
   hint.setAttribute('aria-hidden',String(guidanceDone));
-  if(!guidanceDone)hint.textContent=guidanceLooked?'Tap a floor arrow to move.':motionEnabled?'Move your phone or drag to look around.':'Drag to look around.';
+  if(!guidanceDone)hint.textContent=guidanceLooked?t('tapArrow'):motionEnabled?t('moveOrDrag'):t('drag');
 }
 function noteLookAround(){
   if(guidanceDone||guidanceLooked)return;
@@ -523,6 +559,7 @@ document.querySelectorAll('[data-map-floor]').forEach(btn=>btn.addEventListener(
 function updateMap(){
   document.getElementById('map-current-location').textContent=locationLabel();
   document.querySelectorAll('.map-node[data-location]').forEach(node=>{
+    node.setAttribute('aria-label',t('goTo',locationLabel(Number(node.dataset.location))));
     const here=Number(node.dataset.location)===current;
     const disabled=here||!ready||transitioning;
     node.classList.toggle('current',here);
@@ -539,7 +576,7 @@ async function navigateFromMap(target){
 }
 document.querySelectorAll('.map-node[data-location]').forEach(node=>{
   const target=Number(node.dataset.location);
-  node.setAttribute('role','button');node.setAttribute('aria-label','Go to '+locationLabel(target));
+  node.setAttribute('role','button');node.setAttribute('aria-label',t('goTo',locationLabel(target)));
   // Invisible touch padding keeps the drawing unchanged, including small hallway dots.
   const shape=node.querySelector('circle,rect');
   if(shape&&!shape.classList.contains('map-hit')){
@@ -707,8 +744,8 @@ function updateRouteLabel(){
   }
   if(!selected){routeTip.classList.remove('show');routeTip.setAttribute('aria-hidden','true');return;}
   const route=selected.userData.route;
-  const name=LOCATIONS[route.to].name.replace('Faculty Offices · ','');
-  const text=route.kind==='stairs'?(route.to===0?'Downstairs · Entrance':'Upstairs · Stair Landing'):name;
+  const name=route.to===5?t('seatingArea'):localizedLocation(route.to).name;
+  const text=route.kind==='stairs'?(route.to===0?t('downstairs'):t('upstairs')):name;
   if(routeTip.textContent!==text)routeTip.textContent=text;
   const halfWidth=routeTip.offsetWidth/2+12;
   routeTip.style.left=THREE.MathUtils.clamp(position.x,halfWidth,innerWidth-halfWidth)+'px';
@@ -735,10 +772,15 @@ function tween(ms, update){
 
 
 const previous=document.getElementById('previous');
-function locationLabel(i=current){const loc=LOCATIONS[i];return loc.area+' · '+loc.name;}
+function localizedLocation(i=current){
+  const loc=LOCATIONS[i];
+  if(currentLanguage==='ar'&&LOCATION_AR[i])return {area:LOCATION_AR[i][0],name:LOCATION_AR[i][1]};
+  return {area:loc.area,name:loc.name};
+}
+function locationLabel(i=current){const loc=localizedLocation(i);return loc.area+' · '+loc.name;}
 function backTarget(){return LOCATIONS[current]?.back ?? null;}
 function floorLabel(i=current){
-  return LOCATIONS[i]?.area==='Top Floor'?'Top Floor':'Ground Floor';
+  return LOCATIONS[i]?.area==='Top Floor'?t('topFloorBadge'):t('groundFloorBadge');
 }
 function updateControls(){
   previous.disabled=!ready || transitioning || backTarget()==null;
@@ -747,6 +789,24 @@ function updateControls(){
   updateMap();
   updateGuidance();
 }
+function applyLanguage(persist=true){
+  document.documentElement.lang=currentLanguage;
+  document.documentElement.dir=currentLanguage==='ar'?'rtl':'ltr';
+  document.title=t('pageTitle');
+  document.querySelectorAll('[data-i18n]').forEach(node=>{node.textContent=t(node.dataset.i18n);});
+  document.querySelectorAll('[data-i18n-aria]').forEach(node=>{node.setAttribute('aria-label',t(node.dataset.i18nAria));});
+  document.querySelectorAll('[data-i18n-title]').forEach(node=>{node.title=t(node.dataset.i18nTitle);});
+  languageToggle.textContent=currentLanguage==='ar'?'EN':'ع';
+  languageToggle.setAttribute('aria-label',t('switchLanguage'));
+  languageToggle.title=currentLanguage==='ar'?'English':'العربية';
+  motion.setAttribute('aria-label',t(motionEnabled?'motionDisable':'motionEnable'));
+  fullscreen.setAttribute('aria-label',t(document.fullscreenElement?'exitFullScreen':'fullScreen'));
+  cp.textContent=locationLabel();
+  updateControls();updateRouteLabel();
+  if(!loading.classList.contains('done'))setInitialProgress(lastInitialProgress);
+  if(persist)try{localStorage.setItem(languageKey,currentLanguage);}catch{}
+}
+languageToggle.onclick=()=>{currentLanguage=currentLanguage==='en'?'ar':'en';applyLanguage();};
 function resetView(){
   const bearing=LOCATIONS[current]?.view ?? LOCATIONS[current]?.routes?.[0]?.angle ?? 0;
   yaw=-bearing;pitch=0;camera.fov=72;camera.updateProjectionMatrix();camera.rotation.set(pitch,yaw,0);
@@ -818,16 +878,18 @@ function loadGLTF(i,onProgress=null){
     },reject);
   });
 }
+let lastInitialProgress=0;
 function setInitialProgress(value){
+  lastInitialProgress=value;
   const progressTrack=loadProgressBar.parentElement;
   if(value==null){
     progressTrack.removeAttribute('aria-valuenow');
-    loadProgressText.textContent='Loading M7A…';return;
+    loadProgressText.textContent=t('loading');return;
   }
   const pct=Math.round(THREE.MathUtils.clamp(value,0,1)*100);
   loadProgressBar.style.width=pct+'%';
   progressTrack.setAttribute('aria-valuenow',String(pct));
-  loadProgressText.textContent=pct===100?'Preparing M7A view…':'Loading M7A · '+pct+'%';
+  loadProgressText.textContent=pct===100?t('preparing'):t('loadingPct',pct);
 }
 async function loadCheckpoint(i, prepared=null, onProgress=null){
   let replacement;
@@ -880,7 +942,7 @@ async function transitionTo(i,selectedRoute=null,fromMap=false){
   travelFrame.style.transformOrigin=ox+'% '+oy+'%';
   travelFrame.style.transform='scale(1.008)';travelFrame.style.opacity='1';travelFrame.style.display='block';
 
-  const slowLoad=setTimeout(()=>{if(!status.textContent)status.textContent='Loading next view…';},850);
+  const slowLoad=setTimeout(()=>{if(!status.textContent)status.textContent=t('loadingNext');},850);
   try{
     // Let the snapshot paint first.
     await new Promise(resolve=>requestAnimationFrame(resolve));
@@ -912,7 +974,7 @@ async function transitionTo(i,selectedRoute=null,fromMap=false){
       const warming=networkPrefetches.get(i);
       if(coarsePointer && warming)await warming;
       const gltf=cached?await cached:await loadGLTF(i,p=>{
-        status.textContent=p==null?'Loading next view…':p>=1?'Preparing next view…':'Loading next view · '+Math.min(99,Math.round(p*100))+'%';
+        status.textContent=p==null?t('loadingNext'):p>=1?t('preparingNext'):t('loadingNextPct',Math.min(99,Math.round(p*100)));
       });
       preloadCache.delete(i);
       if(!gltf)throw new Error('Checkpoint preload failed');
@@ -932,7 +994,7 @@ async function transitionTo(i,selectedRoute=null,fromMap=false){
     completeGuidance();return true;
   }catch(err){
     console.error(err);
-    status.textContent='This location could not load. Please try again.';
+    status.textContent=t('loadLocationError');
     // Mobile may have released the previous panorama to stay within Safari's GPU budget.
     // Restore it from cache if the destination failed to load.
     if(coarsePointer && !object){
@@ -1013,19 +1075,19 @@ else addEventListener('orientationchange',()=>{if(motionEnabled)motionNeedsCalib
 motion.onclick=async()=>{
   const status=document.getElementById('status');
   if(motionEnabled){
-    motionEnabled=false;motion.setAttribute('aria-pressed','false');motion.setAttribute('aria-label','Enable phone motion view');
-    yaw=camera.rotation.y;pitch=camera.rotation.x;status.textContent='Phone motion view off.';updateControls();
-    setTimeout(()=>{if(status.textContent==='Phone motion view off.')status.textContent='';},1300);return;
+    motionEnabled=false;motion.setAttribute('aria-pressed','false');motion.setAttribute('aria-label',t('motionEnable'));
+    yaw=camera.rotation.y;pitch=camera.rotation.x;const message=t('motionOff');status.textContent=message;updateControls();
+    setTimeout(()=>{if(status.textContent===message)status.textContent='';},1300);return;
   }
   try{
     if(typeof DeviceOrientationEvent.requestPermission==='function'){
       const permission=await DeviceOrientationEvent.requestPermission();
       if(permission!=='granted')throw new Error('permission denied');
     }
-    motionEnabled=true;motionNeedsCalibrate=true;motion.setAttribute('aria-pressed','true');motion.setAttribute('aria-label','Disable phone motion view');
-    status.textContent='Phone motion view on · move your phone to look around.';updateControls();
-    setTimeout(()=>{if(status.textContent.startsWith('Phone motion view on'))status.textContent='';},2200);
-  }catch(err){status.textContent='Phone motion access was not allowed. You can still drag to look around.';}
+    motionEnabled=true;motionNeedsCalibrate=true;motion.setAttribute('aria-pressed','true');motion.setAttribute('aria-label',t('motionDisable'));
+    const message=t('motionOn');status.textContent=message;updateControls();
+    setTimeout(()=>{if(status.textContent===message)status.textContent='';},2200);
+  }catch(err){status.textContent=t('motionDenied');}
 };
 
 function zoom(delta){if(!ready || transitioning)return;camera.fov=THREE.MathUtils.clamp(camera.fov+delta,35,95);camera.updateProjectionMatrix();}
@@ -1034,14 +1096,14 @@ previous.onclick=()=>{const back=backTarget();if(back!=null)transitionTo(back);}
 document.getElementById('reset').onclick=()=>{if(ready&&!transitioning)resetView();};
 const fullscreen=document.getElementById('fullscreen');
 fullscreen.hidden=!document.fullscreenEnabled;
-fullscreen.onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{document.getElementById('status').textContent='Full screen is unavailable in this browser.';}};
-document.addEventListener('fullscreenchange',()=>fullscreen.setAttribute('aria-label',document.fullscreenElement?'Exit full screen':'Full screen'));
+fullscreen.onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{document.getElementById('status').textContent=t('fullscreenUnavailable');}};
+document.addEventListener('fullscreenchange',()=>fullscreen.setAttribute('aria-label',t(document.fullscreenElement?'exitFullScreen':'fullScreen')));
 addEventListener('keydown',e=>{if(e.key==='Escape'&&(mapPanel.classList.contains('open')||infoPanel.classList.contains('open'))){e.preventDefault();const opener=mapPanel.classList.contains('open')?mapToggle:infoToggle;closePanels();opener.focus();return;}if(e.target.closest('button,input,textarea,select,[role="button"]')||e.altKey||e.ctrlKey||e.metaKey)return;if(e.key==='Backspace'||e.key==='Escape'){const back=backTarget();if(back!=null){e.preventDefault();routeTip.classList.remove('show');routeTip.setAttribute('aria-hidden','true');transitionTo(back);}}
   if(e.key==='Home' && ready && !transitioning){e.preventDefault();resetView();}
   if(e.key==='+' || e.key==='='){e.preventDefault();zoom(-8);}
   if(e.key==='-'){e.preventDefault();zoom(8);}
 });
-updateControls();measureLabelBounds();
+applyLanguage(false);measureLabelBounds();
 addEventListener('resize', ()=>{
   renderQuality();
   camera.aspect=innerWidth/innerHeight;
@@ -1079,9 +1141,10 @@ loadCheckpoint(0,null,p=>setInitialProgress(p)).then(()=>{
     type:'CACHE_VIEWED_PANORAMA',url:new URL(DATA[0],location.href).href
   })).catch(err=>console.warn('Initial panorama cache unavailable',err));
 }).catch(err=>{
-  loading.classList.remove('done');loading.style.display='grid';loading.innerHTML='<div class="loading-card error"><b>Could not load the tour.</b><p>Check your connection and reload this page.</p><button class="tool" onclick="location.reload()" aria-label="Retry">↻</button></div>';
+  loading.classList.remove('done');loading.style.display='grid';loading.innerHTML='<div class="loading-card error"><b>'+t('tourLoadError')+'</b><p>'+t('checkConnection')+'</p><button class="tool" onclick="location.reload()" aria-label="'+t('retry')+'">↻</button></div>';
   console.error(err);
 });
 </script>
 </body>
 </html>
+
