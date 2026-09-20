@@ -258,7 +258,7 @@ const CAMERA_HEIGHT=0.45;
 camera.position.set(0,CAMERA_HEIGHT,0);
 camera.rotation.order='YXZ';
 
-const renderer=new THREE.WebGLRenderer({antialias:!coarsePointer,powerPreference:'high-performance'});
+const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
 function renderQuality(){
   // Keep phone rendering within a smaller GPU budget; preserve desktop supersampling.
   const pixelBudget=coarsePointer?1000000:6000000;
