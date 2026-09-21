@@ -47,9 +47,9 @@
   .brand:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(var(--uos-soft),#21aaa6)}
   .eyebrow{display:block;font-size:9px;line-height:1.2;letter-spacing:.18em;text-transform:uppercase;color:#a9e4df;font-weight:750;margin-bottom:6px}
   .brand-row{display:flex;align-items:center;gap:10px;min-width:0}
-  .brand strong{font-size:20px;line-height:1.05;font-weight:650;letter-spacing:-.035em;white-space:nowrap}
+  .brand strong{min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:20px;line-height:1.05;font-weight:650;letter-spacing:-.035em;white-space:nowrap}
   .floor-badge{display:inline-flex;align-items:center;min-height:22px;padding:0 8px;border-radius:999px;border:1px solid rgba(222,251,248,.2);background:rgba(220,250,248,.1);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#dff8f6;font-weight:750;white-space:nowrap}
-  .lang-toggle{flex:none;pointer-events:auto;min-width:30px;height:24px;padding:0 7px;border:1px solid rgba(222,251,248,.28);border-radius:999px;background:rgba(223,247,245,.11);color:#effffd;font-size:10px;font-weight:800;line-height:1;transition:background .16s ease,border-color .16s ease,transform .16s ease}
+  .lang-toggle{display:block;pointer-events:auto;min-width:30px;height:24px;margin-top:8px;padding:0 7px;border:1px solid rgba(222,251,248,.28);border-radius:999px;background:rgba(223,247,245,.11);color:#effffd;font-size:10px;font-weight:800;line-height:1;transition:background .16s ease,border-color .16s ease,transform .16s ease}
   .lang-toggle:hover{background:rgba(223,247,245,.2);border-color:rgba(222,251,248,.48)}.lang-toggle:active{transform:scale(.96)}
   .brand small{display:block;color:#d5eeee;font-size:11px;line-height:1.3;margin-top:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
@@ -121,7 +121,7 @@
     .topbar{left:10px;right:10px;top:max(10px,env(safe-area-inset-top));gap:8px}
     .brand{min-width:0;max-width:calc(100vw - 214px);padding:10px 12px 10px 14px;border-radius:15px}
     .brand .eyebrow{font-size:7px;letter-spacing:.14em;margin-bottom:5px}
-    .brand-row{gap:5px}.brand strong{font-size:16px}.floor-badge{font-size:7px;min-height:18px;padding:0 6px}.lang-toggle{min-width:25px;height:20px;padding:0 5px;font-size:9px}.brand small{font-size:9px;margin-top:4px}
+    .brand-row{gap:5px}.brand strong{font-size:16px}.floor-badge{font-size:7px;min-height:18px;padding:0 6px}.lang-toggle{min-width:25px;height:20px;margin-top:6px;padding:0 5px;font-size:9px}.brand small{font-size:9px;margin-top:4px}
     .tools{gap:3px;padding:3px}.tool{width:36px;height:36px;font-size:16px}.tools #zoom-in,.tools #zoom-out{display:none}
     .bottom{bottom:max(10px,env(safe-area-inset-bottom));gap:7px;width:calc(100% - 20px)}
     #hint{font-size:9px;line-height:1.2;padding:6px 10px;white-space:normal}
@@ -144,8 +144,9 @@
 <header class="topbar">
   <div class="brand">
     <span class="eyebrow" data-i18n="eyebrow">University of Sharjah · Virtual Tour</span>
-    <div class="brand-row"><strong data-i18n="building">M7A Building</strong><span class="floor-badge" id="floor-badge">Ground Floor</span><button class="lang-toggle" id="language-toggle" type="button" aria-label="Switch to Arabic" title="العربية">ع</button></div>
+    <div class="brand-row"><strong data-i18n="building">M7A Building</strong><span class="floor-badge" id="floor-badge">Ground Floor</span></div>
     <small id="cp" aria-live="polite">Main Hall · Entrance</small>
+    <button class="lang-toggle" id="language-toggle" type="button" aria-label="Switch to Arabic" title="العربية">ع</button>
   </div>
   <div class="tools" aria-label="View controls" data-i18n-aria="viewControls">
     <button class="tool" id="motion" title="Use phone motion" aria-label="Enable phone motion view" data-i18n-title="motionTitle" hidden>◎</button>
