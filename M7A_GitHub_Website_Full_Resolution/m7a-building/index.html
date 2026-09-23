@@ -211,6 +211,36 @@
 <link href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css" rel="stylesheet">
 <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script>
+<style>
+/* Shared finishing styles for the tour and campus directory. */
+#tour-search-results{max-height:calc(100dvh - var(--tour-panel-top,88px) - 190px - env(safe-area-inset-bottom));overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#a5c4bd transparent;padding-inline:2px}
+#tour-search-results::-webkit-scrollbar{width:5px}#tour-search-results::-webkit-scrollbar-thumb{background:#a5c4bd;border-radius:99px}#tour-search-results::-webkit-scrollbar-track{background:transparent}#tour-search-results::-webkit-scrollbar-button{display:none;width:0;height:0}
+.brand{padding-inline-end:64px;box-shadow:0 8px 28px #001f2430}
+.brand .lang-toggle{position:absolute;inset-inline-end:14px;top:50%;transform:translateY(-50%);margin:0;width:36px;height:36px;font-size:11px}
+.brand .lang-toggle:active{transform:translateY(-50%) scale(.96)}
+.brand .eyebrow{letter-spacing:.12em;line-height:1.4}
+.tools{gap:5px;padding:5px;max-width:100%;flex-wrap:wrap;justify-content:flex-end;border-radius:28px}.tool{width:42px;height:42px;flex-shrink:0}
+.tool svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.location-chip{background:rgba(8,116,106,.3);border-color:#90d5c34d;box-shadow:none;font-weight:600}
+.location-dot{width:7px;height:7px;box-shadow:0 0 0 4px #79ffe014}#route-label{text-shadow:none}
+#tour-search-panel,#info-panel{top:var(--tour-panel-top,88px);max-height:calc(100dvh - var(--tour-panel-top,88px) - 20px - env(safe-area-inset-bottom));overflow:auto;overscroll-behavior:contain;padding:18px;border:1px solid #dce9e4;border-radius:18px;background:#f8fcfb;color:#17494b;box-shadow:0 16px 44px #001f2426;color-scheme:light;scrollbar-width:thin;scrollbar-color:#a5c4bd transparent}
+#info-panel{z-index:60}.panel-head strong,.tour-search-heading strong{font-size:16px;line-height:1.4;letter-spacing:-.02em}.panel-head small{font-size:11px;color:#607c78;line-height:1.5}.info-copy{font-size:13px;line-height:1.7;color:#365e59}
+#info-panel .share-card{background:#edf5f2;border-color:#d4e5de;padding:14px}#info-panel .share-copy b{font-size:12px;color:#17494b}#info-panel .share-copy span{font-size:11px;color:#607c78}#info-panel .scene-link{font-size:11px;color:#24756b;border-color:#d4e5de}.share-button{min-height:40px;font-size:11px}
+.panel-close,.tour-search-heading button{width:40px;height:40px;flex-shrink:0;background:#eaf3ef;border:1px solid #d7e6df;color:#285f56;font-size:22px}
+#info-panel button:focus-visible,#info-panel a:focus-visible{outline:2px solid #087f75;outline-offset:3px}
+#hall-search,#tour-search-input{color-scheme:light;border-radius:12px;background:#fff;min-height:46px;transition:border-color .15s,box-shadow .15s}
+#hall-search::placeholder,#tour-search-input::placeholder{color:#708680;opacity:1}#hall-search:focus,#tour-search-input:focus{border-color:#168e7e;box-shadow:0 0 0 3px #168e7e12}
+.campus-map-card{color-scheme:light;box-shadow:0 14px 40px #001f2426}.hall-result{padding:14px 12px;border-radius:12px}.hall-result small{color:#5e7973}.hall-thumbnail{height:100px}.hall-status{margin:8px 0}.campus-popup-button{font-weight:700;box-shadow:none}
+.tour-search-result{padding:16px 0}.tour-search-result:last-child{border-bottom:0}.tour-search-result strong{font-size:14px;letter-spacing:-.01em}.tour-search-actions button{min-height:42px;transition:background .15s,border-color .15s}.tour-search-actions button:hover:not(:disabled){background:#e6f2ed;border-color:#8cbcaf}.tour-search-actions button:first-child:hover:not(:disabled){background:#066e65;border-color:#066e65}
+#directions-panel{bottom:max(100px,calc(env(safe-area-inset-bottom) + 90px));border-color:#ffe49a55;box-shadow:0 10px 30px #001f2433}#directions-panel #directions-stop{min-width:40px}#directions-panel button{min-height:44px}
+@media(max-width:640px){
+ .topbar{gap:8px;left:12px;right:12px}.topbar .brand{padding:12px 60px 12px 14px;min-width:0}.brand .eyebrow{font-size:8px;letter-spacing:.09em}.brand strong{font-size:17px}.brand small{font-size:11px;line-height:1.4}.brand-row{gap:7px}.floor-badge{font-size:8px}.brand .lang-toggle{inset-inline-end:12px;width:34px;height:34px}
+ html[dir=rtl] .topbar .brand{padding-inline:14px 60px}.tools{padding:4px;gap:3px}.tool{width:40px;height:40px}#map-toggle{font-size:11px;padding:0 12px}
+ #tour-search-panel,#info-panel{right:12px;width:calc(100vw - 24px);padding:16px}#hall-search,#tour-search-input{font-size:16px}.campus-map-card .eyebrow{font-size:9px}.hall-thumbnail{height:64px}.location-chip{font-size:11px}.step{width:44px;height:44px}.nav{padding:5px}.location-chip{min-height:44px}
+}
+@media(max-width:360px){.brand strong{font-size:15px}.floor-badge{font-size:7px}.tool{width:36px;height:40px}#map-toggle{font-size:10px;padding:0 9px}.brand .eyebrow{font-size:7px}}
+@media(prefers-reduced-motion:reduce){.panel,.room-chevron,.tour-search-actions button,#hall-search,#tour-search-input{transition:none!important}}
+</style>
 </head>
 <body>
 <div id="app"></div>
@@ -227,9 +257,9 @@
     <button class="tool" id="motion" title="Use phone motion" aria-label="Enable phone motion view" data-i18n-title="motionTitle" hidden>◎</button>
     <button class="tool" id="map-toggle" title="Tour map" aria-label="Open tour map" data-i18n-title="tourMap" data-i18n-aria="openMap" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2V5Zm6-2v16m6-14v16"/></svg><span data-i18n="backToCampus">Back to campus</span></button>
     <button class="tool" id="search-toggle" type="button" aria-label="Search halls or rooms" title="Search halls or rooms" aria-pressed="false" aria-controls="tour-search-panel"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></button>
-    <button class="tool info-tool" id="info-toggle" title="Tour information" aria-label="Open tour information" data-i18n-title="tourInfo" data-i18n-aria="openInfo" aria-pressed="false">i</button>
-    <button class="tool" id="reset" title="Reset view" aria-label="Reset and level view" data-i18n-title="resetView" data-i18n-aria="resetView">↺</button>
-    <button class="tool" id="fullscreen" title="Full screen" aria-label="Full screen" data-i18n-title="fullScreen">⛶</button>
+    <button class="tool info-tool" id="info-toggle" title="Tour information" aria-label="Open tour information" data-i18n-title="tourInfo" data-i18n-aria="openInfo" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v6m0-10v.5"/></svg></button>
+    <button class="tool" id="reset" title="Reset view" aria-label="Reset and level view" data-i18n-title="resetView" data-i18n-aria="resetView"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10a8 8 0 1 1 1 7M4 4v6h6"/></svg></button>
+    <button class="tool" id="fullscreen" title="Full screen" aria-label="Full screen" data-i18n-title="fullScreen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg></button>
   </div>
 </header>
 
@@ -665,6 +695,13 @@ function updateTourSearch(){
 tourSearch.addEventListener('input',updateTourSearch);
 searchToggle.onclick=()=>{togglePanel(searchPanel,searchToggle);if(searchPanel.classList.contains('open')){updateTourSearch();requestAnimationFrame(()=>tourSearch.focus());}};
 document.getElementById('tour-search-close').onclick=()=>{closePanels();searchToggle.focus();};
+// Keep overlays below the actual toolbar, including wrapped and translated layouts.
+function positionTourPanels(){
+  const bottom=document.querySelector('.tools').getBoundingClientRect().bottom;
+  document.documentElement.style.setProperty('--tour-panel-top',Math.ceil(bottom+12)+'px');
+}
+new ResizeObserver(positionTourPanels).observe(document.querySelector('.topbar'));
+addEventListener('resize',positionTourPanels);positionTourPanels();
 let campusMap=null;
 let directionsTarget=null,directionsNext=null;
 const directionsPanel=document.createElement('section');
