@@ -170,6 +170,11 @@
     .campus-map-location{left:10px;bottom:max(21px,calc(env(safe-area-inset-bottom) + 11px));width:min(280px,calc(100vw - 20px));padding:10px 12px}
     #campus-map .leaflet-control-zoom{margin-left:10px;margin-bottom:88px}.campus-pin{width:34px;height:34px;font-size:10px}
   }
+#map-toggle{width:auto;min-width:42px;padding:0 12px;font-size:11px;white-space:nowrap}
+#campus-enter{margin-top:14px;min-height:42px;font-size:12px}
+.campus-map-card{min-width:0}.campus-map-card strong{line-height:1.2}
+.campus-popup-button:disabled{opacity:.65;cursor:wait}
+@media(max-width:640px){.topbar{flex-wrap:wrap}.topbar .brand{width:100%;max-width:none;box-sizing:border-box}.topbar .tools{margin-left:auto}#map-toggle{padding:0 10px;font-size:10px}.campus-map-card{max-width:calc(100vw - 126px)}.campus-map-card strong{font-size:17px}}
 </style>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous">
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script>
@@ -188,7 +193,7 @@
   </div>
   <div class="tools" aria-label="View controls" data-i18n-aria="viewControls">
     <button class="tool" id="motion" title="Use phone motion" aria-label="Enable phone motion view" data-i18n-title="motionTitle" hidden>◎</button>
-    <button class="tool" id="map-toggle" title="Tour map" aria-label="Open tour map" data-i18n-title="tourMap" data-i18n-aria="openMap" aria-pressed="false">▦</button>
+    <button class="tool" id="map-toggle" title="Tour map" aria-label="Open tour map" data-i18n-title="tourMap" data-i18n-aria="openMap" aria-pressed="false"><span aria-hidden="true">↗</span> <span data-i18n="backToCampus">Back to campus</span></button>
     <button class="tool info-tool" id="info-toggle" title="Tour information" aria-label="Open tour information" data-i18n-title="tourInfo" data-i18n-aria="openInfo" aria-pressed="false">i</button>
     <button class="tool" id="reset" title="Reset view" aria-label="Reset and level view" data-i18n-title="resetView" data-i18n-aria="resetView">↺</button>
     <button class="tool" id="fullscreen" title="Full screen" aria-label="Full screen" data-i18n-title="fullScreen">⛶</button>
@@ -196,13 +201,14 @@
 </header>
 
 <aside id="map-panel" class="panel campus-map-panel" aria-hidden="true" aria-label="Tour map" data-i18n-aria="tourMap">
-  <div id="campus-map" aria-label="Interactive University of Sharjah checkpoint map" data-i18n-aria="campusMapAria"></div>
+  <div id="campus-map" aria-label="Interactive University of Sharjah campus map" data-i18n-aria="campusMapAria"></div>
   <div class="campus-map-shade" aria-hidden="true"></div>
   <div class="campus-map-toolbar">
     <div class="campus-map-card">
       <span class="eyebrow" data-i18n="university">University of Sharjah</span>
       <strong data-i18n="campusMapTitle">Explore the campus</strong>
-      <small data-i18n="campusMapSubtitle">Select a checkpoint to enter the 360° tour</small>
+      <small data-i18n="campusMapSubtitle">Choose M7 to explore inside</small>
+      <button id="campus-enter" class="campus-popup-button" type="button" disabled>Preparing 360° view…</button>
     </div>
     <div class="campus-map-actions">
       <button class="campus-map-language" id="campus-language-toggle" type="button" aria-label="Switch to Arabic" title="العربية">ع</button>
@@ -324,8 +330,8 @@ const languageKey='m7a-language-v1';
 const I18N={
   en:{
     pageTitle:'M7A Building — Virtual Tour | University of Sharjah',eyebrow:'University of Sharjah · Virtual Tour',building:'M7A Building',university:'University of Sharjah',buildingLoader:'Building M7A',
-    viewControls:'View controls',motionTitle:'Use phone motion',motionEnable:'Enable phone motion view',motionDisable:'Disable phone motion view',tourMap:'Tour map',openMap:'Open tour map',tourInfo:'Tour information',openInfo:'Open tour information',resetView:'Reset and level view',fullScreen:'Full screen',exitFullScreen:'Exit full screen',
-    campusMapTitle:'Explore the campus',campusMapSubtitle:'Select a checkpoint to enter the 360° tour',campusMapAria:'Interactive University of Sharjah checkpoint map',currentCheckpoint:'Current checkpoint',viewPanorama:'View in 360°',preparingPanorama:'Preparing 360° view…',mapTitle:'M7A Tour Map',mapSubtitle:'Find your place in the building',closeMap:'Close map',youAreHere:'You are here',mapFloor:'Map floor',groundFloor:'Ground Floor',topFloor:'Top Floor',groundFloorBadge:'Ground Floor',topFloorBadge:'Top Floor',groundMapTitle:'Ground floor map',groundMapDesc:'Facing into the hallway from the entrance at the bottom: M7A-001 is on the right and M7A-004 is on the left at Study Rooms. At Hall End, M7A-003 is on the left and M7A-002 is on the right. The stairs are on the right below M7A-001 and connect the entrance to the top floor. Elevators are on the left of the entrance. Schematic, not to scale.',topMapTitle:'Top floor map',topMapDesc:'Stairs from the entrance lead to Stair Landing, then Faculty Offices, then Seating Area. Schematic, not to scale.',
+    viewControls:'View controls',motionTitle:'Use phone motion',motionEnable:'Enable phone motion view',motionDisable:'Disable phone motion view',tourMap:'Campus map',openMap:'Back to campus map',tourInfo:'Tour information',openInfo:'Open tour information',resetView:'Reset and level view',fullScreen:'Full screen',exitFullScreen:'Exit full screen',
+    campusMapTitle:'Explore the campus',campusMapSubtitle:'Choose M7 to explore inside',m7Hall:'M7 Hall',indoorTour:'360° indoor tour',enterHall:'Enter M7',backToCampus:'Back to campus',campusMapAria:'Interactive University of Sharjah campus map',currentCheckpoint:'Current checkpoint',viewPanorama:'View in 360°',preparingPanorama:'Preparing 360° view…',mapTitle:'M7A Tour Map',mapSubtitle:'Find your place in the building',closeMap:'Close map',youAreHere:'You are here',mapFloor:'Map floor',groundFloor:'Ground Floor',topFloor:'Top Floor',groundFloorBadge:'Ground Floor',topFloorBadge:'Top Floor',groundMapTitle:'Ground floor map',groundMapDesc:'Facing into the hallway from the entrance at the bottom: M7A-001 is on the right and M7A-004 is on the left at Study Rooms. At Hall End, M7A-003 is on the left and M7A-002 is on the right. The stairs are on the right below M7A-001 and connect the entrance to the top floor. Elevators are on the left of the entrance. Schematic, not to scale.',topMapTitle:'Top floor map',topMapDesc:'Stairs from the entrance lead to Stair Landing, then Faculty Offices, then Seating Area. Schematic, not to scale.',
     hallEnd:'Hall End',studyRooms:'Study Rooms',stairsUp:'Stairs ↑',elevators:'Elevators',entrance:'Entrance',seatingArea:'Seating Area',facultyOffices:'Faculty Offices',stairLanding:'Stair Landing',entranceGround:'↓ Entrance · Ground Floor',groundMapNote:'Facing into the hall from the entrance. M7A-001 is on your right.',topMapNote:'The stairs connect this floor to the ground-floor entrance.',mapHelp:'Tap a location to go there. Highlighted location = you are here. Schematic · not to scale.',
     aboutTitle:'About this tour',aboutSubtitle:'University of Sharjah · Building M7A',closeInfo:'Close information',aboutCopy:'Drag to look around. Use a floor arrow or the map to move between locations. On supported phones, you can also look around by moving your device.',shareTitle:'Share this location',copyLink:'Copy link',linkCopied:'Link copied',copyFailed:'Could not copy the link.',
     tourNavigation:'Tour navigation',navigationTitle:'Tap a floor arrow to move · Backspace: back · Home: reset view',back:'Back',loadingM7A:'Loading M7A',loading:'Loading M7A…',loadingPct:p=>`Loading M7A · ${p}%`,preparing:'Preparing M7A view…',stillLoading:'Still loading M7A…',
@@ -334,8 +340,8 @@ const I18N={
   },
   ar:{
     pageTitle:'مبنى M7A — جولة افتراضية | جامعة الشارقة',eyebrow:'جامعة الشارقة · جولة افتراضية',building:'مبنى M7A',university:'جامعة الشارقة',buildingLoader:'مبنى M7A',
-    viewControls:'أدوات العرض',motionTitle:'استخدام حركة الهاتف',motionEnable:'تفعيل العرض بحركة الهاتف',motionDisable:'إيقاف العرض بحركة الهاتف',tourMap:'خريطة الجولة',openMap:'فتح خريطة الجولة',tourInfo:'معلومات الجولة',openInfo:'فتح معلومات الجولة',resetView:'إعادة ضبط العرض وتسويته',fullScreen:'ملء الشاشة',exitFullScreen:'الخروج من ملء الشاشة',
-    campusMapTitle:'استكشف الحرم الجامعي',campusMapSubtitle:'اختر نقطة للدخول إلى الجولة بزاوية 360°',campusMapAria:'خريطة تفاعلية لنقاط الجولة في جامعة الشارقة',currentCheckpoint:'النقطة الحالية',viewPanorama:'عرض بزاوية 360°',preparingPanorama:'جارٍ تجهيز العرض بزاوية 360°…',mapTitle:'خريطة جولة M7A',mapSubtitle:'تعرّف على موقعك داخل المبنى',closeMap:'إغلاق الخريطة',youAreHere:'موقعك الحالي',mapFloor:'طابق الخريطة',groundFloor:'الطابق الأرضي',topFloor:'الطابق العلوي',groundFloorBadge:'الأرضي',topFloorBadge:'العلوي',groundMapTitle:'خريطة الطابق الأرضي',groundMapDesc:'عند النظر إلى الممر من المدخل في الأسفل: تقع M7A-001 على اليمين وM7A-004 على اليسار عند قاعات الدراسة. عند نهاية الردهة تقع M7A-003 على اليسار وM7A-002 على اليمين. يقع الدرج على اليمين أسفل M7A-001 ويربط المدخل بالطابق العلوي. تقع المصاعد على يسار المدخل. الخريطة توضيحية وغير مرسومة بمقياس.',topMapTitle:'خريطة الطابق العلوي',topMapDesc:'يؤدي الدرج من المدخل إلى بسطة الدرج، ثم مكاتب أعضاء هيئة التدريس، ثم منطقة الجلوس. الخريطة توضيحية وغير مرسومة بمقياس.',
+    viewControls:'أدوات العرض',motionTitle:'استخدام حركة الهاتف',motionEnable:'تفعيل العرض بحركة الهاتف',motionDisable:'إيقاف العرض بحركة الهاتف',tourMap:'خريطة الحرم الجامعي',openMap:'العودة إلى خريطة الحرم الجامعي',tourInfo:'معلومات الجولة',openInfo:'فتح معلومات الجولة',resetView:'إعادة ضبط العرض وتسويته',fullScreen:'ملء الشاشة',exitFullScreen:'الخروج من ملء الشاشة',
+    campusMapTitle:'استكشف الحرم الجامعي',campusMapSubtitle:'اختر مبنى M7 لاستكشافه من الداخل',m7Hall:'مبنى M7',indoorTour:'جولة داخلية بزاوية 360°',enterHall:'دخول M7',backToCampus:'العودة إلى الحرم',campusMapAria:'خريطة تفاعلية للحرم الجامعي في جامعة الشارقة',currentCheckpoint:'النقطة الحالية',viewPanorama:'عرض بزاوية 360°',preparingPanorama:'جارٍ تجهيز العرض بزاوية 360°…',mapTitle:'خريطة جولة M7A',mapSubtitle:'تعرّف على موقعك داخل المبنى',closeMap:'إغلاق الخريطة',youAreHere:'موقعك الحالي',mapFloor:'طابق الخريطة',groundFloor:'الطابق الأرضي',topFloor:'الطابق العلوي',groundFloorBadge:'الأرضي',topFloorBadge:'العلوي',groundMapTitle:'خريطة الطابق الأرضي',groundMapDesc:'عند النظر إلى الممر من المدخل في الأسفل: تقع M7A-001 على اليمين وM7A-004 على اليسار عند قاعات الدراسة. عند نهاية الردهة تقع M7A-003 على اليسار وM7A-002 على اليمين. يقع الدرج على اليمين أسفل M7A-001 ويربط المدخل بالطابق العلوي. تقع المصاعد على يسار المدخل. الخريطة توضيحية وغير مرسومة بمقياس.',topMapTitle:'خريطة الطابق العلوي',topMapDesc:'يؤدي الدرج من المدخل إلى بسطة الدرج، ثم مكاتب أعضاء هيئة التدريس، ثم منطقة الجلوس. الخريطة توضيحية وغير مرسومة بمقياس.',
     hallEnd:'نهاية الردهة',studyRooms:'قاعات الدراسة',stairsUp:'الدرج ↑',elevators:'المصاعد',entrance:'المدخل',seatingArea:'منطقة الجلوس',facultyOffices:'مكاتب أعضاء هيئة التدريس',stairLanding:'بسطة الدرج',entranceGround:'↓ المدخل · الطابق الأرضي',groundMapNote:'انظر إلى داخل الردهة من المدخل. تقع M7A-001 على يمينك.',topMapNote:'يربط الدرج هذا الطابق بمدخل الطابق الأرضي.',mapHelp:'اضغط على موقع للانتقال إليه. الموقع المميز هو موقعك الحالي. الخريطة توضيحية وغير مرسومة بمقياس.',
     aboutTitle:'حول هذه الجولة',aboutSubtitle:'جامعة الشارقة · مبنى M7A',closeInfo:'إغلاق المعلومات',aboutCopy:'اسحب للنظر حولك. استخدم سهمًا أرضيًا أو الخريطة للتنقل بين المواقع. في الهواتف المدعومة، يمكنك أيضًا النظر حولك بتحريك جهازك.',shareTitle:'مشاركة هذا الموقع',copyLink:'نسخ الرابط',linkCopied:'تم نسخ الرابط',copyFailed:'تعذّر نسخ الرابط.',
     tourNavigation:'التنقل في الجولة',navigationTitle:'اضغط على سهم أرضي للانتقال · مسافة للخلف: رجوع · الرئيسية: إعادة ضبط العرض',back:'رجوع',loadingM7A:'جارٍ تحميل M7A',loading:'جارٍ تحميل M7A…',loadingPct:p=>`جارٍ تحميل M7A · ${p}%`,preparing:'جارٍ تجهيز مشهد M7A…',stillLoading:'لا يزال تحميل M7A جاريًا…',
@@ -554,14 +560,9 @@ const LOCATIONS=[
 const LOCATION_AR=[
   ['الردهة الرئيسية','المدخل'],['الردهة الرئيسية','قاعات الدراسة'],['الردهة الرئيسية','نهاية الردهة'],['الطابق العلوي','بسطة الدرج'],['الطابق العلوي','مكاتب أعضاء هيئة التدريس'],['الطابق العلوي','مكاتب أعضاء هيئة التدريس · منطقة الجلوس'],['الطابق الأرضي','M7A-001'],['الطابق الأرضي','M7A-004'],['الطابق الأرضي','M7A-003'],['الطابق الأرضي','M7A-002']
 ];
-// Demo positions clustered around M7A. Replace these pairs with surveyed GPS
-// coordinates later; the order intentionally matches LOCATIONS.
-const CAMPUS_POINTS=[
-  [25.28770,55.47886],[25.28782,55.47900],[25.28794,55.47914],
-  [25.28764,55.47910],[25.28776,55.47924],[25.28788,55.47938],
-  [25.28769,55.47931],[25.28786,55.47881],[25.28804,55.47896],
-  [25.28805,55.47927]
-];
+// Outdoor destinations are buildings; indoor checkpoints stay in LOCATIONS.
+// M7 coordinates supplied by the site owner.
+const CAMPUS_BUILDINGS=[{id:'m7',name:'M7',coordinates:[25.2857153181386,55.47720532173917],entrance:0}];
 const requestedScene=new URLSearchParams(location.search).get('scene');
 const requestedSceneIndex=LOCATIONS.findIndex(loc=>loc.id===requestedScene);
 const INITIAL_SCENE=requestedSceneIndex>=0?requestedSceneIndex:0;
@@ -595,48 +596,46 @@ const mapToggle=document.getElementById('map-toggle');
 const infoToggle=document.getElementById('info-toggle');
 let campusMap=null;
 const campusMarkers=[];
-function campusPin(index){
-  return L.divIcon({
-    className:'',
-    html:`<div class="campus-pin${index===current?' current':''}"><span>${index+1}</span></div>`,
-    iconSize:[38,46],iconAnchor:[19,44],popupAnchor:[0,-42]
-  });
+function campusPin(building){
+  return L.divIcon({className:'',html:'<div class="campus-pin current"><span>'+building.name+'</span></div>',iconSize:[38,46],iconAnchor:[19,44],popupAnchor:[0,-42]});
 }
-function campusPopup(index){
-  const loc=localizedLocation(index);
+function campusPopup(building){
   const content=document.createElement('div');
-  content.innerHTML=`<span class="campus-popup-area"></span><strong class="campus-popup-name"></strong>`;
-  content.querySelector('.campus-popup-area').textContent=loc.area;
-  content.querySelector('.campus-popup-name').textContent=loc.name;
+  content.innerHTML='<span class="campus-popup-area"></span><strong class="campus-popup-name"></strong>';
+  content.querySelector('.campus-popup-area').textContent=t('indoorTour');
+  content.querySelector('.campus-popup-name').textContent=t('m7Hall');
   const button=document.createElement('button');
-  button.type='button';button.className='campus-popup-button';button.disabled=!ready;button.textContent=t(ready?'viewPanorama':'preparingPanorama');
-  button.addEventListener('click',()=>openPanoramaFromCampus(index));
+  button.type='button';button.className='campus-popup-button';button.disabled=!ready;button.textContent=t(ready?'enterHall':'preparingPanorama');
+  button.addEventListener('click',()=>openPanoramaFromCampus(building.entrance));
   content.append(button);return content;
 }
 function initCampusMap(){
   if(campusMap||!window.L)return;
-  campusMap=L.map('campus-map',{zoomControl:false,minZoom:16,maxZoom:20,fadeAnimation:false}).setView(CAMPUS_POINTS[0],18);
+  campusMap=L.map('campus-map',{zoomControl:false,minZoom:3,maxZoom:20,fadeAnimation:false}).setView(CAMPUS_BUILDINGS[0].coordinates,17);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{
-    maxZoom:20,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    maxNativeZoom:19,maxZoom:20,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(campusMap);
   L.control.zoom({position:'bottomleft'}).addTo(campusMap);
-  CAMPUS_POINTS.forEach((point,index)=>{
-    const marker=L.marker(point,{icon:campusPin(index),keyboard:true,title:locationLabel(index),alt:locationLabel(index)}).addTo(campusMap);
-    marker.bindPopup(()=>campusPopup(index),{className:'campus-popup',closeButton:true,offset:[0,-2]});
-    marker.on('click',()=>marker.setPopupContent(campusPopup(index)));
+  CAMPUS_BUILDINGS.forEach(building=>{
+    const marker=L.marker(building.coordinates,{icon:campusPin(building),keyboard:true,title:t('m7Hall'),alt:t('m7Hall')}).addTo(campusMap);
+    marker.bindPopup(()=>campusPopup(building),{className:'campus-popup',closeButton:true,offset:[0,-2]});
+    marker.on('click',()=>marker.setPopupContent(campusPopup(building)));
     campusMarkers.push(marker);
   });
-  L.polyline(CAMPUS_POINTS.slice(0,3),{color:'#087f82',weight:5,opacity:.58,dashArray:'7 9'}).addTo(campusMap);
 }
 function updateCampusMap(){
-  document.getElementById('campus-current-location').textContent=locationLabel();
+  document.getElementById('campus-current-location').textContent='M7 · '+locationLabel();
+  document.getElementById('campus-enter').disabled=!ready;
+  document.getElementById('campus-enter').textContent=t(ready?'enterHall':'preparingPanorama');
   campusMarkers.forEach((marker,index)=>{
-    marker.setIcon(campusPin(index));marker.options.title=locationLabel(index);marker.options.alt=locationLabel(index);
-    marker.getElement()?.setAttribute('aria-label',t('goTo',locationLabel(index)));
-    marker.getElement()?.setAttribute('title',locationLabel(index));
-    if(marker.isPopupOpen())marker.setPopupContent(campusPopup(index));
+    const building=CAMPUS_BUILDINGS[index];
+    marker.options.title=t('m7Hall');marker.options.alt=t('m7Hall');
+    marker.getElement()?.setAttribute('aria-label',t('m7Hall'));
+    marker.getElement()?.setAttribute('title',t('m7Hall'));
+    if(marker.isPopupOpen())marker.setPopupContent(campusPopup(building));
   });
 }
+document.getElementById('campus-enter').onclick=()=>openPanoramaFromCampus(CAMPUS_BUILDINGS[0].entrance);
 function closePanels(){
   for(const [panel,button] of [[mapPanel,mapToggle],[infoPanel,infoToggle]]){
     panel.classList.remove('open');panel.setAttribute('aria-hidden','true');button.setAttribute('aria-pressed','false');
