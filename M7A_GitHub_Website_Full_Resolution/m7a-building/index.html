@@ -166,6 +166,12 @@
 #campus-enter{margin-top:14px;min-height:42px;font-size:12px}
 .campus-map-card{min-width:0}.campus-map-card strong{line-height:1.2}
 @media(max-width:640px){.topbar{flex-wrap:wrap}.topbar .brand{width:100%;max-width:none;box-sizing:border-box}.topbar .tools{margin-left:auto}#map-toggle{padding:0 10px;font-size:10px}}
+#tour-search-panel{z-index:60;background:#f8fcfb;color:#17494b;max-height:calc(100dvh - 160px);overflow:auto;scrollbar-width:thin;scrollbar-color:#a5c4bd transparent;box-sizing:border-box}
+.tour-search-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.tour-search-heading button{border:0;background:#e8f1ee;color:#245c58;border-radius:50%;width:32px;height:32px;font-size:23px;cursor:pointer}
+#tour-search-input{box-sizing:border-box;width:100%;border:1px solid #c8ddd7;border-radius:12px;padding:13px;background:white;color:#17494b;font:inherit;font-size:14px}
+#tour-search-input:focus-visible,#tour-search-panel button:focus-visible{outline:2px solid #078f83;outline-offset:3px}
+.tour-search-result{padding:14px 0;border-bottom:1px solid #dfebe6}.tour-search-result strong,.tour-search-result small{display:block}.tour-search-result small{color:#617c77;font-size:12px;margin:4px 0 10px}.tour-search-actions{display:flex;gap:8px;flex-wrap:wrap}.tour-search-actions button{font:inherit;font-size:12px;font-weight:650;border:1px solid #c8ddd7;background:white;color:#175b54;border-radius:10px;padding:9px 12px;cursor:pointer}.tour-search-actions button:first-child{background:#087f75;border-color:#087f75;color:white}.tour-search-actions button:disabled{opacity:.45;cursor:default}#tour-search-status{display:block;margin-top:10px;color:#617c77}
+@media(max-width:640px){#tour-search-input{font-size:16px}#tour-search-panel{top:max(164px,calc(env(safe-area-inset-top) + 154px));max-height:calc(100dvh - 184px)}}
 </style>
 <style>
  .directory-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}.directory-heading strong{font-size:18px}
@@ -220,6 +226,7 @@
   <div class="tools" aria-label="View controls" data-i18n-aria="viewControls">
     <button class="tool" id="motion" title="Use phone motion" aria-label="Enable phone motion view" data-i18n-title="motionTitle" hidden>◎</button>
     <button class="tool" id="map-toggle" title="Tour map" aria-label="Open tour map" data-i18n-title="tourMap" data-i18n-aria="openMap" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2V5Zm6-2v16m6-14v16"/></svg><span data-i18n="backToCampus">Back to campus</span></button>
+    <button class="tool" id="search-toggle" type="button" aria-label="Search halls or rooms" title="Search halls or rooms" aria-pressed="false" aria-controls="tour-search-panel"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></button>
     <button class="tool info-tool" id="info-toggle" title="Tour information" aria-label="Open tour information" data-i18n-title="tourInfo" data-i18n-aria="openInfo" aria-pressed="false">i</button>
     <button class="tool" id="reset" title="Reset view" aria-label="Reset and level view" data-i18n-title="resetView" data-i18n-aria="resetView">↺</button>
     <button class="tool" id="fullscreen" title="Full screen" aria-label="Full screen" data-i18n-title="fullScreen">⛶</button>
@@ -297,6 +304,11 @@
   </div>
 </aside>
 
+<aside id="tour-search-panel" class="panel" aria-hidden="true" aria-label="Search halls or rooms">
+  <div class="tour-search-heading"><strong id="tour-search-title">Find a room</strong><button id="tour-search-close" type="button" aria-label="Close search">×</button></div>
+  <input id="tour-search-input" type="search" autocomplete="off" placeholder="Search halls or rooms" aria-label="Search halls or rooms">
+  <div id="tour-search-results"></div><small id="tour-search-status" role="status" aria-live="polite"></small>
+</aside>
 <aside id="info-panel" class="panel" aria-hidden="true" aria-label="Tour information" data-i18n-aria="tourInfo">
   <div class="panel-head"><div><strong data-i18n="aboutTitle">About this tour</strong><small data-i18n="aboutSubtitle">University of Sharjah · Building M7A</small></div><button class="panel-close" data-close-panel aria-label="Close information" data-i18n-aria="closeInfo">×</button></div>
   <div class="info-copy">
@@ -321,7 +333,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { HALLS } from './halls.js';
-import { createDirectory } from './campus-directory.js';
+import { createDirectory, searchHalls, localized } from './campus-directory.js';
 import { findPath } from './directions.js';
 
 const PANORAMA_FILES = [
@@ -627,6 +639,32 @@ const mapPanel=document.getElementById('map-panel');
 const infoPanel=document.getElementById('info-panel');
 const mapToggle=document.getElementById('map-toggle');
 const infoToggle=document.getElementById('info-toggle');
+const searchPanel=document.getElementById('tour-search-panel'),searchToggle=document.getElementById('search-toggle'),tourSearch=document.getElementById('tour-search-input');
+function updateTourSearch(){
+  const ar=currentLanguage==='ar',label=ar?'ابحث عن مبنى أو قاعة':'Search halls or rooms';
+  searchToggle.title=label;searchToggle.setAttribute('aria-label',label);searchPanel.setAttribute('aria-label',label);
+  tourSearch.placeholder=label;tourSearch.setAttribute('aria-label',label);
+  document.getElementById('tour-search-title').textContent=ar?'ابحث عن قاعة':'Find a room';
+  document.getElementById('tour-search-close').setAttribute('aria-label',ar?'إغلاق البحث':'Close search');
+  const results=tourSearch.value.trim()?searchHalls(CAMPUS_BUILDINGS,tourSearch.value,currentLanguage):CAMPUS_BUILDINGS.flatMap(hall=>(hall.rooms||[]).map(room=>({hall,room,label:localized(room.name,currentLanguage)})));
+  const root=document.getElementById('tour-search-results');root.replaceChildren();
+  for(const {hall,room,label:resultLabel} of results){
+    const row=document.createElement('div');row.className='tour-search-result';
+    const title=document.createElement('strong');title.textContent=resultLabel;
+    const detail=document.createElement('small');detail.textContent=hall.code+' · '+localized(room?.floor||hall.name,currentLanguage);
+    row.append(title,detail);
+    const target=room?room.tour:hall.tour,actions=document.createElement('div');actions.className='tour-search-actions';
+    if(target){
+      if(target.scene){const button=document.createElement('button');button.type='button';button.textContent=ar?'أرشدني إلى القاعة':'Show me the way';button.disabled=!ready||transitioning;button.onclick=()=>startRoomDirections(target.scene);actions.append(button);}
+      const enter=document.createElement('button');enter.type='button';enter.textContent=ar?'فتح العرض بزاوية 360°':'Open 360° view';enter.disabled=Boolean(target.scene)&&(!ready||transitioning);enter.onclick=()=>openDirectoryTour(target);actions.append(enter);
+    }else{detail.textContent+=' · '+(ar?'الجولة متاحة قريبًا':'Tour coming soon');}
+    row.append(actions);root.append(row);
+  }
+  document.getElementById('tour-search-status').textContent=results.length?(ar?'النتائج: ':'Results: ')+results.length:(ar?'لا توجد مبانٍ أو قاعات مطابقة':'No matching halls or rooms');
+}
+tourSearch.addEventListener('input',updateTourSearch);
+searchToggle.onclick=()=>{togglePanel(searchPanel,searchToggle);if(searchPanel.classList.contains('open')){updateTourSearch();requestAnimationFrame(()=>tourSearch.focus());}};
+document.getElementById('tour-search-close').onclick=()=>{closePanels();searchToggle.focus();};
 let campusMap=null;
 let directionsTarget=null,directionsNext=null;
 const directionsPanel=document.createElement('section');
@@ -656,11 +694,12 @@ function startRoomDirections(sceneId){
 }
 document.getElementById('directions-next').onclick=()=>{if(directionsNext!==null)transitionTo(directionsNext);};
 document.getElementById('directions-stop').onclick=()=>{directionsTarget=null;updateDirections();lastMobileFrame='';updateHotspotVisuals(performance.now());mapToggle.focus({preventScroll:true});};
-const directory=createDirectory({halls:CAMPUS_BUILDINGS,root:mapPanel,language:()=>currentLanguage,isReady:()=>ready,startDirections:startRoomDirections,openTour:target=>{
+function openDirectoryTour(target){
   directionsTarget=null;updateDirections();
   if(target.scene){const index=LOCATIONS.findIndex(item=>item.id===target.scene);if(index>=0)openPanoramaFromCampus(index);}
   else if(target.url){const url=new URL(target.url,location.href);if(['https:','http:'].includes(url.protocol))location.assign(url.href);}
-}});
+}
+const directory=createDirectory({halls:CAMPUS_BUILDINGS,root:mapPanel,language:()=>currentLanguage,isReady:()=>ready,startDirections:startRoomDirections,openTour:openDirectoryTour});
 function initCampusMap(){
   if(campusMap||!window.maplibregl)return;
   const building=CAMPUS_BUILDINGS[0];
@@ -690,7 +729,7 @@ function updateCampusMap(){
   document.getElementById('campus-map').setAttribute('aria-label',t('campusMapAria'));
 }
 function closePanels(){
-  for(const [panel,button] of [[mapPanel,mapToggle],[infoPanel,infoToggle]]){
+  for(const [panel,button] of [[mapPanel,mapToggle],[infoPanel,infoToggle],[searchPanel,searchToggle]]){
     panel.classList.remove('open');panel.setAttribute('aria-hidden','true');button.setAttribute('aria-pressed','false');
     panel.inert=true;
   }
@@ -708,7 +747,7 @@ function togglePanel(panel,button){
 mapToggle.onclick=()=>togglePanel(mapPanel,mapToggle);
 infoToggle.onclick=()=>togglePanel(infoPanel,infoToggle);
 document.querySelectorAll('[data-close-panel]').forEach(btn=>btn.addEventListener('click',()=>{const opener=btn.closest('aside')===mapPanel?mapToggle:infoToggle;closePanels();opener.focus();updateRouteLabel();}));
-mapPanel.inert=true;infoPanel.inert=true;
+mapPanel.inert=true;infoPanel.inert=true;searchPanel.inert=true;
 function setMapFloor(floor){
   document.querySelectorAll('[data-floor-view]').forEach(el=>el.classList.toggle('active',el.dataset.floorView===floor));
   document.querySelectorAll('[data-map-floor]').forEach(btn=>{
@@ -905,7 +944,7 @@ function measureLabelBounds(){
   labelBounds.bottom=document.querySelector('.bottom').getBoundingClientRect().top-8;
 }
 function updateRouteLabel(){
-  if(!ready||transitioning||dragging||mapPanel.classList.contains('open')||infoPanel.classList.contains('open')){routeTip.classList.remove('show');routeTip.setAttribute('aria-hidden','true');return;}
+  if(!ready||transitioning||dragging||mapPanel.classList.contains('open')||infoPanel.classList.contains('open')||searchPanel.classList.contains('open')){routeTip.classList.remove('show');routeTip.setAttribute('aria-hidden','true');return;}
   camera.updateMatrixWorld();camera.getWorldDirection(labelFacing);
   const bearing=Math.atan2(labelFacing.x,-labelFacing.z);
   let selected=null,best=Infinity,position=null;
@@ -971,6 +1010,7 @@ function updateSceneShare(){
   shareLocation.textContent=locationLabel();sceneLinkElement.href=url;sceneLinkElement.textContent=url;
 }
 function updateControls(){
+  updateTourSearch();
   updateDirections();
   previous.disabled=!ready || transitioning || backTarget()==null;
   document.getElementById('route-label').textContent=locationLabel();
@@ -1305,7 +1345,7 @@ const fullscreen=document.getElementById('fullscreen');
 fullscreen.hidden=!document.fullscreenEnabled;
 fullscreen.onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{document.getElementById('status').textContent=t('fullscreenUnavailable');}};
 document.addEventListener('fullscreenchange',()=>fullscreen.setAttribute('aria-label',t(document.fullscreenElement?'exitFullScreen':'fullScreen')));
-addEventListener('keydown',e=>{if(e.key==='Escape'&&(mapPanel.classList.contains('open')||infoPanel.classList.contains('open'))){e.preventDefault();const opener=mapPanel.classList.contains('open')?mapToggle:infoToggle;closePanels();opener.focus();return;}if(e.target.closest('button,input,textarea,select,[role="button"]')||e.altKey||e.ctrlKey||e.metaKey)return;if(e.key==='Backspace'||e.key==='Escape'){const back=backTarget();if(back!=null){e.preventDefault();routeTip.classList.remove('show');routeTip.setAttribute('aria-hidden','true');transitionTo(back);}}
+addEventListener('keydown',e=>{if(e.key==='Escape'&&(mapPanel.classList.contains('open')||infoPanel.classList.contains('open')||searchPanel.classList.contains('open'))){e.preventDefault();const opener=mapPanel.classList.contains('open')?mapToggle:searchPanel.classList.contains('open')?searchToggle:infoToggle;closePanels();opener.focus();return;}if(e.target.closest('button,input,textarea,select,[role="button"]')||e.altKey||e.ctrlKey||e.metaKey)return;if(e.key==='Backspace'||e.key==='Escape'){const back=backTarget();if(back!=null){e.preventDefault();routeTip.classList.remove('show');routeTip.setAttribute('aria-hidden','true');transitionTo(back);}}
   if(e.key==='Home' && ready && !transitioning){e.preventDefault();resetView();}
   if(e.key==='+' || e.key==='='){e.preventDefault();zoom(-8);}
   if(e.key==='-'){e.preventDefault();zoom(8);}
