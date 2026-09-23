@@ -167,6 +167,21 @@
 .campus-map-card{min-width:0}.campus-map-card strong{line-height:1.2}
 @media(max-width:640px){.topbar{flex-wrap:wrap}.topbar .brand{width:100%;max-width:none;box-sizing:border-box}.topbar .tools{margin-left:auto}#map-toggle{padding:0 10px;font-size:10px}}
 </style>
+<style>
+ .directory-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}.directory-heading strong{font-size:18px}
+ #directory-collapse{width:36px;height:36px;flex:none;border:1px solid #d5e3e3;border-radius:50%;background:#f1f8f7;color:#075f63;font-size:22px}
+ #directory-body{max-height:min(55vh,470px);overflow:auto;overscroll-behavior:contain;padding:2px}
+ #hall-search{box-sizing:border-box;width:100%;margin:14px 0 8px;padding:12px;border:1px solid #c8d9d9;border-radius:10px;background:#f7faf9;color:#163e42;font:inherit;font-size:13px}
+ #hall-search:focus-visible,.hall-room:focus-visible{outline:2px solid #087f82;outline-offset:2px}
+ .hall-result{display:block;width:100%;padding:12px 8px;text-align:start;border:0;border-bottom:1px solid #e1eceb;background:transparent;color:#173e42;border-radius:7px}.hall-result:hover{background:#eaf6f3}.hall-result strong{font-size:14px!important;line-height:1.4!important}.hall-result small{font-size:11px}
+ #directory-browse{border:0;background:none;color:#087f82;padding:12px 0 0;font:inherit;font-size:12px;font-weight:700}
+ .hall-thumbnail{width:100%;height:85px;object-fit:cover;border-radius:10px;margin-top:10px}.hall-status,.directory-empty{font-size:12px;color:#526c6d;line-height:1.5}
+ .room-label{display:block;font-size:12px;color:#375a5d;margin:10px 0 5px}.hall-room{box-sizing:border-box;width:100%;padding:11px 8px;border:1px solid #c8d9d9;background:white;color:#163e42;border-radius:8px;font-size:12px}
+ .campus-cluster{width:48px;height:48px;border:3px solid white;border-radius:50%;background:#087f82;color:white;font:800 15px Inter,system-ui,sans-serif;box-shadow:0 0 0 7px #087f8229,0 5px 18px #00333740;cursor:pointer}
+ .campus-cluster:focus-visible{outline:3px solid #087f82;outline-offset:8px}
+ [hidden]{display:none!important}
+ @media(max-width:600px){#directory-body{max-height:42vh}.directory-heading strong{font-size:16px}.hall-thumbnail{height:65px}}
+</style>
 <link href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css" rel="stylesheet">
 <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script>
@@ -197,9 +212,13 @@
   <div class="campus-map-toolbar">
     <div class="campus-map-card">
       <span class="eyebrow" data-i18n="university">University of Sharjah</span>
-      <strong data-i18n="campusMapTitle">M7 · College of Science</strong>
-      <small data-i18n="campusMapSubtitle">A 360° indoor tour is available</small>
-      <button id="campus-enter" class="campus-popup-button" type="button" disabled>Preparing 360° view…</button>
+      <div class="directory-heading"><strong id="directory-title">Choose a hall</strong><button id="directory-collapse" type="button" aria-controls="directory-body" aria-expanded="true" aria-label="Collapse details">−</button></div>
+      <div id="directory-body">
+        <button id="directory-browse" type="button" hidden>All halls</button>
+        <input id="hall-search" type="search" placeholder="Search halls or rooms" aria-label="Search halls or rooms" autocomplete="off">
+        <div id="hall-results" aria-live="polite"></div>
+        <div id="hall-detail"></div>
+      </div>
     </div>
     <div class="campus-map-actions">
       <button class="campus-map-language" id="campus-language-toggle" type="button" aria-label="Switch to Arabic" title="العربية">ع</button>
@@ -281,6 +300,8 @@
 <script>setTimeout(()=>{const l=document.getElementById('loading');if(l&&!l.classList.contains('done')){const p=document.getElementById('load-progress-text');if(p&&!p.textContent.includes('%')){let ar=false;try{ar=localStorage.getItem('m7a-language-v1')==='ar';}catch{}p.textContent=ar?'لا يزال تحميل M7A جاريًا…':'Still loading M7A…';}}},18000);</script><script type="module">
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { HALLS } from './halls.js';
+import { createDirectory } from './campus-directory.js';
 
 const PANORAMA_FILES = [
   "ground-entrance.glb",
@@ -553,7 +574,7 @@ const LOCATION_AR=[
 ];
 // Outdoor destinations are buildings; indoor checkpoints stay in LOCATIONS.
 // M7 coordinates supplied by the site owner.
-const CAMPUS_BUILDINGS=[{id:'m7',name:'M7',coordinates:[25.2857153181386,55.47720532173917],entrance:0}];
+const CAMPUS_BUILDINGS=HALLS;
 const requestedScene=new URLSearchParams(location.search).get('scene');
 const requestedSceneIndex=LOCATIONS.findIndex(loc=>loc.id===requestedScene);
 const INITIAL_SCENE=requestedSceneIndex>=0?requestedSceneIndex:0;
@@ -586,14 +607,17 @@ const infoPanel=document.getElementById('info-panel');
 const mapToggle=document.getElementById('map-toggle');
 const infoToggle=document.getElementById('info-toggle');
 let campusMap=null;
-let campusMarkerElement=null;
+const directory=createDirectory({halls:CAMPUS_BUILDINGS,root:mapPanel,language:()=>currentLanguage,isReady:()=>ready,openTour:target=>{
+  if(target.scene){const index=LOCATIONS.findIndex(item=>item.id===target.scene);if(index>=0)openPanoramaFromCampus(index);}
+  else if(target.url){const url=new URL(target.url,location.href);if(['https:','http:'].includes(url.protocol))location.assign(url.href);}
+}});
 function initCampusMap(){
   if(campusMap||!window.maplibregl)return;
   const building=CAMPUS_BUILDINGS[0];
   campusMap=new maplibregl.Map({
     container:'campus-map',
     style:'https://tiles.openfreemap.org/styles/liberty',
-    center:[building.coordinates[1],building.coordinates[0]],
+    center:building.coordinates,
     zoom:17.4,
     // Align the main campus avenue horizontally; keep this heading during gestures.
     bearing:124,
@@ -607,22 +631,14 @@ function initCampusMap(){
   campusMap.touchZoomRotate.disableRotation();
   campusMap.keyboard.disableRotation();
   campusMap.addControl(new maplibregl.NavigationControl({showCompass:false,showZoom:true,visualizePitch:false}),'top-right');
-  campusMarkerElement=document.createElement('button');
-  campusMarkerElement.type='button';campusMarkerElement.className='campus-marker';
-  campusMarkerElement.innerHTML='<span class="campus-pin-shape" aria-hidden="true"><span>M7</span></span>';
-  campusMarkerElement.addEventListener('click',()=>openPanoramaFromCampus(building.entrance));
-  new maplibregl.Marker({element:campusMarkerElement,anchor:'bottom'}).setLngLat([building.coordinates[1],building.coordinates[0]]).addTo(campusMap);
+  directory.attach(campusMap);
   updateCampusMap();
 }
 function updateCampusMap(){
   document.getElementById('campus-current-location').textContent='M7 · '+locationLabel();
-  document.getElementById('campus-enter').disabled=!ready;
-  document.getElementById('campus-enter').textContent=t(ready?'enterHall':'preparingPanorama');
+  directory.update();
   document.getElementById('campus-map').setAttribute('aria-label',t('campusMapAria'));
-  campusMarkerElement?.setAttribute('aria-label',t('enterHall'));
-  campusMarkerElement?.setAttribute('title',t('m7Hall'));
 }
-document.getElementById('campus-enter').onclick=()=>openPanoramaFromCampus(CAMPUS_BUILDINGS[0].entrance);
 function closePanels(){
   for(const [panel,button] of [[mapPanel,mapToggle],[infoPanel,infoToggle]]){
     panel.classList.remove('open');panel.setAttribute('aria-hidden','true');button.setAttribute('aria-pressed','false');

@@ -1,0 +1,16 @@
+<!doctype html><meta charset="utf-8"><title>Directory overlap fixture</title>
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css">
+<script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
+<style>#map{height:350px}#card{padding:20px;max-width:400px}.hall-result{display:block;padding:12px;width:100%}.hall-result small{display:block}.campus-cluster{background:teal;color:white;width:48px;height:48px;border-radius:50%}.campus-marker{background:teal;color:white}[hidden]{display:none!important}</style>
+<div id="map"></div><div id="card"><strong id="directory-title"></strong><button id="directory-collapse" aria-controls="directory-body"></button><div id="directory-body"><button id="directory-browse"></button><input id="hall-search"><div id="hall-results"></div><div id="hall-detail"></div></div></div><output id="opened"></output>
+<script type="module">
+import {createDirectory} from '../M7A_GitHub_Website_Full_Resolution/m7a-building/campus-directory.js';
+const halls=[
+ {id:'qa1',code:'QA1',name:{en:'Available fixture'},coordinates:[55.4772,25.2857],tour:{url:'./fixture-tour.html'}},
+ {id:'qa2',code:'QA2',name:{en:'Pending fixture'},coordinates:[55.4772,25.2857],tour:null},
+ {id:'qa3',code:'QA3',name:{en:'Nearby fixture'},coordinates:[55.47725,25.2857],tour:null}
+];
+const map=new maplibregl.Map({container:'map',style:{version:8,sources:{},layers:[]},center:halls[0].coordinates,zoom:17});
+const directory=createDirectory({halls,root:document.querySelector('#card'),language:()=> 'en',isReady:()=>true,openTour:target=>document.querySelector('#opened').textContent=target.url});
+directory.attach(map);
+</script>

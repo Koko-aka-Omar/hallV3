@@ -1,9 +1,9 @@
 const CACHE_PREFIX='m7a-tour:'+self.registration.scope+':';
-const SHELL_CACHE=CACHE_PREFIX+'shell-v19';
+const SHELL_CACHE=CACHE_PREFIX+'shell-v20';
 // Bump only when panorama files change; UI releases retain full-resolution downloads.
 const PANORAMA_CACHE=CACHE_PREFIX+'panoramas-v2';
 const LEGACY_CACHE='m7a-tour-v7';
-const CORE_ASSETS=['./','./index.html','./favicon.svg','./manifest.webmanifest','./apple-touch-icon.png','./social-preview.png'];
+const CORE_ASSETS=['./','./index.html','./halls.js','./campus-directory.js','./favicon.svg','./manifest.webmanifest','./apple-touch-icon.png','./social-preview.png'];
 const PANORAMA_NAMES=[
   'ground-entrance','ground-study-rooms','ground-hall-end',
   'top-stair-landing','top-faculty-offices','top-seating-area',
