@@ -147,13 +147,17 @@
   .campus-map-close,.campus-map-language{width:46px;min-width:46px;height:46px;padding:0;border:1px solid rgba(9,49,54,.1);border-radius:50%;background:rgba(255,255,255,.97);box-shadow:0 8px 24px rgba(0,31,35,.18);color:#113f43;font-weight:850;pointer-events:auto}
   .campus-map-close{font-size:24px;line-height:1}.campus-map-language{font-size:11px}.campus-map-close:hover,.campus-map-language:hover{background:#eef8f7;color:#006c70}
   .campus-map-location{display:none}
-  .campus-marker{width:52px;height:52px;border:4px solid #fff;border-radius:50%;background:#087f82;color:#fff;font:850 13px/1 Inter,system-ui,sans-serif;box-shadow:0 0 0 8px rgba(8,127,130,.18),0 8px 20px rgba(0,42,47,.32);cursor:pointer;transition:transform .16s ease,background .16s ease}.campus-marker:hover{background:#056a6d;transform:scale(1.06)}
+  .campus-marker{width:52px;height:64px;padding:0;border:0;background:transparent;cursor:pointer;overflow:visible}
+  .campus-marker svg{display:block;width:52px;height:64px;overflow:visible;filter:drop-shadow(0 5px 7px rgba(0,42,47,.3));transition:filter .16s ease}
+  .campus-marker:hover svg{filter:drop-shadow(0 6px 10px rgba(0,42,47,.45))}
+  .campus-marker:focus-visible{outline:3px solid #087f82;outline-offset:5px;border-radius:24px}
+  .campus-map-card button:focus-visible,.campus-map-actions button:focus-visible{outline:3px solid #24b9b0;outline-offset:4px}
   .campus-popup-button{width:100%;min-height:43px;border:0;border-radius:11px;background:#087f82;color:#fff;font-size:12px;font-weight:850;box-shadow:0 7px 18px rgba(8,127,130,.2)}.campus-popup-button:hover{background:#066e71}.campus-popup-button:disabled{opacity:.65;cursor:wait}
-  #campus-map .maplibregl-ctrl-bottom-right{right:clamp(16px,3vw,34px);bottom:clamp(16px,3vw,28px)}#campus-map .maplibregl-ctrl-group{border-radius:12px;overflow:hidden;box-shadow:0 8px 24px rgba(0,31,35,.18)}#campus-map .maplibregl-ctrl-attrib{font-size:9px}
+  #campus-map .maplibregl-ctrl-bottom-right{right:12px;bottom:4px}#campus-map .maplibregl-ctrl-top-right{top:78px;right:clamp(6px,2vw,24px)}#campus-map .maplibregl-ctrl-group{border-radius:12px;overflow:hidden;box-shadow:0 8px 24px rgba(0,31,35,.18)}#campus-map .maplibregl-ctrl-group button{width:42px;height:42px}#campus-map .maplibregl-ctrl-attrib{font-size:10px}
   html[dir="rtl"] .campus-map-card{text-align:right;direction:rtl}
   @media(max-width:600px){
     #map-panel.campus-map-panel{max-height:none}
-    .campus-map-card{left:10px;bottom:max(12px,calc(env(safe-area-inset-bottom) + 8px));width:calc(100vw - 20px);padding:14px 15px;border-radius:16px}.campus-map-card strong{font-size:18px}.campus-map-card small{font-size:10px}
+    .campus-map-card{left:12px;bottom:max(40px,calc(env(safe-area-inset-bottom) + 30px));width:calc(100vw - 24px);padding:16px;border-radius:16px}.campus-map-card strong{font-size:19px}.campus-map-card small{font-size:12px}
     .campus-map-actions{top:max(10px,env(safe-area-inset-top));right:10px;gap:6px}.campus-map-close,.campus-map-language{width:42px;min-width:42px;height:42px;font-size:10px}.campus-map-close{font-size:22px}
   }
 #map-toggle{width:auto;min-width:42px;padding:0 12px;font-size:11px;white-space:nowrap}
@@ -589,15 +593,23 @@ function initCampusMap(){
     style:'https://tiles.openfreemap.org/styles/liberty',
     center:[building.coordinates[1],building.coordinates[0]],
     zoom:17.4,
-    bearing:43,
+    // Align the main campus avenue vertically; keep this heading during gestures.
+    bearing:34,
     pitch:0,
+    maxPitch:0,
+    dragRotate:false,
+    pitchWithRotate:false,
+    touchPitch:false,
     attributionControl:true
   });
-  campusMap.addControl(new maplibregl.NavigationControl({showCompass:true,showZoom:true,visualizePitch:false}),'bottom-right');
+  campusMap.touchZoomRotate.disableRotation();
+  campusMap.keyboard.disableRotation();
+  campusMap.addControl(new maplibregl.NavigationControl({showCompass:false,showZoom:true,visualizePitch:false}),'top-right');
   campusMarkerElement=document.createElement('button');
-  campusMarkerElement.type='button';campusMarkerElement.className='campus-marker';campusMarkerElement.textContent='M7';
+  campusMarkerElement.type='button';campusMarkerElement.className='campus-marker';
+  campusMarkerElement.innerHTML='<svg viewBox="0 0 52 64" aria-hidden="true"><path d="M26 62C22 55 3 39 3 26a23 23 0 0 1 46 0c0 13-19 29-23 36Z" fill="#087f82" stroke="white" stroke-width="3"/><circle cx="26" cy="26" r="16" fill="#00666b"/><text x="26" y="31" text-anchor="middle" fill="white" font-family="Inter,system-ui,sans-serif" font-size="14" font-weight="800">M7</text></svg>';
   campusMarkerElement.addEventListener('click',()=>openPanoramaFromCampus(building.entrance));
-  new maplibregl.Marker({element:campusMarkerElement,anchor:'center'}).setLngLat([building.coordinates[1],building.coordinates[0]]).addTo(campusMap);
+  new maplibregl.Marker({element:campusMarkerElement,anchor:'bottom'}).setLngLat([building.coordinates[1],building.coordinates[0]]).addTo(campusMap);
   updateCampusMap();
 }
 function updateCampusMap(){
