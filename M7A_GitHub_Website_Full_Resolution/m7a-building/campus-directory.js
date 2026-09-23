@@ -91,16 +91,49 @@ export function createDirectory({ halls, root, language, isReady, openTour }) {
     const target = room?.tour || (!room ? selected.tour : null);
     detail.append(node('p', 'hall-status', target ? text('available') : text('soon')));
     if (selected.rooms?.length) {
-      const caption = node('label', 'room-label', text('rooms')); caption.htmlFor = 'hall-room';
-      const options = node('select', 'hall-room'); options.id = 'hall-room';
-      const entry = node('option', '', text('entrance')); entry.value = ''; options.append(entry);
-      for (const item of selected.rooms) {
-        const option = node('option', '', `${localized(item.name, language())}${item.floor ? ' · ' + localized(item.floor, language()) : ''}`);
-        option.value = item.id; options.append(option);
+      const caption = node('p', 'room-label', text('rooms')); caption.id = 'room-picker-label';
+      const picker = node('div', 'room-picker');
+      const toggle = node('button', 'room-picker-toggle'); toggle.type = 'button'; toggle.id = 'hall-room';
+      toggle.setAttribute('aria-expanded', 'false'); toggle.setAttribute('aria-controls', 'room-choices');
+      toggle.setAttribute('aria-labelledby', 'room-picker-label room-picker-value');
+      const value = node('span', '', room ? localized(room.name, language()) : text('entrance')); value.id = 'room-picker-value';
+      const chevron = node('span', 'room-chevron', '⌄'); chevron.setAttribute('aria-hidden', 'true'); toggle.append(value, chevron);
+      const choices = node('div', 'room-choices'); choices.id = 'room-choices'; choices.hidden = true;
+      choices.setAttribute('role', 'group'); choices.setAttribute('aria-labelledby', 'room-picker-label');
+      const buttons = [];
+      for (const item of [null, ...selected.rooms]) {
+        const option = node('button', 'room-choice'); option.type = 'button';
+        const active = (item?.id || '') === (room?.id || ''); option.setAttribute('aria-pressed', String(active));
+        const labels = node('span', 'room-choice-labels');
+        labels.append(node('strong', '', item ? localized(item.name, language()) : text('entrance')));
+        if (item?.floor) labels.append(node('small', '', localized(item.floor, language())));
+        if (item && !item.tour) labels.append(node('small', '', text('soon')));
+        const check = node('span', 'room-choice-check', active ? '✓' : ''); check.setAttribute('aria-hidden', 'true');
+        option.append(labels, check);
+        option.onclick = () => { room = item; renderDetail(); detail.querySelector('#hall-room')?.focus({ preventScroll: true }); };
+        buttons.push(option); choices.append(option);
       }
-      options.value = room?.id || '';
-      options.onchange = () => { room = selected.rooms.find(item => item.id === options.value) || null; renderDetail(); detail.querySelector('select')?.focus({ preventScroll: true }); };
-      detail.append(caption, options);
+      const setOpen = open => {
+        choices.hidden = !open; toggle.setAttribute('aria-expanded', String(open));
+        if (open) requestAnimationFrame(() => {
+          body.scrollTop += toggle.getBoundingClientRect().top - body.getBoundingClientRect().top - 4;
+        });
+      };
+      toggle.onclick = () => setOpen(choices.hidden);
+      toggle.onkeydown = event => {
+        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+          event.preventDefault(); setOpen(true); buttons[event.key === 'ArrowDown' ? 0 : buttons.length - 1].focus();
+        }
+      };
+      picker.onkeydown = event => {
+        if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); setOpen(false); toggle.focus(); }
+        const index = buttons.indexOf(document.activeElement);
+        if (index < 0 || !['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) return;
+        event.preventDefault();
+        const next = event.key === 'Home' ? 0 : event.key === 'End' ? buttons.length - 1 : (index + (event.key === 'ArrowDown' ? 1 : -1) + buttons.length) % buttons.length;
+        buttons[next].focus();
+      };
+      picker.append(toggle, choices); detail.append(caption, picker);
     }
     const button = node('button', 'campus-popup-button'); button.id = 'campus-enter'; button.type = 'button';
     button.disabled = !target || Boolean(target.scene && !isReady());
