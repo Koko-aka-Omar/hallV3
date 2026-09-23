@@ -39,7 +39,7 @@ export function searchHalls(halls, query, language) {
   });
 }
 
-export function createDirectory({ halls, root, language, isReady, openTour }) {
+export function createDirectory({ halls, root, language, isReady, openTour, startDirections }) {
   const copy = {
     en: { choose: 'Choose a hall', search: 'Search halls or rooms', empty: 'No matching halls or rooms', browse: 'All halls', available: '360° tour available', soon: 'Tour coming soon', enter: 'Enter 360° tour', loading: 'Preparing 360° view…', rooms: 'Rooms', entrance: 'Hall entrance', collapse: 'Collapse details', expand: 'Expand details', group: 'Nearby halls', select: 'Select a hall', count: n => `${n} halls`, back: 'All halls' },
     ar: { choose: 'اختر مبنى', search: 'ابحث عن مبنى أو قاعة', empty: 'لا توجد مبانٍ أو قاعات مطابقة', browse: 'جميع المباني', available: 'تتوفر جولة بزاوية 360°', soon: 'الجولة متاحة قريبًا', enter: 'دخول الجولة بزاوية 360°', loading: 'جارٍ تجهيز العرض بزاوية 360°…', rooms: 'القاعات', entrance: 'مدخل المبنى', collapse: 'طي التفاصيل', expand: 'عرض التفاصيل', group: 'مبانٍ متقاربة', select: 'اختر مبنى', count: n => `${n} مبانٍ`, back: 'جميع المباني' }
@@ -140,6 +140,13 @@ export function createDirectory({ halls, root, language, isReady, openTour }) {
     button.textContent = !target ? text('soon') : target.scene && !isReady() ? text('loading') : text('enter');
     button.onclick = () => { if (target && !button.disabled) openTour(target); };
     detail.append(button);
+    if (room && target?.scene && startDirections) {
+      const directions = node('button', 'campus-popup-button directions-start', language() === 'ar' ? 'أرشدني إلى القاعة' : 'Show me the way');
+      directions.type = 'button'; directions.disabled = !isReady();
+      directions.onclick = () => startDirections(target.scene);
+      detail.append(directions);
+      detail.append(node('small', 'hall-status', language() === 'ar' ? 'اتبع المسار من موقعك الحالي في الجولة.' : 'Follow the route from your current tour viewpoint.'));
+    }
   }
   function render() {
     title.textContent = selected ? label(selected) : group ? text('group') : text('choose');

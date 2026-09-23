@@ -169,6 +169,11 @@
 </style>
 <style>
  .directory-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}.directory-heading strong{font-size:18px}
+ .directions-start{margin-top:10px;background:#edf7f5;color:#07686d;border:1px solid #acd4cf;box-shadow:none}.directions-start:hover{background:#d9eeea}
+ #directions-panel{position:fixed;z-index:40;bottom:110px;left:50%;transform:translateX(-50%);box-sizing:border-box;width:min(540px,calc(100vw - 24px));display:flex;align-items:center;gap:10px;padding:14px 16px;border:1px solid #ffe49a88;border-radius:16px;background:#063c40f5;color:white;box-shadow:0 8px 26px #001f2440}
+ #directions-panel>div{flex:1;min-width:0}#directions-panel strong{display:block;font-size:14px;line-height:1.4}#directions-panel small{display:block;margin-top:5px;font-size:12px;color:#f6df9b;line-height:1.4}
+ #directions-panel button{min-height:40px;border:0;border-radius:10px;padding:0 12px;background:#ffe49a;color:#143f40;font-weight:750}#directions-panel button:disabled{opacity:.55}#directions-panel #directions-stop{background:transparent;color:white;font-size:22px;padding:0 8px}
+ #directions-panel button:focus-visible{outline:3px solid white;outline-offset:3px}
  #directory-collapse{width:36px;height:36px;flex:none;border:1px solid #d5e3e3;border-radius:50%;background:#f1f8f7;color:#075f63;font-size:22px}
  #directory-body{max-height:min(55vh,470px);overflow:auto;overscroll-behavior:contain;padding:2px;scrollbar-width:thin;scrollbar-color:#9abfbb transparent}
  #directory-body::-webkit-scrollbar{width:6px;height:6px}
@@ -317,6 +322,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { HALLS } from './halls.js';
 import { createDirectory } from './campus-directory.js';
+import { findPath } from './directions.js';
 
 const PANORAMA_FILES = [
   "ground-entrance.glb",
@@ -622,7 +628,36 @@ const infoPanel=document.getElementById('info-panel');
 const mapToggle=document.getElementById('map-toggle');
 const infoToggle=document.getElementById('info-toggle');
 let campusMap=null;
-const directory=createDirectory({halls:CAMPUS_BUILDINGS,root:mapPanel,language:()=>currentLanguage,isReady:()=>ready,openTour:target=>{
+let directionsTarget=null,directionsNext=null;
+const directionsPanel=document.createElement('section');
+directionsPanel.id='directions-panel';directionsPanel.hidden=true;
+directionsPanel.innerHTML='<div><strong id="directions-title"></strong><small id="directions-step" role="status" aria-live="polite"></small></div><button id="directions-next" type="button"></button><button id="directions-stop" type="button">×</button>';
+document.body.append(directionsPanel);
+function updateDirections(){
+  directionsPanel.hidden=directionsTarget===null;
+  directionsNext=null;
+  if(directionsTarget===null)return;
+  const path=findPath(LOCATIONS,current,directionsTarget),ar=currentLanguage==='ar';
+  const arrived=current===directionsTarget;
+  directionsNext=path?.[1]??null;
+  document.getElementById('directions-title').textContent=(arrived?(ar?'وصلت إلى ':'You’ve arrived at '):(ar?'الاتجاهات إلى ':'Directions to '))+localizedLocation(directionsTarget).name;
+  document.getElementById('directions-step').textContent=transitioning?(ar?'جارٍ الانتقال…':'Moving…'):arrived?(ar?'أنت الآن في القاعة المطلوبة.':'You’re at your destination.'):!path?(ar?'لا يوجد مسار متصل من هذا الموقع.':'No connected route from this viewpoint.'):(ar?'التالي: ':'Next: ')+localizedLocation(directionsNext).name+' · '+(ar?'الانتقالات المتبقية: ':'Moves remaining: ')+(path.length-1);
+  const next=document.getElementById('directions-next');next.hidden=directionsNext===null;next.disabled=!ready||transitioning;next.textContent=ar?'متابعة':'Continue';
+  const stop=document.getElementById('directions-stop');stop.setAttribute('aria-label',ar?'إنهاء الاتجاهات':'End directions');
+}
+function startRoomDirections(sceneId){
+  const target=LOCATIONS.findIndex(item=>item.id===sceneId);
+  if(target<0||!ready||transitioning)return;
+  directionsTarget=target;closePanels();updateDirections();
+  const route=LOCATIONS[current].routes.find(item=>item.to===directionsNext);
+  if(route&&!motionEnabled){yaw=-route.angle;pitch=-.3;camera.rotation.set(pitch,yaw,0);}
+  lastMobileFrame='';updateHotspotVisuals(performance.now());
+  document.getElementById(directionsNext===null?'directions-stop':'directions-next').focus({preventScroll:true});
+}
+document.getElementById('directions-next').onclick=()=>{if(directionsNext!==null)transitionTo(directionsNext);};
+document.getElementById('directions-stop').onclick=()=>{directionsTarget=null;updateDirections();lastMobileFrame='';updateHotspotVisuals(performance.now());mapToggle.focus({preventScroll:true});};
+const directory=createDirectory({halls:CAMPUS_BUILDINGS,root:mapPanel,language:()=>currentLanguage,isReady:()=>ready,startDirections:startRoomDirections,openTour:target=>{
+  directionsTarget=null;updateDirections();
   if(target.scene){const index=LOCATIONS.findIndex(item=>item.id===target.scene);if(index>=0)openPanoramaFromCampus(index);}
   else if(target.url){const url=new URL(target.url,location.href);if(['https:','http:'].includes(url.protocol))location.assign(url.href);}
 }});
@@ -830,9 +865,14 @@ function updateHotspotVisuals(now=0){
     const pulse=(reducedMotion||coarsePointer)?0:(0.5+0.5*Math.sin(now*0.0028))*0.045;
     hs.scale.setScalar(0.64*(1+0.05*e+pulse));
     const stairBoost=u.route?.kind==='stairs'?0.06:0;
+    const guided=directionsNext!==null&&u.route?.to===directionsNext;
+    u.inner.material.color.setHex(guided?0xffcf5c:0x22b8b0);
+    u.ring.material.color.setHex(guided?0xffe49a:0x8edbd6);
+    u.arrow.material.color.setHex(guided?0xfff5c4:0x063f43);
     u.inner.material.opacity=(0.16+0.15*e+stairBoost)*quiet;
     u.ring.material.opacity=(0.40+0.30*e+pulse)*quiet;
     u.arrow.material.opacity=(0.70+0.20*e)*quiet;
+    if(guided){hs.scale.multiplyScalar(1.2);u.inner.material.opacity=.5;u.ring.material.opacity=1;u.arrow.material.opacity=1;}
   }
 }
 
@@ -931,6 +971,7 @@ function updateSceneShare(){
   shareLocation.textContent=locationLabel();sceneLinkElement.href=url;sceneLinkElement.textContent=url;
 }
 function updateControls(){
+  updateDirections();
   previous.disabled=!ready || transitioning || backTarget()==null;
   document.getElementById('route-label').textContent=locationLabel();
   floorBadge.textContent=floorLabel();
