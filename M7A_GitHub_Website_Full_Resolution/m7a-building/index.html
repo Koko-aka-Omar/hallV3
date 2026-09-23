@@ -138,47 +138,32 @@
   /* Full-screen campus map */
   #map-panel.campus-map-panel{z-index:110;inset:0;top:0;right:0;width:100vw;max-height:none;padding:0;border:0;border-radius:0;background:#062f33;overflow:hidden;transform:scale(1.012);transition:opacity .24s ease,transform .24s ease,visibility .24s ease}
   #map-panel.campus-map-panel.open{transform:scale(1)}
-  #campus-map{position:absolute;z-index:1;inset:0;background:#dce9e6}
-  .campus-map-shade{display:none}
-  .campus-map-toolbar{position:absolute;z-index:520;top:max(18px,env(safe-area-inset-top));left:clamp(16px,3vw,34px);right:clamp(16px,3vw,34px);display:flex;align-items:flex-start;justify-content:space-between;gap:14px;pointer-events:none}
-  .campus-map-card{max-width:min(460px,calc(100vw - 92px));padding:15px 18px 14px;border:1px solid rgba(196,246,241,.24);border-radius:19px;background:linear-gradient(135deg,rgba(0,76,82,.96),rgba(2,46,51,.93));box-shadow:0 16px 42px rgba(0,26,29,.3);color:#fff;pointer-events:auto;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
-  .campus-map-card .eyebrow{margin-bottom:7px}.campus-map-card strong{display:block;font-size:20px;line-height:1.08;letter-spacing:-.035em}.campus-map-card small{display:block;margin-top:6px;color:#c8e9e6;font-size:11px;line-height:1.4}
-  .campus-map-close{width:46px;height:46px;flex:none;border:1px solid rgba(219,255,251,.32);border-radius:50%;background:rgba(2,55,60,.94);box-shadow:0 12px 30px rgba(0,24,27,.32);font-size:24px;line-height:1;pointer-events:auto;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
-  .campus-map-close:hover{background:#087f82}
-  .campus-map-actions{display:flex;align-items:center;gap:8px;pointer-events:auto}.campus-map-language{min-width:46px;height:46px;padding:0 11px;border:1px solid rgba(219,255,251,.32);border-radius:999px;background:rgba(2,55,60,.94);box-shadow:0 12px 30px rgba(0,24,27,.28);font-size:11px;font-weight:850}.campus-map-language:hover{background:#087f82}
-  .campus-map-location{position:absolute;z-index:520;left:clamp(16px,3vw,34px);bottom:max(28px,calc(env(safe-area-inset-bottom) + 18px));width:min(320px,calc(100vw - 32px));display:flex;align-items:center;gap:11px;padding:11px 14px;border:1px solid rgba(199,248,244,.23);border-radius:15px;background:rgba(2,49,54,.94);box-shadow:0 12px 34px rgba(0,25,28,.3);color:#fff;pointer-events:none;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
-  .campus-map-location .location-dot{width:10px;height:10px}.campus-map-location small{display:block;color:#9ed8d4;font-size:9px;margin-bottom:2px}.campus-map-location strong{display:block;max-width:min(380px,70vw);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .campus-pin{position:relative;width:38px;height:38px;display:grid;place-items:center;border:3px solid #effffd;border-radius:50% 50% 50% 12%;background:linear-gradient(145deg,#18aaa5,#006e74);box-shadow:0 8px 18px rgba(0,50,55,.32);color:#fff;font:800 11px/1 Inter,system-ui,sans-serif;transform:rotate(-45deg);transition:transform .16s ease,filter .16s ease}
-  .campus-pin span{transform:rotate(45deg)}
-  .campus-pin:hover{transform:rotate(-45deg) scale(1.08);filter:brightness(1.08)}
-  .campus-pin.current{background:linear-gradient(145deg,#7affe0,#0b9f91);box-shadow:0 0 0 7px rgba(31,224,190,.18),0 8px 22px rgba(0,55,52,.36)}
-  .campus-pin.current:after{content:"";position:absolute;inset:-8px;border:2px solid rgba(112,255,224,.58);border-radius:50%;animation:campusPulse 1.8s ease-out infinite}
-  @keyframes campusPulse{0%{opacity:.9;transform:scale(.65)}80%,100%{opacity:0;transform:scale(1.35)}}
-  .campus-popup .leaflet-popup-content-wrapper{border:1px solid rgba(173,238,231,.24);border-radius:16px;background:#063f44;box-shadow:0 14px 34px rgba(0,30,34,.32);color:#fff}
-  .campus-popup .leaflet-popup-content{margin:14px 15px 15px;min-width:165px;font-family:Inter,system-ui,sans-serif}
-  .campus-popup .leaflet-popup-tip{background:#063f44}.campus-popup .leaflet-popup-close-button{color:#c9eeeb!important;font-size:20px!important;top:4px!important;right:5px!important}
-  .campus-popup-area{display:block;color:#8edbd4;font-size:9px;font-weight:750;letter-spacing:.08em;text-transform:uppercase}.campus-popup-name{display:block;margin:4px 20px 11px 0;font-size:14px;line-height:1.2}.campus-popup-button{width:100%;min-height:35px;border:1px solid rgba(207,255,249,.25);border-radius:10px;background:#0b8985;color:#fff;font-size:10px;font-weight:800}.campus-popup-button:hover{background:#12a39c}
-  #campus-map .leaflet-control-zoom{margin-left:clamp(16px,3vw,34px);margin-bottom:96px;border:0;box-shadow:0 10px 28px rgba(0,34,37,.25)}
-  #campus-map .leaflet-control-zoom a{width:38px;height:38px;border:1px solid rgba(190,239,235,.25);background:#074e53;color:#fff;line-height:36px}#campus-map .leaflet-control-zoom a:first-child{border-radius:12px 12px 0 0}#campus-map .leaflet-control-zoom a:last-child{border-radius:0 0 12px 12px}
-  #campus-map .leaflet-control-attribution{padding:3px 7px;background:rgba(255,255,255,.88);font-size:9px}
-  html[dir="rtl"] .campus-map-card,html[dir="rtl"] .campus-map-location{text-align:right;direction:rtl}.leaflet-container{font-family:Inter,system-ui,sans-serif}
+  #campus-map{position:absolute;z-index:1;inset:0;width:100%;height:100%;border:0;background:#e8eef1}
+  .campus-map-shade{position:absolute;z-index:2;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,42,47,.08),transparent 22%,transparent 68%,rgba(0,31,35,.12))}
+  .campus-map-toolbar{position:absolute;z-index:3;inset:0;pointer-events:none}
+  .campus-map-card{position:absolute;left:clamp(16px,3vw,34px);bottom:max(24px,calc(env(safe-area-inset-bottom) + 16px));width:min(340px,calc(100vw - 32px));box-sizing:border-box;padding:18px;border:1px solid rgba(9,49,54,.1);border-radius:18px;background:rgba(255,255,255,.97);box-shadow:0 16px 44px rgba(0,31,35,.2);color:#102e31;pointer-events:auto}
+  .campus-map-card .eyebrow{margin-bottom:7px;color:#087f82}.campus-map-card strong{display:block;font-size:21px;line-height:1.15;letter-spacing:-.035em}.campus-map-card small{display:block;margin-top:6px;color:#5b6f71;font-size:11px;line-height:1.4}
+  .campus-map-actions{position:absolute;top:max(16px,env(safe-area-inset-top));right:clamp(16px,3vw,34px);display:flex;align-items:center;gap:8px;pointer-events:auto}
+  .campus-map-close,.campus-map-language{width:46px;min-width:46px;height:46px;padding:0;border:1px solid rgba(9,49,54,.1);border-radius:50%;background:rgba(255,255,255,.97);box-shadow:0 8px 24px rgba(0,31,35,.18);color:#113f43;font-weight:850;pointer-events:auto}
+  .campus-map-close{font-size:24px;line-height:1}.campus-map-language{font-size:11px}.campus-map-close:hover,.campus-map-language:hover{background:#eef8f7;color:#006c70}
+  .campus-map-location{display:none}
+  .campus-marker{width:52px;height:52px;border:4px solid #fff;border-radius:50%;background:#087f82;color:#fff;font:850 13px/1 Inter,system-ui,sans-serif;box-shadow:0 0 0 8px rgba(8,127,130,.18),0 8px 20px rgba(0,42,47,.32);cursor:pointer;transition:transform .16s ease,background .16s ease}.campus-marker:hover{background:#056a6d;transform:scale(1.06)}
+  .campus-popup-button{width:100%;min-height:43px;border:0;border-radius:11px;background:#087f82;color:#fff;font-size:12px;font-weight:850;box-shadow:0 7px 18px rgba(8,127,130,.2)}.campus-popup-button:hover{background:#066e71}.campus-popup-button:disabled{opacity:.65;cursor:wait}
+  #campus-map .maplibregl-ctrl-bottom-right{right:clamp(16px,3vw,34px);bottom:clamp(16px,3vw,28px)}#campus-map .maplibregl-ctrl-group{border-radius:12px;overflow:hidden;box-shadow:0 8px 24px rgba(0,31,35,.18)}#campus-map .maplibregl-ctrl-attrib{font-size:9px}
+  html[dir="rtl"] .campus-map-card{text-align:right;direction:rtl}
   @media(max-width:600px){
     #map-panel.campus-map-panel{max-height:none}
-    .campus-map-toolbar{top:max(11px,env(safe-area-inset-top));left:10px;right:10px;gap:9px}
-    .campus-map-card{max-width:calc(100vw - 70px);padding:12px 14px;border-radius:16px}.campus-map-card strong{font-size:17px}.campus-map-card small{font-size:9px}
-    .campus-map-close,.campus-map-language{width:42px;min-width:42px;height:42px;font-size:10px}.campus-map-close{font-size:22px}.campus-map-actions{gap:6px}
-    .campus-map-location{left:10px;bottom:max(21px,calc(env(safe-area-inset-bottom) + 11px));width:min(280px,calc(100vw - 20px));padding:10px 12px}
-    #campus-map .leaflet-control-zoom{margin-left:10px;margin-bottom:88px}.campus-pin{width:34px;height:34px;font-size:10px}
+    .campus-map-card{left:10px;bottom:max(12px,calc(env(safe-area-inset-bottom) + 8px));width:calc(100vw - 20px);padding:14px 15px;border-radius:16px}.campus-map-card strong{font-size:18px}.campus-map-card small{font-size:10px}
+    .campus-map-actions{top:max(10px,env(safe-area-inset-top));right:10px;gap:6px}.campus-map-close,.campus-map-language{width:42px;min-width:42px;height:42px;font-size:10px}.campus-map-close{font-size:22px}
   }
 #map-toggle{width:auto;min-width:42px;padding:0 12px;font-size:11px;white-space:nowrap}
 #campus-enter{margin-top:14px;min-height:42px;font-size:12px}
 .campus-map-card{min-width:0}.campus-map-card strong{line-height:1.2}
-.campus-popup-button:disabled{opacity:.65;cursor:wait}
-@media(max-width:640px){.topbar{flex-wrap:wrap}.topbar .brand{width:100%;max-width:none;box-sizing:border-box}.topbar .tools{margin-left:auto}#map-toggle{padding:0 10px;font-size:10px}.campus-map-card{max-width:calc(100vw - 126px)}.campus-map-card strong{font-size:17px}}
+@media(max-width:640px){.topbar{flex-wrap:wrap}.topbar .brand{width:100%;max-width:none;box-sizing:border-box}.topbar .tools{margin-left:auto}#map-toggle{padding:0 10px;font-size:10px}}
 </style>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous">
+<link href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css" rel="stylesheet">
+<script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
 </head>
 <body>
 <div id="app"></div>
@@ -201,13 +186,13 @@
 </header>
 
 <aside id="map-panel" class="panel campus-map-panel" aria-hidden="true" aria-label="Tour map" data-i18n-aria="tourMap">
-  <div id="campus-map" aria-label="Interactive University of Sharjah campus map" data-i18n-aria="campusMapAria"></div>
+  <div id="campus-map" role="region" aria-label="Interactive University of Sharjah campus map" data-i18n-aria="campusMapAria"></div>
   <div class="campus-map-shade" aria-hidden="true"></div>
   <div class="campus-map-toolbar">
     <div class="campus-map-card">
       <span class="eyebrow" data-i18n="university">University of Sharjah</span>
-      <strong data-i18n="campusMapTitle">Explore the campus</strong>
-      <small data-i18n="campusMapSubtitle">Choose M7 to explore inside</small>
+      <strong data-i18n="campusMapTitle">M7 · College of Science</strong>
+      <small data-i18n="campusMapSubtitle">A 360° indoor tour is available</small>
       <button id="campus-enter" class="campus-popup-button" type="button" disabled>Preparing 360° view…</button>
     </div>
     <div class="campus-map-actions">
@@ -331,7 +316,7 @@ const I18N={
   en:{
     pageTitle:'M7A Building — Virtual Tour | University of Sharjah',eyebrow:'University of Sharjah · Virtual Tour',building:'M7A Building',university:'University of Sharjah',buildingLoader:'Building M7A',
     viewControls:'View controls',motionTitle:'Use phone motion',motionEnable:'Enable phone motion view',motionDisable:'Disable phone motion view',tourMap:'Campus map',openMap:'Back to campus map',tourInfo:'Tour information',openInfo:'Open tour information',resetView:'Reset and level view',fullScreen:'Full screen',exitFullScreen:'Exit full screen',
-    campusMapTitle:'Explore the campus',campusMapSubtitle:'Choose M7 to explore inside',m7Hall:'M7 Hall',indoorTour:'360° indoor tour',enterHall:'Enter M7',backToCampus:'Back to campus',campusMapAria:'Interactive University of Sharjah campus map',currentCheckpoint:'Current checkpoint',viewPanorama:'View in 360°',preparingPanorama:'Preparing 360° view…',mapTitle:'M7A Tour Map',mapSubtitle:'Find your place in the building',closeMap:'Close map',youAreHere:'You are here',mapFloor:'Map floor',groundFloor:'Ground Floor',topFloor:'Top Floor',groundFloorBadge:'Ground Floor',topFloorBadge:'Top Floor',groundMapTitle:'Ground floor map',groundMapDesc:'Facing into the hallway from the entrance at the bottom: M7A-001 is on the right and M7A-004 is on the left at Study Rooms. At Hall End, M7A-003 is on the left and M7A-002 is on the right. The stairs are on the right below M7A-001 and connect the entrance to the top floor. Elevators are on the left of the entrance. Schematic, not to scale.',topMapTitle:'Top floor map',topMapDesc:'Stairs from the entrance lead to Stair Landing, then Faculty Offices, then Seating Area. Schematic, not to scale.',
+    campusMapTitle:'M7 · College of Science',campusMapSubtitle:'A 360° indoor tour is available',m7Hall:'M7 Hall',indoorTour:'360° indoor tour',enterHall:'Enter M7',backToCampus:'Back to campus',campusMapAria:'Interactive University of Sharjah campus map',currentCheckpoint:'Current checkpoint',viewPanorama:'View in 360°',preparingPanorama:'Preparing 360° view…',mapTitle:'M7A Tour Map',mapSubtitle:'Find your place in the building',closeMap:'Close map',youAreHere:'You are here',mapFloor:'Map floor',groundFloor:'Ground Floor',topFloor:'Top Floor',groundFloorBadge:'Ground Floor',topFloorBadge:'Top Floor',groundMapTitle:'Ground floor map',groundMapDesc:'Facing into the hallway from the entrance at the bottom: M7A-001 is on the right and M7A-004 is on the left at Study Rooms. At Hall End, M7A-003 is on the left and M7A-002 is on the right. The stairs are on the right below M7A-001 and connect the entrance to the top floor. Elevators are on the left of the entrance. Schematic, not to scale.',topMapTitle:'Top floor map',topMapDesc:'Stairs from the entrance lead to Stair Landing, then Faculty Offices, then Seating Area. Schematic, not to scale.',
     hallEnd:'Hall End',studyRooms:'Study Rooms',stairsUp:'Stairs ↑',elevators:'Elevators',entrance:'Entrance',seatingArea:'Seating Area',facultyOffices:'Faculty Offices',stairLanding:'Stair Landing',entranceGround:'↓ Entrance · Ground Floor',groundMapNote:'Facing into the hall from the entrance. M7A-001 is on your right.',topMapNote:'The stairs connect this floor to the ground-floor entrance.',mapHelp:'Tap a location to go there. Highlighted location = you are here. Schematic · not to scale.',
     aboutTitle:'About this tour',aboutSubtitle:'University of Sharjah · Building M7A',closeInfo:'Close information',aboutCopy:'Drag to look around. Use a floor arrow or the map to move between locations. On supported phones, you can also look around by moving your device.',shareTitle:'Share this location',copyLink:'Copy link',linkCopied:'Link copied',copyFailed:'Could not copy the link.',
     tourNavigation:'Tour navigation',navigationTitle:'Tap a floor arrow to move · Backspace: back · Home: reset view',back:'Back',loadingM7A:'Loading M7A',loading:'Loading M7A…',loadingPct:p=>`Loading M7A · ${p}%`,preparing:'Preparing M7A view…',stillLoading:'Still loading M7A…',
@@ -341,7 +326,7 @@ const I18N={
   ar:{
     pageTitle:'مبنى M7A — جولة افتراضية | جامعة الشارقة',eyebrow:'جامعة الشارقة · جولة افتراضية',building:'مبنى M7A',university:'جامعة الشارقة',buildingLoader:'مبنى M7A',
     viewControls:'أدوات العرض',motionTitle:'استخدام حركة الهاتف',motionEnable:'تفعيل العرض بحركة الهاتف',motionDisable:'إيقاف العرض بحركة الهاتف',tourMap:'خريطة الحرم الجامعي',openMap:'العودة إلى خريطة الحرم الجامعي',tourInfo:'معلومات الجولة',openInfo:'فتح معلومات الجولة',resetView:'إعادة ضبط العرض وتسويته',fullScreen:'ملء الشاشة',exitFullScreen:'الخروج من ملء الشاشة',
-    campusMapTitle:'استكشف الحرم الجامعي',campusMapSubtitle:'اختر مبنى M7 لاستكشافه من الداخل',m7Hall:'مبنى M7',indoorTour:'جولة داخلية بزاوية 360°',enterHall:'دخول M7',backToCampus:'العودة إلى الحرم',campusMapAria:'خريطة تفاعلية للحرم الجامعي في جامعة الشارقة',currentCheckpoint:'النقطة الحالية',viewPanorama:'عرض بزاوية 360°',preparingPanorama:'جارٍ تجهيز العرض بزاوية 360°…',mapTitle:'خريطة جولة M7A',mapSubtitle:'تعرّف على موقعك داخل المبنى',closeMap:'إغلاق الخريطة',youAreHere:'موقعك الحالي',mapFloor:'طابق الخريطة',groundFloor:'الطابق الأرضي',topFloor:'الطابق العلوي',groundFloorBadge:'الأرضي',topFloorBadge:'العلوي',groundMapTitle:'خريطة الطابق الأرضي',groundMapDesc:'عند النظر إلى الممر من المدخل في الأسفل: تقع M7A-001 على اليمين وM7A-004 على اليسار عند قاعات الدراسة. عند نهاية الردهة تقع M7A-003 على اليسار وM7A-002 على اليمين. يقع الدرج على اليمين أسفل M7A-001 ويربط المدخل بالطابق العلوي. تقع المصاعد على يسار المدخل. الخريطة توضيحية وغير مرسومة بمقياس.',topMapTitle:'خريطة الطابق العلوي',topMapDesc:'يؤدي الدرج من المدخل إلى بسطة الدرج، ثم مكاتب أعضاء هيئة التدريس، ثم منطقة الجلوس. الخريطة توضيحية وغير مرسومة بمقياس.',
+    campusMapTitle:'M7 · كلية العلوم',campusMapSubtitle:'تتوفر جولة داخلية بزاوية 360°',m7Hall:'مبنى M7',indoorTour:'جولة داخلية بزاوية 360°',enterHall:'دخول M7',backToCampus:'العودة إلى الحرم',campusMapAria:'خريطة تفاعلية للحرم الجامعي في جامعة الشارقة',currentCheckpoint:'النقطة الحالية',viewPanorama:'عرض بزاوية 360°',preparingPanorama:'جارٍ تجهيز العرض بزاوية 360°…',mapTitle:'خريطة جولة M7A',mapSubtitle:'تعرّف على موقعك داخل المبنى',closeMap:'إغلاق الخريطة',youAreHere:'موقعك الحالي',mapFloor:'طابق الخريطة',groundFloor:'الطابق الأرضي',topFloor:'الطابق العلوي',groundFloorBadge:'الأرضي',topFloorBadge:'العلوي',groundMapTitle:'خريطة الطابق الأرضي',groundMapDesc:'عند النظر إلى الممر من المدخل في الأسفل: تقع M7A-001 على اليمين وM7A-004 على اليسار عند قاعات الدراسة. عند نهاية الردهة تقع M7A-003 على اليسار وM7A-002 على اليمين. يقع الدرج على اليمين أسفل M7A-001 ويربط المدخل بالطابق العلوي. تقع المصاعد على يسار المدخل. الخريطة توضيحية وغير مرسومة بمقياس.',topMapTitle:'خريطة الطابق العلوي',topMapDesc:'يؤدي الدرج من المدخل إلى بسطة الدرج، ثم مكاتب أعضاء هيئة التدريس، ثم منطقة الجلوس. الخريطة توضيحية وغير مرسومة بمقياس.',
     hallEnd:'نهاية الردهة',studyRooms:'قاعات الدراسة',stairsUp:'الدرج ↑',elevators:'المصاعد',entrance:'المدخل',seatingArea:'منطقة الجلوس',facultyOffices:'مكاتب أعضاء هيئة التدريس',stairLanding:'بسطة الدرج',entranceGround:'↓ المدخل · الطابق الأرضي',groundMapNote:'انظر إلى داخل الردهة من المدخل. تقع M7A-001 على يمينك.',topMapNote:'يربط الدرج هذا الطابق بمدخل الطابق الأرضي.',mapHelp:'اضغط على موقع للانتقال إليه. الموقع المميز هو موقعك الحالي. الخريطة توضيحية وغير مرسومة بمقياس.',
     aboutTitle:'حول هذه الجولة',aboutSubtitle:'جامعة الشارقة · مبنى M7A',closeInfo:'إغلاق المعلومات',aboutCopy:'اسحب للنظر حولك. استخدم سهمًا أرضيًا أو الخريطة للتنقل بين المواقع. في الهواتف المدعومة، يمكنك أيضًا النظر حولك بتحريك جهازك.',shareTitle:'مشاركة هذا الموقع',copyLink:'نسخ الرابط',linkCopied:'تم نسخ الرابط',copyFailed:'تعذّر نسخ الرابط.',
     tourNavigation:'التنقل في الجولة',navigationTitle:'اضغط على سهم أرضي للانتقال · مسافة للخلف: رجوع · الرئيسية: إعادة ضبط العرض',back:'رجوع',loadingM7A:'جارٍ تحميل M7A',loading:'جارٍ تحميل M7A…',loadingPct:p=>`جارٍ تحميل M7A · ${p}%`,preparing:'جارٍ تجهيز مشهد M7A…',stillLoading:'لا يزال تحميل M7A جاريًا…',
@@ -595,45 +580,33 @@ const infoPanel=document.getElementById('info-panel');
 const mapToggle=document.getElementById('map-toggle');
 const infoToggle=document.getElementById('info-toggle');
 let campusMap=null;
-const campusMarkers=[];
-function campusPin(building){
-  return L.divIcon({className:'',html:'<div class="campus-pin current"><span>'+building.name+'</span></div>',iconSize:[38,46],iconAnchor:[19,44],popupAnchor:[0,-42]});
-}
-function campusPopup(building){
-  const content=document.createElement('div');
-  content.innerHTML='<span class="campus-popup-area"></span><strong class="campus-popup-name"></strong>';
-  content.querySelector('.campus-popup-area').textContent=t('indoorTour');
-  content.querySelector('.campus-popup-name').textContent=t('m7Hall');
-  const button=document.createElement('button');
-  button.type='button';button.className='campus-popup-button';button.disabled=!ready;button.textContent=t(ready?'enterHall':'preparingPanorama');
-  button.addEventListener('click',()=>openPanoramaFromCampus(building.entrance));
-  content.append(button);return content;
-}
+let campusMarkerElement=null;
 function initCampusMap(){
-  if(campusMap||!window.L)return;
-  campusMap=L.map('campus-map',{zoomControl:false,minZoom:3,maxZoom:20,fadeAnimation:false}).setView(CAMPUS_BUILDINGS[0].coordinates,17);
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{
-    maxNativeZoom:19,maxZoom:20,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  }).addTo(campusMap);
-  L.control.zoom({position:'bottomleft'}).addTo(campusMap);
-  CAMPUS_BUILDINGS.forEach(building=>{
-    const marker=L.marker(building.coordinates,{icon:campusPin(building),keyboard:true,title:t('m7Hall'),alt:t('m7Hall')}).addTo(campusMap);
-    marker.bindPopup(()=>campusPopup(building),{className:'campus-popup',closeButton:true,offset:[0,-2]});
-    marker.on('click',()=>marker.setPopupContent(campusPopup(building)));
-    campusMarkers.push(marker);
+  if(campusMap||!window.maplibregl)return;
+  const building=CAMPUS_BUILDINGS[0];
+  campusMap=new maplibregl.Map({
+    container:'campus-map',
+    style:'https://tiles.openfreemap.org/styles/liberty',
+    center:[building.coordinates[1],building.coordinates[0]],
+    zoom:17.4,
+    bearing:43,
+    pitch:0,
+    attributionControl:true
   });
+  campusMap.addControl(new maplibregl.NavigationControl({showCompass:true,showZoom:true,visualizePitch:false}),'bottom-right');
+  campusMarkerElement=document.createElement('button');
+  campusMarkerElement.type='button';campusMarkerElement.className='campus-marker';campusMarkerElement.textContent='M7';
+  campusMarkerElement.addEventListener('click',()=>openPanoramaFromCampus(building.entrance));
+  new maplibregl.Marker({element:campusMarkerElement,anchor:'center'}).setLngLat([building.coordinates[1],building.coordinates[0]]).addTo(campusMap);
+  updateCampusMap();
 }
 function updateCampusMap(){
   document.getElementById('campus-current-location').textContent='M7 · '+locationLabel();
   document.getElementById('campus-enter').disabled=!ready;
   document.getElementById('campus-enter').textContent=t(ready?'enterHall':'preparingPanorama');
-  campusMarkers.forEach((marker,index)=>{
-    const building=CAMPUS_BUILDINGS[index];
-    marker.options.title=t('m7Hall');marker.options.alt=t('m7Hall');
-    marker.getElement()?.setAttribute('aria-label',t('m7Hall'));
-    marker.getElement()?.setAttribute('title',t('m7Hall'));
-    if(marker.isPopupOpen())marker.setPopupContent(campusPopup(building));
-  });
+  document.getElementById('campus-map').setAttribute('aria-label',t('campusMapAria'));
+  campusMarkerElement?.setAttribute('aria-label',t('enterHall'));
+  campusMarkerElement?.setAttribute('title',t('m7Hall'));
 }
 document.getElementById('campus-enter').onclick=()=>openPanoramaFromCampus(CAMPUS_BUILDINGS[0].entrance);
 function closePanels(){
@@ -648,10 +621,7 @@ function togglePanel(panel,button){
   closePanels();
   if(open){
     panel.inert=false;panel.classList.add('open');panel.setAttribute('aria-hidden','false');button.setAttribute('aria-pressed','true');
-    if(panel===mapPanel){
-      initCampusMap();requestAnimationFrame(()=>{campusMap?.invalidateSize();updateCampusMap();});
-      setTimeout(()=>campusMap?.invalidateSize(),280);
-    }
+    if(panel===mapPanel){initCampusMap();requestAnimationFrame(()=>{campusMap?.resize();updateCampusMap();});setTimeout(()=>campusMap?.resize(),280);}
   }
   updateRouteLabel();
 }
