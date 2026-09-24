@@ -241,6 +241,23 @@
 @media(max-width:360px){.brand strong{font-size:15px}.floor-badge{font-size:7px}.tool{width:36px;height:40px}#map-toggle{font-size:10px;padding:0 9px}.brand .eyebrow{font-size:7px}}
 @media(prefers-reduced-motion:reduce){.panel,.room-chevron,.tour-search-actions button,#hall-search,#tour-search-input{transition:none!important}}
 </style>
+<style>
+/* Keep physical map controls stable while the directory follows the reading language. */
+.campus-map-actions{direction:ltr;gap:4px;padding:5px;border:1px solid #dce8e2;border-radius:999px;background:#fffffff5;box-shadow:0 6px 22px #133c351c}
+.campus-map-close,.campus-map-language{width:42px;min-width:42px;height:42px;box-shadow:none;border:0;background:transparent;font-weight:700}
+.campus-map-language{background:#edf6f2;color:#12695f;font-size:12px}.campus-map-close{color:#42625c}
+.campus-map-heading{position:absolute;top:max(20px,env(safe-area-inset-top));left:clamp(16px,3vw,34px);padding:12px 16px;border:1px solid #dce8e2;border-radius:14px;background:#fffffff5;box-shadow:0 6px 22px #133c3514;color:#184d45;font-size:14px;font-weight:700;pointer-events:none}
+.campus-map-card{width:min(360px,calc(100vw - 32px));padding:20px;border-color:#dce8e2;border-radius:22px;background:#fffffff5}
+.campus-map-card .eyebrow{font-size:9px;letter-spacing:.12em;color:#537e73;margin-bottom:8px}.directory-heading{gap:10px;margin-bottom:4px}.directory-heading strong{font-size:20px;letter-spacing:-.025em;line-height:1.35}
+#directory-collapse{width:36px;height:36px;border:0;background:#edf5f1;color:#366f62}
+#hall-search{padding-inline:14px;margin:12px 0 10px;background:#f4f8f6;border-color:#dbe7e1}
+.hall-result{position:relative;border:1px solid #e0ebe5;background:#f8fbf9;padding:14px;margin-bottom:7px}.hall-result:hover{background:#edf6f0;border-color:#b9d4c6}.hall-result small{margin-top:5px;font-size:12px}.hall-result strong{font-weight:650}
+#directory-browse{padding:10px 0 2px;color:#35796b}.hall-thumbnail{border:1px solid #dce8e2;border-radius:14px}.room-picker-toggle{background:#f5f9f7;border-color:#d7e5dd}.campus-popup-button{min-height:46px;border-radius:12px;font-size:13px}
+#campus-map .maplibregl-ctrl-top-right{top:88px;right:clamp(16px,3vw,34px)}#campus-map .maplibregl-ctrl-top-right .maplibregl-ctrl{margin:0}
+#campus-map .maplibregl-ctrl-group{border:1px solid #dce8e2;border-radius:15px;background:#fffffff5;box-shadow:0 6px 22px #133c351c}#campus-map .maplibregl-ctrl-group button{width:44px;height:44px}#campus-map .maplibregl-ctrl-group button+button{border-top-color:#e4ece7}
+#directory-body{scroll-padding-block:8px}
+@media(max-width:600px){.campus-map-heading{top:max(14px,env(safe-area-inset-top));left:12px;font-size:12px;padding:12px 14px}.campus-map-actions{right:12px;top:max(10px,env(safe-area-inset-top));padding:4px}.campus-map-card{left:12px;width:calc(100vw - 24px);padding:16px;border-radius:20px}.directory-heading strong{font-size:18px}#campus-map .maplibregl-ctrl-top-right{right:12px;top:78px}.campus-map-card .eyebrow{font-size:8px}.campus-popup-button{min-height:44px}}
+</style>
 </head>
 <body>
 <div id="app"></div>
@@ -267,6 +284,7 @@
   <div id="campus-map" role="region" aria-label="Interactive University of Sharjah campus map" data-i18n-aria="campusMapAria"></div>
   <div class="campus-map-shade" aria-hidden="true"></div>
   <div class="campus-map-toolbar">
+    <div class="campus-map-heading" data-i18n="tourMap">Campus map</div>
     <div class="campus-map-card">
       <span class="eyebrow" data-i18n="university">University of Sharjah</span>
       <div class="directory-heading"><strong id="directory-title">Choose a hall</strong><button id="directory-collapse" type="button" aria-controls="directory-body" aria-expanded="true" aria-label="Collapse details">−</button></div>
