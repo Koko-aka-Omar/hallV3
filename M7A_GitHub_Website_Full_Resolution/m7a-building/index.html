@@ -716,7 +716,7 @@ function updateDirections(){
   const arrived=current===directionsTarget;
   directionsNext=path?.[1]??null;
   document.getElementById('directions-title').textContent=(arrived?(ar?'وصلت إلى ':'You’ve arrived at '):(ar?'الاتجاهات إلى ':'Directions to '))+localizedLocation(directionsTarget).name;
-  document.getElementById('directions-step').textContent=transitioning?(ar?'جارٍ الانتقال…':'Moving…'):arrived?(ar?'أنت الآن في القاعة المطلوبة.':'You’re at your destination.'):!path?(ar?'لا يوجد مسار متصل من هذا الموقع.':'No connected route from this viewpoint.'):(ar?'التالي: ':'Next: ')+localizedLocation(directionsNext).name+' · '+(ar?'الانتقالات المتبقية: ':'Moves remaining: ')+(path.length-1);
+  document.getElementById('directions-step').textContent=transitioning?(ar?'جارٍ الانتقال…':'Moving…'):arrived?(ar?'أنت الآن في القاعة المطلوبة.':'You’re at your destination.'):!path?(ar?'لا يوجد مسار متصل من هذا الموقع.':'No connected route from this viewpoint.'):(ar?'التالي: ':'Next: ')+localizedLocation(directionsNext).name+' · '+(ar?'الانتقالات المتبقية: ':'Steps remaining: ')+(path.length-1);
   const next=document.getElementById('directions-next');next.hidden=directionsNext===null;next.disabled=!ready||transitioning;next.textContent=ar?'متابعة':'Continue';
   const stop=document.getElementById('directions-stop');stop.setAttribute('aria-label',ar?'إنهاء الاتجاهات':'End directions');
 }
