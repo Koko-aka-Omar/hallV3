@@ -199,7 +199,8 @@ export const LOCATIONS=[
       {
         to: 16,
         angle: 3.3,
-        arrowAngle: 3.3,
+        arrowAngle: 3.05,
+        hotspotAngle: 3.05,
         kind: "stairs",
         stairDirection: "down"
       },
