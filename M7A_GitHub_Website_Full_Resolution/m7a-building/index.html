@@ -798,7 +798,7 @@ const LOCATIONS=[
     routes:[
       {to:24,angle:0.00,label:'Library · Lobby',back:true},
       {to:26,angle:3.14,label:'Library · Study Area 021'},
-      {to:31,angle:-1.57,label:'Library · Study Area 026'}
+      {to:32,angle:-1.57,label:'Library · Study Area 027'}
     ]
   },
   {
@@ -832,13 +832,14 @@ const LOCATIONS=[
   {
     id:'library-study-025',area:'Library',name:'Library · Study Area 025',back:29,view:3.14,
     routes:[
-      {to:29,angle:0.00,label:'Library · Study Area 024',back:true}
+      {to:29,angle:0.00,label:'Library · Study Area 024',back:true},
+      {to:31,angle:3.14,label:'Library · Study Area 026'}
     ]
   },
   {
-    id:'library-study-026',area:'Library',name:'Library · Study Area 026',back:25,view:3.14,
+    id:'library-study-026',area:'Library',name:'Library · Study Area 026',back:30,view:3.14,
     routes:[
-      {to:25,angle:1.57,label:'Library · Study Area',back:true},
+      {to:30,angle:0.00,label:'Library · Study Area 025',back:true},
       {to:32,angle:3.14,label:'Library · Study Area 027'}
     ]
   },
@@ -846,6 +847,7 @@ const LOCATIONS=[
     id:'library-study-027',area:'Library',name:'Library · Study Area 027',back:31,view:3.14,
     routes:[
       {to:31,angle:0.00,label:'Library · Study Area 026',back:true},
+      {to:25,angle:1.57,label:'Library · Study Area',back:true},
       {to:33,angle:3.14,label:'Library · Study Area 028'}
     ]
   },
