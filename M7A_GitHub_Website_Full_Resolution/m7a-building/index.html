@@ -705,10 +705,10 @@ const LOCATIONS=[
   {
     id:'theater-hall',area:'Theater',name:'Main Lobby',back:10,view:2.32,
     routes:[
-      {to:10,angle:0.10,label:'Theater · Outdoor Entrance',back:true},
-      {to:11,angle:6.18,label:'Theater · Covered Entrance',back:true},
-      {to:13,angle:1.96,label:'Auditorium · Main Door Lobby'},
-      {to:22,angle:4.20,label:'Auditorium · Library Door Lobby'}
+      {to:10,angle:0.10,hotspotAngle:0.28,hotspotDist:1.75,hotspotScale:0.74,label:'Theater · Outdoor Entrance',back:true},
+      {to:11,angle:6.18,hotspotAngle:6.00,hotspotDist:1.75,hotspotScale:0.74,label:'Theater · Covered Entrance',back:true},
+      {to:13,angle:1.96,hotspotAngle:1.55,hotspotDist:2.00,hotspotScale:0.76,label:'Auditorium · Main Door Lobby'},
+      {to:22,angle:4.20,hotspotAngle:4.73,hotspotDist:2.00,hotspotScale:0.76,label:'Auditorium · Library Door Lobby'}
     ]
   },
   {
@@ -727,43 +727,43 @@ const LOCATIONS=[
     id:'theater-auditorium-rear',area:'Auditorium',name:'Main Door Landing',back:13,view:3.27,
     routes:[
       {to:13,angle:0.06,label:'Auditorium · Main Door Lobby',back:true},
-      {to:15,angle:3.27,label:'Auditorium · Main Stairs · Middle',kind:'stairs',stairDirection:'down',hotspotDist:1.55}
+      {to:15,angle:3.27,label:'Auditorium · Main Stairs · Middle',kind:'stairs',stairDirection:'down',hotspotDist:2.35,hotspotScale:0.82}
     ]
   },
   {
     id:'theater-auditorium-center',area:'Auditorium',name:'Main Stairs · Middle',back:14,view:2.55,
     routes:[
-      {to:14,angle:0.06,label:'Auditorium · Main Door Landing',back:true,kind:'stairs',stairDirection:'up',hotspotDist:1.55},
-      {to:16,angle:2.55,label:'Auditorium · Main Stairs · Lower',kind:'stairs',stairDirection:'down',hotspotDist:1.55},
+      {to:14,angle:0.06,label:'Auditorium · Main Door Landing',back:true,kind:'stairs',stairDirection:'up',hotspotDist:2.35,hotspotScale:0.82},
+      {to:16,angle:2.55,label:'Auditorium · Main Stairs · Lower',kind:'stairs',stairDirection:'down',hotspotDist:2.35,hotspotScale:0.82},
       {to:20,angle:4.71,label:'Auditorium · Cross-Aisle Shortcut'}
     ]
   },
   {
     id:'theater-stage-011',area:'Auditorium',name:'Main Stairs · Lower',back:15,view:4.71,
     routes:[
-      {to:15,angle:5.72,label:'Auditorium · Main Stairs · Middle',back:true,kind:'stairs',stairDirection:'up',hotspotDist:1.55},
-      {to:17,angle:4.71,label:'Auditorium · Lower Center',kind:'stairs',stairDirection:'down',hotspotDist:1.55}
+      {to:15,angle:5.72,label:'Auditorium · Main Stairs · Middle',back:true,kind:'stairs',stairDirection:'up',hotspotDist:2.35,hotspotScale:0.82},
+      {to:17,angle:4.71,label:'Auditorium · Lower Center',kind:'stairs',stairDirection:'down',hotspotDist:2.35,hotspotScale:0.82}
     ]
   },
   {
     id:'theater-stage-012',area:'Auditorium',name:'Lower Center',back:16,view:3.14,
     routes:[
-      {to:16,angle:4.71,label:'Auditorium · Main Stairs · Lower',back:true,kind:'stairs',stairDirection:'up',hotspotDist:1.55},
-      {to:18,angle:1.57,label:'Auditorium · Library Stairs · Lower',kind:'stairs',stairDirection:'up',hotspotDist:1.55}
+      {to:16,angle:4.71,label:'Auditorium · Main Stairs · Lower',back:true,kind:'stairs',stairDirection:'up',hotspotDist:2.35,hotspotScale:0.82},
+      {to:18,angle:1.57,label:'Auditorium · Library Stairs · Lower',kind:'stairs',stairDirection:'up',hotspotDist:2.35,hotspotScale:0.82}
     ]
   },
   {
     id:'theater-stage-013',area:'Auditorium',name:'Library Stairs · Lower',back:17,view:1.57,
     routes:[
-      {to:17,angle:2.32,label:'Auditorium · Lower Center',back:true,kind:'stairs',stairDirection:'down',hotspotDist:1.55},
-      {to:19,angle:1.57,label:'Auditorium · Library Stairs · Middle',kind:'stairs',stairDirection:'up',hotspotDist:1.55}
+      {to:17,angle:2.32,label:'Auditorium · Lower Center',back:true,kind:'stairs',stairDirection:'down',hotspotDist:2.35,hotspotScale:0.82},
+      {to:19,angle:1.57,label:'Auditorium · Library Stairs · Middle',kind:'stairs',stairDirection:'up',hotspotDist:2.35,hotspotScale:0.82}
     ]
   },
   {
     id:'theater-stage-014',area:'Auditorium',name:'Library Stairs · Middle',back:18,view:0.00,
     routes:[
-      {to:18,angle:3.74,label:'Auditorium · Library Stairs · Lower',back:true,kind:'stairs',stairDirection:'down',hotspotDist:1.55},
-      {to:21,angle:0.00,label:'Auditorium · Library Door Landing',kind:'stairs',stairDirection:'up',hotspotDist:1.55},
+      {to:18,angle:3.74,label:'Auditorium · Library Stairs · Lower',back:true,kind:'stairs',stairDirection:'down',hotspotDist:2.35,hotspotScale:0.82},
+      {to:21,angle:0.00,label:'Auditorium · Library Door Landing',kind:'stairs',stairDirection:'up',hotspotDist:2.35,hotspotScale:0.82},
       {to:20,angle:1.57,label:'Auditorium · Cross-Aisle Shortcut'}
     ]
   },
@@ -777,7 +777,7 @@ const LOCATIONS=[
   {
     id:'theater-stage-016',area:'Auditorium',name:'Library Door Landing',back:19,view:3.14,
     routes:[
-      {to:19,angle:3.14,label:'Auditorium · Library Stairs · Middle',back:true,kind:'stairs',stairDirection:'down',hotspotDist:1.55},
+      {to:19,angle:3.14,label:'Auditorium · Library Stairs · Middle',back:true,kind:'stairs',stairDirection:'down',hotspotDist:2.35,hotspotScale:0.82},
       {to:22,angle:0.00,label:'Auditorium · Library Door Lobby'}
     ]
   },
@@ -1155,10 +1155,9 @@ function placeOne(root,route){
   root.visible=!!route;
   root.userData.route=route??null;
   if(!route)return;
-  const angle=route.angle;
-  // Auditorium stair routes can opt into a farther floor position so the
-  // hotspot sits visually around the middle of the staircase. Routes without
-  // an override retain their original placement (including every M7A route).
+  const angle=route.hotspotAngle??route.angle;
+  // hotspotAngle/hotspotDist affect only where the floor arrow is drawn.
+  // route.angle remains the actual movement / transition bearing.
   const dist=route.hotspotDist??(route.kind==='stairs'?1.08:1.02);
   root.position.set(Math.sin(angle)*dist,FLOOR_Y,-Math.cos(angle)*dist);
   // The original M7A scenes (0-9) were hand-calibrated around the arrow mesh's
@@ -1184,7 +1183,8 @@ function updateHotspotVisuals(now=0){
     u.emphasis+=((hs===hoverHotspot&&!dragging?1:0)-u.emphasis)*blend;
     const e=coarsePointer?0:u.emphasis,quiet=dragging?0.62:1;
     const pulse=(reducedMotion||coarsePointer)?0:(0.5+0.5*Math.sin(now*0.0028))*0.045;
-    hs.scale.setScalar(0.64*(1+0.05*e+pulse));
+    const hotspotScale=u.route?.hotspotScale??0.64;
+    hs.scale.setScalar(hotspotScale*(1+0.05*e+pulse));
     const stairBoost=u.route?.kind==='stairs'?0.06:0;
     const guided=directionsNext!==null&&u.route?.to===directionsNext;
     u.inner.material.color.setHex(guided?0xffcf5c:0x22b8b0);
@@ -1232,7 +1232,8 @@ function updateRouteLabel(){
   let selected=null,best=Infinity,position=null;
   for(const root of hotspotRoots){
     if(!root.visible||!root.userData.route)continue;
-    const delta=Math.abs(wrapAngle(root.userData.route.angle-bearing));
+    const visualAngle=root.userData.route.hotspotAngle??root.userData.route.angle;
+    const delta=Math.abs(wrapAngle(visualAngle-bearing));
     const hovered=!coarsePointer&&root===hoverHotspot;
     if(!hovered&&delta>0.45)continue;
     labelPoint.copy(root.position).project(camera);
