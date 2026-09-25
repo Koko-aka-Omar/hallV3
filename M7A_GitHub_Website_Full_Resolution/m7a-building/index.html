@@ -701,11 +701,17 @@ const LOCATIONS=[
   },
   {
     id:'theater-auditorium-center',area:'Theater',name:'Auditorium · Center',back:14,view:3.20,
-    routes:[{to:14,angle:0.06,label:'Theater · Auditorium Rear',back:true}]
+    routes:[
+      {to:14,angle:0.06,label:'Theater · Auditorium Rear',back:true},
+      {to:16,angle:3.20,label:'Theater · Stage 011'}
+    ]
   },
   {
-    id:'theater-stage-011',area:'Theater',name:'Stage · 011',back:null,view:3.14,
-    routes:[{to:17,angle:3.14,label:'Theater · Stage 012'}]
+    id:'theater-stage-011',area:'Theater',name:'Stage · 011',back:15,view:3.14,
+    routes:[
+      {to:15,angle:0.00,label:'Theater · Auditorium Center',back:true},
+      {to:17,angle:3.14,label:'Theater · Stage 012'}
+    ]
   },
   {
     id:'theater-stage-012',area:'Theater',name:'Stage · 012',back:16,view:3.14,
