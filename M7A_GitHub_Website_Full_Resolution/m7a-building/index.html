@@ -726,7 +726,8 @@ const LOCATIONS=[
     id:'theater-auditorium-center',area:'Theater',name:'Auditorium · Center',back:14,view:3.20,
     routes:[
       {to:14,angle:0.06,label:'Theater · Auditorium Rear',back:true},
-      {to:16,angle:2.55,label:'Theater · Stage 011'}
+      {to:16,angle:2.55,label:'Theater · Stage 011'},
+      {to:20,angle:0.32,label:'Theater · Stage 015'}
     ]
   },
   {
@@ -754,20 +755,21 @@ const LOCATIONS=[
     id:'theater-stage-014',area:'Theater',name:'Stage · 014',back:18,view:3.14,
     routes:[
       {to:18,angle:3.74,label:'Theater · Stage 013',back:true},
-      {to:20,angle:0.00,label:'Theater · Stage 015'}
+      {to:21,angle:0.00,label:'Theater · Stage 016'},
+      {to:20,angle:0.28,label:'Theater · Stage 015'}
     ]
   },
   {
-    id:'theater-stage-015',area:'Theater',name:'Stage · 015',back:19,view:3.14,
+    id:'theater-stage-015',area:'Theater',name:'Stage · 015',back:15,view:3.14,
+    routes:[
+      {to:15,angle:2.85,label:'Theater · Auditorium Center',back:true},
+      {to:19,angle:3.14,label:'Theater · Stage 014'}
+    ]
+  },
+  {
+    id:'theater-stage-016',area:'Theater',name:'Stage · 016',back:19,view:3.14,
     routes:[
       {to:19,angle:3.14,label:'Theater · Stage 014',back:true},
-      {to:21,angle:0.00,label:'Theater · Stage 016'}
-    ]
-  },
-  {
-    id:'theater-stage-016',area:'Theater',name:'Stage · 016',back:20,view:3.14,
-    routes:[
-      {to:20,angle:3.14,label:'Theater · Stage 015',back:true},
       {to:22,angle:0.00,label:'Theater · Hall 017'}
     ]
   },
