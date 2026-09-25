@@ -103,11 +103,13 @@ export const LOCATIONS=[
     routes: [
       {
         to: 12,
-        angle: 3.14
+        angle: 3.14,
+        arrowAngle: 3.14
       },
       {
         to: 23,
-        angle: 0
+        angle: 0.18,
+        arrowAngle: 0.18
       }
     ]
   },
@@ -121,15 +123,18 @@ export const LOCATIONS=[
       {
         to: 11,
         angle: 6.1,
+        arrowAngle: 6.1,
         back: true
       },
       {
         to: 13,
-        angle: 1.55
+        angle: 1.55,
+        arrowAngle: 1.55
       },
       {
         to: 22,
-        angle: 3.45
+        angle: 3.13,
+        arrowAngle: 3.13
       }
     ]
   },
@@ -142,12 +147,14 @@ export const LOCATIONS=[
     routes: [
       {
         to: 12,
-        angle: 4.2,
+        angle: 4.62,
+        arrowAngle: 4.62,
         back: true
       },
       {
         to: 14,
-        angle: 2.98
+        angle: 2.98,
+        arrowAngle: 2.98
       }
     ]
   },
@@ -161,11 +168,13 @@ export const LOCATIONS=[
       {
         to: 13,
         angle: 0,
+        arrowAngle: 0,
         back: true
       },
       {
         to: 15,
-        angle: 3.14,
+        angle: 3.29,
+        arrowAngle: 3.29,
         kind: "stairs",
         stairDirection: "down"
       }
@@ -181,19 +190,22 @@ export const LOCATIONS=[
       {
         to: 14,
         angle: 0,
+        arrowAngle: 0,
         back: true,
         kind: "stairs",
         stairDirection: "up"
       },
       {
         to: 16,
-        angle: 3.14,
+        angle: 3.3,
+        arrowAngle: 3.3,
         kind: "stairs",
         stairDirection: "down"
       },
       {
         to: 20,
-        angle: 4.71
+        angle: 4.71,
+        arrowAngle: 4.71
       }
     ]
   },
@@ -206,16 +218,16 @@ export const LOCATIONS=[
     routes: [
       {
         to: 15,
-        angle: 4.71,
+        angle: 6,
+        arrowAngle: 6,
         back: true,
         kind: "stairs",
         stairDirection: "up"
       },
       {
         to: 17,
-        angle: 4.05,
-        kind: "stairs",
-        stairDirection: "down"
+        angle: 4.1,
+        arrowAngle: 4.1
       }
     ]
   },
@@ -229,15 +241,13 @@ export const LOCATIONS=[
       {
         to: 16,
         angle: 4.71,
-        back: true,
-        kind: "stairs",
-        stairDirection: "up"
+        arrowAngle: 4.71,
+        back: true
       },
       {
         to: 18,
-        angle: 1.57,
-        kind: "stairs",
-        stairDirection: "up"
+        angle: 1.65,
+        arrowAngle: 1.65
       }
     ]
   },
@@ -250,14 +260,14 @@ export const LOCATIONS=[
     routes: [
       {
         to: 17,
-        angle: 2.23,
-        back: true,
-        kind: "stairs",
-        stairDirection: "down"
+        angle: 2.92,
+        arrowAngle: 2.92,
+        back: true
       },
       {
         to: 19,
-        angle: 1.57,
+        angle: 1.1,
+        arrowAngle: 1.1,
         kind: "stairs",
         stairDirection: "up"
       }
@@ -272,20 +282,23 @@ export const LOCATIONS=[
     routes: [
       {
         to: 18,
-        angle: 3.74,
+        angle: 3.25,
+        arrowAngle: 3.25,
         back: true,
         kind: "stairs",
         stairDirection: "down"
       },
       {
         to: 21,
-        angle: 0,
+        angle: 0.12,
+        arrowAngle: 0.12,
         kind: "stairs",
         stairDirection: "up"
       },
       {
         to: 20,
-        angle: 1.57
+        angle: 1.57,
+        arrowAngle: 1.57
       }
     ]
   },
@@ -299,11 +312,13 @@ export const LOCATIONS=[
       {
         to: 15,
         angle: 1.57,
+        arrowAngle: 1.57,
         back: true
       },
       {
         to: 19,
-        angle: 4.71
+        angle: 4.71,
+        arrowAngle: 4.71
       }
     ]
   },
@@ -316,14 +331,16 @@ export const LOCATIONS=[
     routes: [
       {
         to: 19,
-        angle: 3.14,
+        angle: 3.35,
+        arrowAngle: 3.35,
         back: true,
         kind: "stairs",
         stairDirection: "down"
       },
       {
         to: 22,
-        angle: 0
+        angle: 0.2,
+        arrowAngle: 0.2
       }
     ]
   },
@@ -337,11 +354,13 @@ export const LOCATIONS=[
       {
         to: 21,
         angle: 3.14,
+        arrowAngle: 3.14,
         back: true
       },
       {
         to: 12,
-        angle: 4.2
+        angle: 1.2,
+        arrowAngle: 1.2
       }
     ]
   }

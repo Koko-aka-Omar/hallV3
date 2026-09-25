@@ -446,14 +446,14 @@ function placeOne(root,route){
   root.visible=!!route;
   root.userData.route=route??null;
   if(!route)return;
-  const angle=route.angle,[dist]=getHotspotStyle(current,route);
-  root.position.set(Math.sin(angle)*dist,FLOOR_Y,-Math.cos(angle)*dist);
-  // The original M7A scenes (0-9) were hand-calibrated around the arrow mesh's
-  // existing orientation. The later Theater/Library panoramas use route bearings
-  // directly, so their arrow glyph needs a half-turn while keeping hotspot
-  // placement and travel bearings unchanged.
+  const angle=route.angle,[defaultDist]=getHotspotStyle(current,route);
+  const dist=route.hotspotDistance??defaultDist;
+  const hotspotAngle=route.hotspotAngle??angle;
+  root.position.set(Math.sin(hotspotAngle)*dist,FLOOR_Y,-Math.cos(hotspotAngle)*dist);
+  // Explicit scene calibration separates arrow heading from placement and travel.
+  // Preserve the legacy orientation for routes without an override.
   const arrowFlip=current>=10?Math.PI:0;
-  root.rotation.y=-angle+arrowFlip;
+  root.rotation.y=route.arrowAngle===undefined?-angle+arrowFlip:-route.arrowAngle;
 }
 
 function placeHotspots(){
