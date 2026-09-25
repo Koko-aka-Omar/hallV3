@@ -697,7 +697,10 @@ const LOCATIONS=[
   },
   {
     id:'theater-entrance-b',area:'Theater',name:'Covered Entrance',back:null,view:3.14,
-    routes:[{to:12,angle:3.14,label:'Theater · Main Lobby'}]
+    routes:[
+      {to:12,angle:3.14,label:'Theater · Main Lobby'},
+      {to:23,angle:0.00,label:'Library · Entrance'}
+    ]
   },
   {
     id:'theater-hall',area:'Theater',name:'Main Lobby',back:10,view:2.32,
@@ -705,8 +708,7 @@ const LOCATIONS=[
       {to:10,angle:0.10,label:'Theater · Outdoor Entrance',back:true},
       {to:11,angle:6.18,label:'Theater · Covered Entrance',back:true},
       {to:13,angle:1.96,label:'Auditorium · Main Door Lobby'},
-      {to:22,angle:4.20,label:'Auditorium · Library Door Lobby'},
-      {to:23,angle:4.75,label:'Library · Entrance'}
+      {to:22,angle:4.20,label:'Auditorium · Library Door Lobby'}
     ]
   },
   {
@@ -787,9 +789,9 @@ const LOCATIONS=[
     ]
   },
   {
-    id:'library-entrance-018',area:'Library',name:'Library · Entrance',back:12,view:3.14,
+    id:'library-entrance-018',area:'Library',name:'Library · Entrance',back:11,view:3.14,
     routes:[
-      {to:12,angle:0.00,label:'Theater · Main Lobby',back:true},
+      {to:11,angle:0.00,label:'Theater · Covered Entrance',back:true},
       {to:24,angle:3.14,label:'Library · Lobby'}
     ]
   },
