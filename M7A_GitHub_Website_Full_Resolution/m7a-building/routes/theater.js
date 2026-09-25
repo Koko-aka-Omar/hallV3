@@ -123,24 +123,33 @@ export const LOCATIONS=[
     id: "theater-hall",
     area: "Theater",
     name: "Main Lobby",
-    back: 11,
+    back: 10,
     view: 2.32,
     routes: [
       {
+        to: 10,
+        angle: 4.68,
+        arrowAngle: 4.68,
+        back: true
+      },
+      {
         to: 11,
         angle: 6.1,
-        arrowAngle: 6.1,
-        back: true
+        arrowAngle: 6.28,
+        hotspotAngle: 6.28,
+        hotspotDistance: 1.25
       },
       {
         to: 13,
         angle: 1.55,
-        arrowAngle: 1.55
+        arrowAngle: 1.95,
+        hotspotAngle: 1.8
       },
       {
         to: 22,
         angle: 3.13,
-        arrowAngle: 3.13
+        arrowAngle: 2.9,
+        hotspotAngle: 3.05
       }
     ]
   },
@@ -270,12 +279,15 @@ export const LOCATIONS=[
         to: 17,
         angle: 2.92,
         arrowAngle: 2.92,
+        hotspotAngle: 3.15,
+        hotspotDistance: 1.35,
         back: true
       },
       {
         to: 19,
         angle: 1.1,
         arrowAngle: 1.1,
+        hotspotAngle: 0.98,
         kind: "stairs",
         stairDirection: "up"
       }
@@ -320,13 +332,15 @@ export const LOCATIONS=[
       {
         to: 15,
         angle: 1.57,
-        arrowAngle: 1.57,
+        arrowAngle: 1.8,
+        hotspotAngle: 1.8,
         back: true
       },
       {
         to: 19,
         angle: 4.71,
-        arrowAngle: 4.71
+        arrowAngle: 4.71,
+        hotspotAngle: 4.9
       }
     ]
   },
