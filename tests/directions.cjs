@@ -5,7 +5,7 @@ const root=path.join(__dirname,'../M7A_GitHub_Website_Full_Resolution/m7a-buildi
  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
  const source=html.match(/const LOCATIONS\s*=\s*(\[[\s\S]*?\]);\s*const LOCATION_AR/)[1];
  const locations=Function('return '+source)();
- const components=[[0,1,2,3,4,5,6,7,8,9],[10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]];
+ const components=[[0,1,2,3,4,5,6,7,8,9],[10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27]];
  for(const component of components)for(const from of component)for(const to of component){
    const route=findPath(locations,from,to);assert(route,`${from} reaches ${to}`);
    assert.equal(route[0],from);assert.equal(route.at(-1),to);
@@ -16,8 +16,8 @@ const root=path.join(__dirname,'../M7A_GitHub_Website_Full_Resolution/m7a-buildi
  assert.deepEqual(findPath(locations,0,target),[0,1,2,target]);
  const theaterCenter=locations.findIndex(item=>item.id==='theater-auditorium-center');
  assert.deepEqual(findPath(locations,10,theaterCenter),[10,12,13,14,theaterCenter]);
- const stageEnd=locations.findIndex(item=>item.id==='library-study-020');
- assert.deepEqual(findPath(locations,16,stageEnd),[16,15,14,13,12,23,24,stageEnd]);
+ const stageEnd=locations.findIndex(item=>item.id==='library-study-022');
+ assert.deepEqual(findPath(locations,16,stageEnd),[16,15,14,13,12,23,24,25,26,stageEnd]);
  assert.deepEqual(findPath(locations,target,target),[target]);
  assert.equal(findPath([{routes:[]},{routes:[]}],0,1),null);
  assert.equal(findPath(locations,-1,target),null);

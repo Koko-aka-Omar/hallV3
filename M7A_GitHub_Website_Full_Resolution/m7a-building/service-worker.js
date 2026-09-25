@@ -1,5 +1,5 @@
 const CACHE_PREFIX='m7a-tour:'+self.registration.scope+':';
-const SHELL_CACHE=CACHE_PREFIX+'shell-v34';
+const SHELL_CACHE=CACHE_PREFIX+'shell-v35';
 // Bump only when panorama files change; UI releases retain full-resolution downloads.
 const PANORAMA_CACHE=CACHE_PREFIX+'panoramas-v3';
 const LEGACY_CACHE='m7a-tour-v7';
@@ -12,7 +12,8 @@ const PANORAMA_NAMES=[
   'theater-foyer','theater-auditorium-rear','theater-auditorium-center',
   'theater-stage-011','theater-stage-012','theater-stage-013',
   'theater-stage-014','theater-stage-015','theater-stage-016',
-  'theater-hall-017','library-entrance-018','library-lobby-019','library-study-020'
+  'theater-hall-017','library-entrance-018','library-lobby-019','library-study-020',
+  'library-study-021','library-study-022'
 ];
 const PANORAMAS=new Set(
   ['assets','assets-mobile'].flatMap(dir=>
