@@ -572,6 +572,7 @@ function localizedLocation(i=current){
 function locationLabel(i=current){const loc=localizedLocation(i);return loc.area+' · '+loc.name;}
 function backTarget(){return LOCATIONS[current]?.back ?? null;}
 function floorLabel(i=current){
+  if(i>=10)return localizedLocation(i).area;
   return LOCATIONS[i]?.area==='Top Floor'?t('topFloorBadge'):t('groundFloorBadge');
 }
 function sceneLink(i=current){
@@ -587,6 +588,7 @@ function updateControls(){
   previous.disabled=!ready || transitioning || backTarget()==null;
   document.getElementById('route-label').textContent=locationLabel();
   floorBadge.textContent=floorLabel();
+  document.querySelector('.brand-row [data-i18n="building"]').textContent=current<10?t('building'):localizedLocation(current<23?10:23).area;
   updateMap();
   updateGuidance();
   updateSceneShare();

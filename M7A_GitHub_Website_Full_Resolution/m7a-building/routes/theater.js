@@ -174,7 +174,8 @@ export const LOCATIONS=[
       {
         to: 15,
         angle: 3.29,
-        arrowAngle: 3.29,
+        arrowAngle: 3.14,
+        hotspotAngle: 3.14,
         kind: "stairs",
         stairDirection: "down"
       }
@@ -227,7 +228,7 @@ export const LOCATIONS=[
       {
         to: 17,
         angle: 4.1,
-        arrowAngle: 4.1
+        arrowAngle: 4.71
       }
     ]
   },
@@ -423,6 +424,10 @@ export const LOCATION_AR=[
 
 // Exceptional visual distance/scale overrides. Keys use stable scene IDs.
 export const HOTSPOT_STYLE={
+  "theater-auditorium-rear->theater-auditorium-center":[0.9,.42],
+  "theater-auditorium-center->theater-stage-011":[0.9,.42],
+  "theater-stage-014->theater-stage-013":[0.9,.42],
+  "theater-stage-016->theater-stage-014":[0.9,.42],
   "theater-hall->theater-entrance-b":[2.05,.78],
   "theater-hall->theater-foyer":[1.85,.76],
   "theater-hall->theater-hall-017":[1.85,.76],

@@ -75,7 +75,7 @@ export const LOCATIONS=[
   {
     id: "library-study-020",
     area: "Library",
-    name: "Study Area",
+    name: "Study Area 1",
     back: 24,
     view: 3.14,
     routes: [
@@ -100,7 +100,7 @@ export const LOCATIONS=[
   {
     id: "library-study-021",
     area: "Library",
-    name: "Study Area 021",
+    name: "Study Area 2",
     back: 25,
     view: 3.14,
     routes: [
@@ -122,7 +122,7 @@ export const LOCATIONS=[
   {
     id: "library-study-022",
     area: "Library",
-    name: "Study Area 022",
+    name: "Study Area 3",
     back: 26,
     view: 3.14,
     routes: [
@@ -142,7 +142,7 @@ export const LOCATIONS=[
   {
     id: "library-study-023",
     area: "Library",
-    name: "Study Area 023",
+    name: "Study Area 4",
     back: 27,
     view: 3.14,
     routes: [
@@ -162,7 +162,7 @@ export const LOCATIONS=[
   {
     id: "library-study-024",
     area: "Library",
-    name: "Study Area 024",
+    name: "Study Area 5",
     back: 28,
     view: 3.14,
     routes: [
@@ -184,7 +184,7 @@ export const LOCATIONS=[
   {
     id: "library-study-025",
     area: "Library",
-    name: "Study Area 025",
+    name: "Study Area 6",
     back: 29,
     view: 3.14,
     routes: [
@@ -206,7 +206,7 @@ export const LOCATIONS=[
   {
     id: "library-study-026",
     area: "Library",
-    name: "Study Area 026",
+    name: "Study Area 7",
     back: 30,
     view: 3.14,
     routes: [
@@ -221,7 +221,7 @@ export const LOCATIONS=[
   {
     id: "library-study-027",
     area: "Library",
-    name: "Study Area 027",
+    name: "Study Area 8",
     back: 25,
     view: 3.14,
     routes: [
@@ -241,7 +241,7 @@ export const LOCATIONS=[
   {
     id: "library-study-028",
     area: "Library",
-    name: "Study Area 028",
+    name: "Study Area 9",
     back: 32,
     view: 3.14,
     routes: [
@@ -261,7 +261,7 @@ export const LOCATIONS=[
   {
     id: "library-study-029",
     area: "Library",
-    name: "Study Area 029",
+    name: "Study Area 10",
     back: 33,
     view: 3.14,
     routes: [
@@ -278,50 +278,50 @@ export const LOCATIONS=[
 export const LOCATION_AR=[
   [
     "المكتبة",
-    "المدخل · 018"
+    "المدخل"
   ],
   [
     "المكتبة",
-    "البهو · 019"
+    "البهو"
   ],
   [
     "المكتبة",
-    "منطقة الدراسة · 020"
+    "منطقة الدراسة 1"
   ],
   [
     "المكتبة",
-    "منطقة الدراسة · 021"
+    "منطقة الدراسة 2"
   ],
   [
     "المكتبة",
-    "منطقة الدراسة · 022"
+    "منطقة الدراسة 3"
   ],
   [
     "المكتبة",
-    "منطقة الدراسة · 023"
+    "منطقة الدراسة 4"
   ],
   [
     "المكتبة",
-    "منطقة الدراسة · 024"
+    "منطقة الدراسة 5"
   ],
   [
     "المكتبة",
-    "منطقة الدراسة · 025"
+    "منطقة الدراسة 6"
   ],
   [
     "المكتبة",
-    "منطقة الدراسة · 026"
+    "منطقة الدراسة 7"
   ],
   [
     "المكتبة",
-    "منطقة الدراسة · 027"
+    "منطقة الدراسة 8"
   ],
   [
     "المكتبة",
-    "منطقة الدراسة · 028"
+    "منطقة الدراسة 9"
   ],
   [
     "المكتبة",
-    "منطقة الدراسة · 029"
+    "منطقة الدراسة 10"
   ]
 ];
