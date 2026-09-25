@@ -705,6 +705,7 @@ const LOCATIONS=[
       {to:10,angle:0.10,label:'Theater · Outdoor Entrance',back:true},
       {to:11,angle:6.18,label:'Theater · Covered Entrance',back:true},
       {to:13,angle:1.96,label:'Auditorium · Main Door Lobby'},
+      {to:22,angle:4.20,label:'Auditorium · Library Door Lobby'},
       {to:23,angle:4.75,label:'Library · Entrance'}
     ]
   },
@@ -782,15 +783,14 @@ const LOCATIONS=[
     id:'theater-hall-017',area:'Auditorium',name:'Library Door Lobby',back:21,view:3.14,
     routes:[
       {to:21,angle:3.14,label:'Auditorium · Library Door Landing',back:true},
-      {to:23,angle:0.95,label:'Library · Entrance'}
+      {to:12,angle:4.20,label:'Theater · Main Lobby'}
     ]
   },
   {
-    id:'library-entrance-018',area:'Library',name:'Library · Entrance',back:22,view:3.14,
+    id:'library-entrance-018',area:'Library',name:'Library · Entrance',back:12,view:3.14,
     routes:[
-      {to:22,angle:0.00,label:'Auditorium · Library Door Lobby',back:true},
-      {to:24,angle:3.14,label:'Library · Lobby'},
-      {to:12,angle:0.00,label:'Theater · Main Lobby'}
+      {to:12,angle:0.00,label:'Theater · Main Lobby',back:true},
+      {to:24,angle:3.14,label:'Library · Lobby'}
     ]
   },
   {
