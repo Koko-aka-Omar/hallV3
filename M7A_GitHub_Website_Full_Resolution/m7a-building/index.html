@@ -396,7 +396,13 @@ const PANORAMA_FILES = [
   "room-m7a-001.glb",
   "room-m7a-004.glb",
   "room-m7a-003.glb",
-  "room-m7a-002.glb"
+  "room-m7a-002.glb",
+  "theater-outer-entrance-a.glb",
+  "theater-outer-entrance-b.glb",
+  "theater-hall.glb",
+  "theater-foyer.glb",
+  "theater-auditorium-rear.glb",
+  "theater-auditorium-center.glb"
 ];
 
 const VISUAL_CALIBRATION=[
@@ -409,7 +415,13 @@ const VISUAL_CALIBRATION=[
   [1.055,1.055,1.055],
   [1.045,1.045,1.045],
   [1.035,1.035,1.035],
-  [1.055,1.055,1.055]
+  [1.055,1.055,1.055],
+  [1.00,1.00,1.00],
+  [1.00,1.00,1.00],
+  [1.00,1.00,1.00],
+  [1.00,1.00,1.00],
+  [1.00,1.00,1.00],
+  [1.00,1.00,1.00]
 ];
 const app=document.getElementById('app');
 const loading=document.getElementById('loading');
@@ -650,10 +662,44 @@ const LOCATIONS=[
   {
     id:'m7a-002',area:'Ground Floor',name:'M7A-002',back:2,view:1.95,
     routes:[{to:2,angle:2.48,label:'Main Hall · Hall End',back:true}]
+  },
+  {
+    id:'theater-entrance-a',area:'Theater',name:'Outer Entrance A',back:null,view:2.86,
+    routes:[{to:12,angle:2.86,label:'Theater · Entrance Hall'}]
+  },
+  {
+    id:'theater-entrance-b',area:'Theater',name:'Outer Entrance B',back:null,view:3.14,
+    routes:[{to:12,angle:3.14,label:'Theater · Entrance Hall'}]
+  },
+  {
+    id:'theater-hall',area:'Theater',name:'Entrance Hall',back:10,view:2.32,
+    routes:[
+      {to:10,angle:0.10,label:'Theater · Outer Entrance A',back:true},
+      {to:11,angle:6.18,label:'Theater · Outer Entrance B',back:true},
+      {to:13,angle:2.32,label:'Theater · Foyer'}
+    ]
+  },
+  {
+    id:'theater-foyer',area:'Theater',name:'Foyer',back:12,view:2.85,
+    routes:[
+      {to:12,angle:4.20,label:'Theater · Entrance Hall',back:true},
+      {to:14,angle:2.85,label:'Theater · Auditorium'}
+    ]
+  },
+  {
+    id:'theater-auditorium-rear',area:'Theater',name:'Auditorium · Rear',back:13,view:3.27,
+    routes:[
+      {to:13,angle:0.06,label:'Theater · Foyer',back:true},
+      {to:15,angle:3.27,label:'Theater · Auditorium Center'}
+    ]
+  },
+  {
+    id:'theater-auditorium-center',area:'Theater',name:'Auditorium · Center',back:14,view:3.20,
+    routes:[{to:14,angle:0.06,label:'Theater · Auditorium Rear',back:true}]
   }
 ];
 const LOCATION_AR=[
-  ['الردهة الرئيسية','المدخل'],['الردهة الرئيسية','قاعات الدراسة'],['الردهة الرئيسية','نهاية الردهة'],['الطابق العلوي','بسطة الدرج'],['الطابق العلوي','مكاتب أعضاء هيئة التدريس'],['الطابق العلوي','مكاتب أعضاء هيئة التدريس · منطقة الجلوس'],['الطابق الأرضي','M7A-001'],['الطابق الأرضي','M7A-004'],['الطابق الأرضي','M7A-003'],['الطابق الأرضي','M7A-002']
+  ['الردهة الرئيسية','المدخل'],['الردهة الرئيسية','قاعات الدراسة'],['الردهة الرئيسية','نهاية الردهة'],['الطابق العلوي','بسطة الدرج'],['الطابق العلوي','مكاتب أعضاء هيئة التدريس'],['الطابق العلوي','مكاتب أعضاء هيئة التدريس · منطقة الجلوس'],['الطابق الأرضي','M7A-001'],['الطابق الأرضي','M7A-004'],['الطابق الأرضي','M7A-003'],['الطابق الأرضي','M7A-002'],['المسرح','المدخل الخارجي أ'],['المسرح','المدخل الخارجي ب'],['المسرح','ردهة المدخل'],['المسرح','البهو'],['المسرح','القاعة · الخلف'],['المسرح','القاعة · الوسط']
 ];
 // Outdoor destinations are buildings; indoor checkpoints stay in LOCATIONS.
 // M7 coordinates supplied by the site owner.

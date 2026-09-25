@@ -3,6 +3,7 @@ const path=require('node:path');
 const root=path.join(__dirname,'../M7A_GitHub_Website_Full_Resolution/m7a-building');
 let html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 html=html.replace("const coarsePointer=matchMedia('(pointer:coarse)').matches;", "const coarsePointer=new URLSearchParams(location.search).has('mobile')||matchMedia('(pointer:coarse)').matches;");
+html=html.replace("const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;", "const reducedMotion=true;");
 const harness=`
 const qa=document.createElement('div');qa.style='position:fixed;top:115px;left:10px;z-index:100;background:#fff;color:#111;padding:10px;max-height:65vh;overflow:auto;font:12px monospace';document.body.append(qa);
 const run=document.createElement('button');run.textContent='Run navigation checks';qa.append(run);
@@ -14,7 +15,7 @@ inspections.forEach(({from,route},n)=>{const o=document.createElement('option');
 inspect.onchange=async()=>{const {from,route}=inspections[+inspect.value];await loadCheckpoint(from);yaw=-route.angle;pitch=-.30;camera.rotation.set(pitch,yaw,0);updateHotspotVisuals();renderer.render(scene,camera);};
 run.onclick=async()=>{run.disabled=true;const lines=[];const check=(v,s)=>{if(!v)throw Error(s);lines.push('PASS '+s);result.textContent=lines.join('\\n')};try{
   currentLanguage='en';applyLanguage();
-  check(LOCATIONS.length===10,'10 checkpoints');
+  check(LOCATIONS.length===16,'16 checkpoints');
   const tip=new THREE.Vector3(0,1,0);
   for(const {from,route} of inspections){
     const root=hotspotRoots[0];placeOne(root,route);root.updateMatrixWorld(true);
@@ -29,6 +30,13 @@ run.onclick=async()=>{run.disabled=true;const lines=[];const check=(v,s)=>{if(!v
     check(hotspotRoots.filter(r=>r.visible).length===LOCATIONS[to].routes.length,'hotspots at '+to);
     check(document.getElementById('route-label').textContent===locationLabel(to),'label at '+to);
   }
+  await loadCheckpoint(10);current=10;updateControls();
+  for(const to of [12,11,12,13,14,15,14,13,12,10]){
+    const from=current;await transitionTo(to);check(current===to&&!transitioning&&ready,'theater travel '+from+' -> '+to);
+    check(hotspotRoots.filter(r=>r.visible).length===LOCATIONS[to].routes.length,'theater hotspots at '+to);
+    check(document.getElementById('route-label').textContent===locationLabel(to),'theater label at '+to);
+  }
+  await loadCheckpoint(0);current=0;updateControls();
   check(guidanceDone&&hint.getAttribute('aria-hidden')==='true','guidance completes after travel');
   await transitionTo(8);check(current===0,'arrow travel cannot jump to an unconnected room');
   for(const to of [8,4,6,5,9,3,7,2,1,0]){
@@ -52,8 +60,7 @@ run.onclick=async()=>{run.disabled=true;const lines=[];const check=(v,s)=>{if(!v
   await navigateFromMap(0);
   yaw=-LOCATIONS[0].routes[0].angle;pitch=-.3;camera.rotation.set(pitch,yaw,0);
   updateRouteLabel();check(routeTip.classList.contains('show')&&routeTip.textContent==='Study Rooms','facing route shows one label');
-  togglePanel(mapPanel,mapToggle);check(!routeTip.classList.contains('show'),'open map hides destination label');
-  closePanels();check(routeTip.classList.contains('show'),'closing map restores destination label');
+  togglePanel(mapPanel,mapToggle);check(!mapPanel.classList.contains('open')&&routeTip.classList.contains('show'),'disabled map stays closed');
   yaw+=Math.PI;camera.rotation.set(pitch,yaw,0);updateRouteLabel();
   check(!routeTip.classList.contains('show'),'offscreen route label is hidden');
   const languageState={current,object,yaw,pitch,fov:camera.fov};
@@ -61,7 +68,7 @@ run.onclick=async()=>{run.disabled=true;const lines=[];const check=(v,s)=>{if(!v
   check(document.documentElement.lang==='ar'&&document.documentElement.dir==='rtl','Arabic language and direction');
   check(cp.textContent==='الردهة الرئيسية · المدخل'&&floorBadge.textContent==='الأرضي','Arabic checkpoint labels');
   check(document.querySelector('[data-i18n="mapTitle"]').textContent==='خريطة جولة M7A','Arabic interface copy');
-  check(mapPanel.classList.contains('open')&&current===languageState.current&&object===languageState.object&&yaw===languageState.yaw&&pitch===languageState.pitch&&camera.fov===languageState.fov,'language switch preserves open panel and tour state');
+  check(!mapPanel.classList.contains('open')&&current===languageState.current&&object===languageState.object&&yaw===languageState.yaw&&pitch===languageState.pitch&&camera.fov===languageState.fov,'language switch preserves disabled map and tour state');
   check(document.querySelector('.map-node[data-location="1"]').getAttribute('aria-label').includes('قاعات الدراسة'),'Arabic map accessibility labels');
   currentLanguage='en';applyLanguage();closePanels();
   check(document.documentElement.lang==='en'&&cp.textContent==='Main Hall · Entrance','English restores without navigation');
