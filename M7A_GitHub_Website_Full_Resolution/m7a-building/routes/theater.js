@@ -92,7 +92,13 @@ export const LOCATIONS=[
     name: "Exterior View",
     back: null,
     view: 2.86,
-    routes: []
+    routes: [
+      {
+        to: 12,
+        angle: 3.14,
+        arrowAngle: 3.14
+      }
+    ]
   },
   {
     id: "theater-entrance-b",
