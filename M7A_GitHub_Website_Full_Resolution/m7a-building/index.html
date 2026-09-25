@@ -408,7 +408,11 @@ const PANORAMA_FILES = [
   "theater-stage-013.glb",
   "theater-stage-014.glb",
   "theater-stage-015.glb",
-  "theater-stage-016.glb"
+  "theater-stage-016.glb",
+  "theater-hall-017.glb",
+  "library-entrance-018.glb",
+  "library-lobby-019.glb",
+  "library-study-020.glb"
 ];
 
 const VISUAL_CALIBRATION=[
@@ -422,6 +426,9 @@ const VISUAL_CALIBRATION=[
   [1.045,1.045,1.045],
   [1.035,1.035,1.035],
   [1.055,1.055,1.055],
+  [1.00,1.00,1.00],
+  [1.00,1.00,1.00],
+  [1.00,1.00,1.00],
   [1.00,1.00,1.00],
   [1.00,1.00,1.00],
   [1.00,1.00,1.00],
@@ -749,11 +756,39 @@ const LOCATIONS=[
   },
   {
     id:'theater-stage-016',area:'Theater',name:'Stage · 016',back:20,view:3.14,
-    routes:[{to:20,angle:0.00,label:'Theater · Stage 015',back:true}]
+    routes:[
+      {to:20,angle:0.00,label:'Theater · Stage 015',back:true},
+      {to:22,angle:3.14,label:'Theater · Hall 017'}
+    ]
+  },
+  {
+    id:'theater-hall-017',area:'Theater',name:'Hall · 017',back:21,view:3.14,
+    routes:[
+      {to:21,angle:0.00,label:'Theater · Stage 016',back:true},
+      {to:23,angle:3.14,label:'Library · Entrance 018'}
+    ]
+  },
+  {
+    id:'library-entrance-018',area:'Library',name:'Library · Entrance',back:22,view:3.14,
+    routes:[
+      {to:22,angle:0.00,label:'Theater · Hall 017',back:true},
+      {to:24,angle:3.14,label:'Library · Lobby'}
+    ]
+  },
+  {
+    id:'library-lobby-019',area:'Library',name:'Library · Lobby',back:23,view:3.14,
+    routes:[
+      {to:23,angle:0.00,label:'Library · Entrance',back:true},
+      {to:25,angle:3.14,label:'Library · Study Area'}
+    ]
+  },
+  {
+    id:'library-study-020',area:'Library',name:'Library · Study Area',back:24,view:3.14,
+    routes:[{to:24,angle:0.00,label:'Library · Lobby',back:true}]
   }
 ];
 const LOCATION_AR=[
-  ['الردهة الرئيسية','المدخل'],['الردهة الرئيسية','قاعات الدراسة'],['الردهة الرئيسية','نهاية الردهة'],['الطابق العلوي','بسطة الدرج'],['الطابق العلوي','مكاتب أعضاء هيئة التدريس'],['الطابق العلوي','مكاتب أعضاء هيئة التدريس · منطقة الجلوس'],['الطابق الأرضي','M7A-001'],['الطابق الأرضي','M7A-004'],['الطابق الأرضي','M7A-003'],['الطابق الأرضي','M7A-002'],['المسرح','المدخل الخارجي أ'],['المسرح','المدخل الخارجي ب'],['المسرح','ردهة المدخل'],['المسرح','البهو'],['المسرح','القاعة · الخلف'],['المسرح','القاعة · الوسط'],['المسرح','المنصة · 011'],['المسرح','المنصة · 012'],['المسرح','المنصة · 013'],['المسرح','المنصة · 014'],['المسرح','المنصة · 015'],['المسرح','المنصة · 016']
+  ['الردهة الرئيسية','المدخل'],['الردهة الرئيسية','قاعات الدراسة'],['الردهة الرئيسية','نهاية الردهة'],['الطابق العلوي','بسطة الدرج'],['الطابق العلوي','مكاتب أعضاء هيئة التدريس'],['الطابق العلوي','مكاتب أعضاء هيئة التدريس · منطقة الجلوس'],['الطابق الأرضي','M7A-001'],['الطابق الأرضي','M7A-004'],['الطابق الأرضي','M7A-003'],['الطابق الأرضي','M7A-002'],['المسرح','المدخل الخارجي أ'],['المسرح','المدخل الخارجي ب'],['المسرح','ردهة المدخل'],['المسرح','البهو'],['المسرح','القاعة · الخلف'],['المسرح','القاعة · الوسط'],['المسرح','المنصة · 011'],['المسرح','المنصة · 012'],['المسرح','المنصة · 013'],['المسرح','المنصة · 014'],['المسرح','المنصة · 015'],['المسرح','المنصة · 016'],['المسرح','الردهة · 017'],['المكتبة','المدخل · 018'],['المكتبة','البهو · 019'],['المكتبة','منطقة الدراسة · 020']
 ];
 // Outdoor destinations are buildings; indoor checkpoints stay in LOCATIONS.
 // M7 coordinates supplied by the site owner.
