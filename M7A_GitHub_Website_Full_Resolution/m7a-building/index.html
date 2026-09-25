@@ -692,92 +692,97 @@ const LOCATIONS=[
     routes:[{to:2,angle:2.48,label:'Main Hall · Hall End',back:true}]
   },
   {
-    id:'theater-entrance-a',area:'Theater',name:'Outer Entrance A',back:null,view:2.86,
-    routes:[{to:12,angle:3.14,label:'Theater · Entrance Hall'}]
+    id:'theater-entrance-a',area:'Theater',name:'Outdoor Entrance',back:null,view:2.86,
+    routes:[{to:12,angle:3.14,label:'Theater · Main Lobby'}]
   },
   {
-    id:'theater-entrance-b',area:'Theater',name:'Outer Entrance B',back:null,view:3.14,
-    routes:[{to:12,angle:3.14,label:'Theater · Entrance Hall'}]
+    id:'theater-entrance-b',area:'Theater',name:'Covered Entrance',back:null,view:3.14,
+    routes:[{to:12,angle:3.14,label:'Theater · Main Lobby'}]
   },
   {
-    id:'theater-hall',area:'Theater',name:'Entrance Hall',back:10,view:2.32,
+    id:'theater-hall',area:'Theater',name:'Main Lobby',back:10,view:2.32,
     routes:[
-      {to:10,angle:0.10,label:'Theater · Outer Entrance A',back:true},
-      {to:11,angle:6.18,label:'Theater · Outer Entrance B',back:true},
-      {to:13,angle:1.96,label:'Theater · Foyer'},
+      {to:10,angle:0.10,label:'Theater · Outdoor Entrance',back:true},
+      {to:11,angle:6.18,label:'Theater · Covered Entrance',back:true},
+      {to:13,angle:1.96,label:'Auditorium · Main Door Lobby'},
       {to:23,angle:4.75,label:'Library · Entrance'}
     ]
   },
   {
-    id:'theater-foyer',area:'Theater',name:'Foyer',back:12,view:2.98,
+    id:'theater-foyer',area:'Auditorium',name:'Main Door Lobby',back:12,view:2.98,
     routes:[
-      {to:12,angle:4.20,label:'Theater · Entrance Hall',back:true},
-      {to:14,angle:2.98,label:'Theater · Auditorium'}
+      {to:12,angle:4.20,label:'Theater · Main Lobby',back:true},
+      {to:14,angle:2.98,label:'Auditorium · Main Door Landing'}
+    ]
+  },
+
+  // Auditorium navigation is intentionally a two-stair layout:
+  // Main-lobby side: 14 -> 15 -> 16 -> 17 (down to Lower Center)
+  // Library side:    21 -> 19 -> 18 -> 17 (down to Lower Center)
+  // Cross-aisle shortcut: 15 <-> 20 <-> 19
+  {
+    id:'theater-auditorium-rear',area:'Auditorium',name:'Main Door Landing',back:13,view:3.27,
+    routes:[
+      {to:13,angle:0.06,label:'Auditorium · Main Door Lobby',back:true},
+      {to:15,angle:3.27,label:'Auditorium · Main Stairs · Middle',kind:'stairs',stairDirection:'down'}
     ]
   },
   {
-    id:'theater-auditorium-rear',area:'Theater',name:'Auditorium · Rear',back:13,view:3.27,
+    id:'theater-auditorium-center',area:'Auditorium',name:'Main Stairs · Middle',back:14,view:2.55,
     routes:[
-      {to:13,angle:0.06,label:'Theater · Foyer',back:true},
-      {to:15,angle:3.27,label:'Theater · Auditorium Center'}
+      {to:14,angle:0.06,label:'Auditorium · Main Door Landing',back:true,kind:'stairs',stairDirection:'up'},
+      {to:16,angle:2.55,label:'Auditorium · Main Stairs · Lower',kind:'stairs',stairDirection:'down'},
+      {to:20,angle:4.71,label:'Auditorium · Cross-Aisle Shortcut'}
     ]
   },
   {
-    id:'theater-auditorium-center',area:'Theater',name:'Auditorium · Center',back:14,view:3.20,
+    id:'theater-stage-011',area:'Auditorium',name:'Main Stairs · Lower',back:15,view:4.71,
     routes:[
-      {to:14,angle:0.06,label:'Theater · Auditorium Rear',back:true},
-      {to:16,angle:2.55,label:'Theater · Stage 011'},
-      {to:20,angle:0.32,label:'Theater · Stage 015'}
+      {to:15,angle:5.72,label:'Auditorium · Main Stairs · Middle',back:true,kind:'stairs',stairDirection:'up'},
+      {to:17,angle:4.71,label:'Auditorium · Lower Center',kind:'stairs',stairDirection:'down'}
     ]
   },
   {
-    id:'theater-stage-011',area:'Theater',name:'Stage · 011',back:15,view:3.14,
+    id:'theater-stage-012',area:'Auditorium',name:'Lower Center',back:16,view:3.14,
     routes:[
-      {to:15,angle:5.72,label:'Theater · Auditorium Center',back:true},
-      {to:17,angle:4.71,label:'Theater · Stage 012'}
+      {to:16,angle:4.71,label:'Auditorium · Main Stairs · Lower',back:true,kind:'stairs',stairDirection:'up'},
+      {to:18,angle:1.57,label:'Auditorium · Library Stairs · Lower',kind:'stairs',stairDirection:'up'}
     ]
   },
   {
-    id:'theater-stage-012',area:'Theater',name:'Stage · 012',back:16,view:3.14,
+    id:'theater-stage-013',area:'Auditorium',name:'Library Stairs · Lower',back:17,view:1.57,
     routes:[
-      {to:16,angle:4.71,label:'Theater · Stage 011',back:true},
-      {to:18,angle:1.57,label:'Theater · Stage 013'}
+      {to:17,angle:2.32,label:'Auditorium · Lower Center',back:true,kind:'stairs',stairDirection:'down'},
+      {to:19,angle:1.57,label:'Auditorium · Library Stairs · Middle',kind:'stairs',stairDirection:'up'}
     ]
   },
   {
-    id:'theater-stage-013',area:'Theater',name:'Stage · 013',back:17,view:3.14,
+    id:'theater-stage-014',area:'Auditorium',name:'Library Stairs · Middle',back:18,view:0.00,
     routes:[
-      {to:17,angle:2.32,label:'Theater · Stage 012',back:true},
-      {to:19,angle:1.57,label:'Theater · Stage 014'}
+      {to:18,angle:3.74,label:'Auditorium · Library Stairs · Lower',back:true,kind:'stairs',stairDirection:'down'},
+      {to:21,angle:0.00,label:'Auditorium · Library Door Landing',kind:'stairs',stairDirection:'up'},
+      {to:20,angle:1.57,label:'Auditorium · Cross-Aisle Shortcut'}
     ]
   },
   {
-    id:'theater-stage-014',area:'Theater',name:'Stage · 014',back:18,view:3.14,
+    id:'theater-stage-015',area:'Auditorium',name:'Cross-Aisle Shortcut',back:15,view:3.14,
     routes:[
-      {to:18,angle:3.74,label:'Theater · Stage 013',back:true},
-      {to:21,angle:0.00,label:'Theater · Stage 016'},
-      {to:20,angle:0.28,label:'Theater · Stage 015'}
+      {to:15,angle:1.57,label:'Auditorium · Main Stairs · Middle',back:true},
+      {to:19,angle:4.71,label:'Auditorium · Library Stairs · Middle'}
     ]
   },
   {
-    id:'theater-stage-015',area:'Theater',name:'Stage · 015',back:15,view:3.14,
+    id:'theater-stage-016',area:'Auditorium',name:'Library Door Landing',back:19,view:3.14,
     routes:[
-      {to:15,angle:2.85,label:'Theater · Auditorium Center',back:true},
-      {to:19,angle:3.14,label:'Theater · Stage 014'}
+      {to:19,angle:3.14,label:'Auditorium · Library Stairs · Middle',back:true,kind:'stairs',stairDirection:'down'},
+      {to:22,angle:0.00,label:'Auditorium · Library Door Lobby'}
     ]
   },
   {
-    id:'theater-stage-016',area:'Theater',name:'Stage · 016',back:19,view:3.14,
+    id:'theater-hall-017',area:'Auditorium',name:'Library Door Lobby',back:21,view:3.14,
     routes:[
-      {to:19,angle:3.14,label:'Theater · Stage 014',back:true},
-      {to:22,angle:0.00,label:'Theater · Hall 017'}
-    ]
-  },
-  {
-    id:'theater-hall-017',area:'Theater',name:'Hall · 017',back:21,view:3.14,
-    routes:[
-      {to:21,angle:3.14,label:'Theater · Stage 016',back:true},
-      {to:23,angle:0.95,label:'Library · Entrance 018'}
+      {to:21,angle:3.14,label:'Auditorium · Library Door Landing',back:true},
+      {to:23,angle:0.95,label:'Library · Entrance'}
     ]
   },
   {
@@ -864,7 +869,7 @@ const LOCATIONS=[
   }
 ];
 const LOCATION_AR=[
-  ['الردهة الرئيسية','المدخل'],['الردهة الرئيسية','قاعات الدراسة'],['الردهة الرئيسية','نهاية الردهة'],['الطابق العلوي','بسطة الدرج'],['الطابق العلوي','مكاتب أعضاء هيئة التدريس'],['الطابق العلوي','مكاتب أعضاء هيئة التدريس · منطقة الجلوس'],['الطابق الأرضي','M7A-001'],['الطابق الأرضي','M7A-004'],['الطابق الأرضي','M7A-003'],['الطابق الأرضي','M7A-002'],['المسرح','المدخل الخارجي أ'],['المسرح','المدخل الخارجي ب'],['المسرح','ردهة المدخل'],['المسرح','البهو'],['المسرح','القاعة · الخلف'],['المسرح','القاعة · الوسط'],['المسرح','المنصة · 011'],['المسرح','المنصة · 012'],['المسرح','المنصة · 013'],['المسرح','المنصة · 014'],['المسرح','المنصة · 015'],['المسرح','المنصة · 016'],['المسرح','الردهة · 017'],['المكتبة','المدخل · 018'],['المكتبة','البهو · 019'],['المكتبة','منطقة الدراسة · 020'],['المكتبة','منطقة الدراسة · 021'],['المكتبة','منطقة الدراسة · 022'],['المكتبة','منطقة الدراسة · 023'],['المكتبة','منطقة الدراسة · 024'],['المكتبة','منطقة الدراسة · 025'],['المكتبة','منطقة الدراسة · 026'],['المكتبة','منطقة الدراسة · 027'],['المكتبة','منطقة الدراسة · 028'],['المكتبة','منطقة الدراسة · 029']
+  ['الردهة الرئيسية','المدخل'],['الردهة الرئيسية','قاعات الدراسة'],['الردهة الرئيسية','نهاية الردهة'],['الطابق العلوي','بسطة الدرج'],['الطابق العلوي','مكاتب أعضاء هيئة التدريس'],['الطابق العلوي','مكاتب أعضاء هيئة التدريس · منطقة الجلوس'],['الطابق الأرضي','M7A-001'],['الطابق الأرضي','M7A-004'],['الطابق الأرضي','M7A-003'],['الطابق الأرضي','M7A-002'],['المسرح','المدخل الخارجي'],['المسرح','المدخل المغطى'],['المسرح','البهو الرئيسي'],['قاعة المحاضرات','بهو الباب الرئيسي'],['قاعة المحاضرات','بسطة الباب الرئيسي'],['قاعة المحاضرات','الدرج الرئيسي · المنتصف'],['قاعة المحاضرات','الدرج الرئيسي · الأسفل'],['قاعة المحاضرات','المنتصف السفلي'],['قاعة المحاضرات','درج جهة المكتبة · الأسفل'],['قاعة المحاضرات','درج جهة المكتبة · المنتصف'],['قاعة المحاضرات','ممر الاختصار الأوسط'],['قاعة المحاضرات','بسطة باب جهة المكتبة'],['قاعة المحاضرات','بهو باب جهة المكتبة'],['المكتبة','المدخل · 018'],['المكتبة','البهو · 019'],['المكتبة','منطقة الدراسة · 020'],['المكتبة','منطقة الدراسة · 021'],['المكتبة','منطقة الدراسة · 022'],['المكتبة','منطقة الدراسة · 023'],['المكتبة','منطقة الدراسة · 024'],['المكتبة','منطقة الدراسة · 025'],['المكتبة','منطقة الدراسة · 026'],['المكتبة','منطقة الدراسة · 027'],['المكتبة','منطقة الدراسة · 028'],['المكتبة','منطقة الدراسة · 029']
 ];
 // Outdoor destinations are buildings; indoor checkpoints stay in LOCATIONS.
 // M7 coordinates supplied by the site owner.
@@ -1234,7 +1239,9 @@ function updateRouteLabel(){
   if(!selected){routeTip.classList.remove('show');routeTip.setAttribute('aria-hidden','true');return;}
   const route=selected.userData.route;
   const name=route.to===5?t('seatingArea'):localizedLocation(route.to).name;
-  const text=route.kind==='stairs'?(route.to===0?t('downstairs'):t('upstairs')):name;
+  const text=route.kind==='stairs'
+    ? (route.stairDirection==='down'?'↓ '+name:route.stairDirection==='up'?'↑ '+name:(route.to===0?t('downstairs'):t('upstairs')))
+    : name;
   if(routeTip.textContent!==text)routeTip.textContent=text;
   const halfWidth=routeTip.offsetWidth/2+12;
   routeTip.style.left=THREE.MathUtils.clamp(position.x,halfWidth,innerWidth-halfWidth)+'px';
