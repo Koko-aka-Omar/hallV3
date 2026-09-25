@@ -1,0 +1,1 @@
+setTimeout(()=>{const l=document.getElementById('loading');if(l&&!l.classList.contains('done')){const p=document.getElementById('load-progress-text');if(p&&!p.textContent.includes('%')){let ar=false;try{ar=localStorage.getItem('m7a-language-v1')==='ar';}catch{}p.textContent=ar?'لا يزال تحميل M7A جاريًا…':'Still loading M7A…';}}},18000);
