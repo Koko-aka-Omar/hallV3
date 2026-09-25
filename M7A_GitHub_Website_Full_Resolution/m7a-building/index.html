@@ -1151,9 +1151,12 @@ function placeOne(root,route){
   const angle=route.angle;
   const dist=route.kind==='stairs'?1.08:1.02;
   root.position.set(Math.sin(angle)*dist,FLOOR_Y,-Math.cos(angle)*dist);
-  // Shape +Y becomes local -Z after the floor rotation. Negative yaw points
-  // that tip along the SAME bearing used for placement and camera travel.
-  root.rotation.y=-angle;
+  // The original M7A scenes (0-9) were hand-calibrated around the arrow mesh's
+  // existing orientation. The later Theater/Library panoramas use route bearings
+  // directly, so their arrow glyph needs a half-turn while keeping hotspot
+  // placement and travel bearings unchanged.
+  const arrowFlip=current>=10?Math.PI:0;
+  root.rotation.y=-angle+arrowFlip;
 }
 
 function placeHotspots(){
