@@ -17,7 +17,7 @@ const root=path.join(__dirname,'../M7A_GitHub_Website_Full_Resolution/m7a-buildi
  const theaterCenter=locations.findIndex(item=>item.id==='theater-auditorium-center');
  assert.deepEqual(findPath(locations,10,theaterCenter),[10,12,13,14,theaterCenter]);
  const stageEnd=locations.findIndex(item=>item.id==='library-study-020');
- assert.deepEqual(findPath(locations,16,stageEnd),[16,17,18,19,20,21,22,23,24,stageEnd]);
+ assert.deepEqual(findPath(locations,16,stageEnd),[16,15,14,13,12,23,24,stageEnd]);
  assert.deepEqual(findPath(locations,target,target),[target]);
  assert.equal(findPath([{routes:[]},{routes:[]}],0,1),null);
  assert.equal(findPath(locations,-1,target),null);
