@@ -3,7 +3,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { HALLS } from './halls.js?v=map-polish-v3';
 import { createDirectory, searchHalls, localized } from './campus-directory.js?v=map-polish-v3';
 import { findPath } from './directions.js';
-import { PANORAMA_FILES, VISUAL_CALIBRATION, LOCATIONS, LOCATION_AR, getHotspotStyle } from './tour-routes.js?v=theater-entry-v1';
+import { PANORAMA_FILES, VISUAL_CALIBRATION, LOCATIONS, LOCATION_AR, getHotspotStyle } from './tour-routes.js?v=theater-entry-v2';
 import { I18N } from './tour-i18n.js?v=map-polish-v3';
 
 const app=document.getElementById('app');
