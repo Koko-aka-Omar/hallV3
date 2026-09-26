@@ -17,7 +17,7 @@
 <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
 <link rel="manifest" href="./manifest.webmanifest" />
-<link rel="stylesheet" href="./styles.css" />
+<link rel="stylesheet" href="./styles.css?v=map-polish-v3" />
 <link href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css" rel="stylesheet">
 <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script>
@@ -53,6 +53,7 @@
       <div class="directory-heading"><strong id="directory-title">Choose a hall</strong><button id="directory-collapse" type="button" aria-controls="directory-body" aria-expanded="true" aria-label="Collapse details">−</button></div>
       <div id="directory-body">
         <button id="directory-browse" type="button" hidden>All halls</button>
+        <div class="campus-map-hint"><span class="checkpoint-key" aria-hidden="true"></span><span data-i18n="checkpointHint">Glowing building outlines are 360° entrances</span></div>
         <input id="hall-search" type="search" placeholder="Search halls or rooms" aria-label="Search halls or rooms" autocomplete="off">
         <div id="hall-results" aria-live="polite"></div>
         <div id="hall-detail"></div>
@@ -142,7 +143,7 @@
 </div>
 <div id="loading"><div class="loading-card"><span class="eyebrow" data-i18n="university">University of Sharjah</span><div class="loader-title" data-i18n="buildingLoader">Building M7A</div><div class="spinner"></div><div class="progress-track" role="progressbar" aria-label="Loading M7A" data-i18n-aria="loadingM7A" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="load-progress-bar"></span></div><p id="load-progress-text">Loading M7A · 0%</p></div></div>
 <script src="./tour-boot.js"></script>
-<script type="module" src="./tour.js?v=checkpoint-glow-v2"></script>
+<script type="module" src="./tour.js?v=map-polish-v3"></script>
 <!-- deployment-sync: horizontal-campus-map-guide -->
 </body>
 </html>

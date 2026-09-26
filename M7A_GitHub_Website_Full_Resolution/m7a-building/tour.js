@@ -1,10 +1,10 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { HALLS } from './halls.js?v=checkpoint-glow-v2';
-import { createDirectory, searchHalls, localized } from './campus-directory.js?v=checkpoint-glow-v2';
+import { HALLS } from './halls.js?v=map-polish-v3';
+import { createDirectory, searchHalls, localized } from './campus-directory.js?v=map-polish-v3';
 import { findPath } from './directions.js';
 import { PANORAMA_FILES, VISUAL_CALIBRATION, LOCATIONS, LOCATION_AR, getHotspotStyle } from './tour-routes.js';
-import { I18N } from './tour-i18n.js';
+import { I18N } from './tour-i18n.js?v=map-polish-v3';
 
 const app=document.getElementById('app');
 const loading=document.getElementById('loading');
@@ -299,6 +299,10 @@ function initCampusMap(){
     },
     bounds:CAMPUS_MAP_BOUNDS,
     fitBoundsOptions:{padding:48},
+    minZoom:15.4,
+    maxZoom:19.2,
+    renderWorldCopies:false,
+    fadeDuration:0,
     bearing:0,
     pitch:0,
     maxPitch:0,

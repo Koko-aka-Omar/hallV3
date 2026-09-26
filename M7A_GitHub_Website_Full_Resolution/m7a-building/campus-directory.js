@@ -55,6 +55,8 @@ export function createDirectory({ halls, root, language, isReady, openTour, star
   const collapse = root.querySelector('#directory-collapse');
   const browse = root.querySelector('#directory-browse');
   let map = null, selected = null, room = null, group = null, collapsed = false, footprintEventsBound = false;
+  let glowFrame = 0;
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const text = key => copy[language()][key];
   const label = hall => `${hall.code} · ${localized(hall.name, language())}`;
@@ -75,12 +77,29 @@ export function createDirectory({ halls, root, language, isReady, openTour, star
     };
   }
 
+  function animateGlow(now) {
+    if (!map || reducedMotion) { glowFrame = 0; return; }
+    if (root.classList.contains('open') && !document.hidden && map.getLayer('hall-checkpoint-glow-soft')) {
+      const wave = (Math.sin(now / 620) + 1) / 2;
+      map.setPaintProperty('hall-checkpoint-glow-soft', 'line-opacity',
+        ['case', ['==', ['get', 'selected'], 1], 0.34 + wave * 0.16, 0.20 + wave * 0.10]);
+      map.setPaintProperty('hall-checkpoint-glow-mid', 'line-opacity',
+        ['case', ['==', ['get', 'selected'], 1], 0.56 + wave * 0.12, 0.36 + wave * 0.08]);
+    }
+    glowFrame = requestAnimationFrame(animateGlow);
+  }
+
+  function startGlowAnimation() {
+    if (!reducedMotion && !glowFrame) glowFrame = requestAnimationFrame(animateGlow);
+  }
+
   function renderFootprints() {
     if (!map || !map.isStyleLoaded()) return;
     const data = checkpointData();
     const source = map.getSource('hall-checkpoints');
     if (source) {
       source.setData(data);
+      startGlowAnimation();
       return;
     }
 
@@ -91,20 +110,47 @@ export function createDirectory({ halls, root, language, isReady, openTour, star
       type: 'fill',
       source: 'hall-checkpoints',
       paint: {
-        'fill-color': '#70f0d3',
-        'fill-opacity': ['case', ['==', ['get', 'selected'], 1], 0.24, 0.11]
+        'fill-color': '#5ff2d4',
+        'fill-opacity': ['case', ['==', ['get', 'selected'], 1], 0.30, 0.12]
       }
     });
 
     map.addLayer({
-      id: 'hall-checkpoint-glow',
+      id: 'hall-checkpoint-glow-soft',
       type: 'line',
       source: 'hall-checkpoints',
+      layout: { 'line-join': 'round', 'line-cap': 'round' },
       paint: {
-        'line-color': '#70f0d3',
-        'line-width': ['case', ['==', ['get', 'selected'], 1], 13, 9],
-        'line-opacity': ['case', ['==', ['get', 'selected'], 1], 0.62, 0.42],
-        'line-blur': 7
+        'line-color': '#55f7da',
+        'line-width': ['case', ['==', ['get', 'selected'], 1], 24, 17],
+        'line-opacity': ['case', ['==', ['get', 'selected'], 1], 0.42, 0.26],
+        'line-blur': 13
+      }
+    });
+
+    map.addLayer({
+      id: 'hall-checkpoint-glow-mid',
+      type: 'line',
+      source: 'hall-checkpoints',
+      layout: { 'line-join': 'round', 'line-cap': 'round' },
+      paint: {
+        'line-color': '#55f4d6',
+        'line-width': ['case', ['==', ['get', 'selected'], 1], 14, 10],
+        'line-opacity': ['case', ['==', ['get', 'selected'], 1], 0.64, 0.42],
+        'line-blur': 6
+      }
+    });
+
+    map.addLayer({
+      id: 'hall-checkpoint-glow-core',
+      type: 'line',
+      source: 'hall-checkpoints',
+      layout: { 'line-join': 'round', 'line-cap': 'round' },
+      paint: {
+        'line-color': '#cffff5',
+        'line-width': ['case', ['==', ['get', 'selected'], 1], 6, 4],
+        'line-opacity': 0.96,
+        'line-blur': 1.1
       }
     });
 
@@ -112,9 +158,10 @@ export function createDirectory({ halls, root, language, isReady, openTour, star
       id: 'hall-checkpoint-outline',
       type: 'line',
       source: 'hall-checkpoints',
+      layout: { 'line-join': 'round', 'line-cap': 'round' },
       paint: {
-        'line-color': '#effffd',
-        'line-width': ['case', ['==', ['get', 'selected'], 1], 4, 2.8],
+        'line-color': '#ffffff',
+        'line-width': ['case', ['==', ['get', 'selected'], 1], 2.8, 2],
         'line-opacity': 0.98
       }
     });
@@ -131,6 +178,7 @@ export function createDirectory({ halls, root, language, isReady, openTour, star
         collapse.focus({ preventScroll: true });
       });
     }
+    startGlowAnimation();
   }
 
   function select(hall, selectedRoom = null) {
@@ -138,7 +186,7 @@ export function createDirectory({ halls, root, language, isReady, openTour, star
     render();
     const card = root.querySelector('.campus-map-card');
     const offset = card && map?.getContainer().clientWidth <= 600 ? [0, -Math.min(card.offsetHeight / 2, 170)] : [0, 0];
-    map?.easeTo({ center: mapCoordinate(hall), offset, duration: 400 });
+    if (map) map.easeTo({ center: mapCoordinate(hall), zoom: Math.max(map.getZoom(), 17.35), offset, duration: 520 });
   }
 
   function renderList() {
