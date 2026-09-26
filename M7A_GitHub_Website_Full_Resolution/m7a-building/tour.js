@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { HALLS } from './halls.js?v=map-polish-v3';
-import { createDirectory, searchHalls, localized } from './campus-directory.js?v=map-polish-v3';
+import { createDirectory, searchHalls, localized } from './campus-directory.js?v=e2-existing-preview-v1';
 import { findPath } from './directions.js';
 import { PANORAMA_FILES, VISUAL_CALIBRATION, LOCATIONS, LOCATION_AR, getHotspotStyle } from './tour-routes.js';
 import { I18N } from './tour-i18n.js?v=map-polish-v3';
