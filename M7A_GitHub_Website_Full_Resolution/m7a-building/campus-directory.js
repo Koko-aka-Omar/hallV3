@@ -174,10 +174,6 @@ export function createDirectory({ halls, root, language, isReady, openTour, star
         const id = event.features?.[0]?.properties?.id;
         const hall = halls.find(item => item.id === id);
         if (!hall) return;
-        if (hall.tour) {
-          openTour(hall.tour);
-          return;
-        }
         select(hall);
         collapse.focus({ preventScroll: true });
       });
