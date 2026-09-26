@@ -16,6 +16,7 @@ export const HALLS = [
     ],
     thumbnail: './panoramas-mobile/theater-outer-entrance-a.jpg',
     tour: { scene: 'theater-entrance-a' },
+    directMapEntry: true,
     rooms: []
   },
   {

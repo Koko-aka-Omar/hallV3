@@ -1,6 +1,6 @@
 // Thin compatibility layer: area-specific navigation lives in ./routes/.
 import * as M7A from './routes/m7a.js';
-import * as THEATER from './routes/theater.js';
+import * as THEATER from './routes/theater.js?v=e2-nav-entry-v1';
 import * as LIBRARY from './routes/library.js';
 
 export const PANORAMA_FILES=[
