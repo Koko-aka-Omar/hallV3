@@ -92,13 +92,18 @@ export const LOCATIONS=[
     name: "Exterior View",
     back: null,
     view: 2.86,
-    routes: []
+    routes: [
+      {
+        to: 11,
+        angle: 2.86
+      }
+    ]
   },
   {
     id: "theater-entrance-b",
     area: "Theater",
     name: "Covered Entrance",
-    back: null,
+    back: 10,
     view: 3.14,
     routes: [
       {
@@ -404,6 +409,7 @@ export const LOCATION_AR=[
 
 // Exceptional visual distance/scale overrides. Keys use stable scene IDs.
 export const HOTSPOT_STYLE={
+  "theater-entrance-a->theater-entrance-b":[1.95,.80],
   "theater-hall->theater-entrance-b":[2.05,.78],
   "theater-hall->theater-foyer":[1.85,.76],
   "theater-hall->theater-hall-017":[1.85,.76],
