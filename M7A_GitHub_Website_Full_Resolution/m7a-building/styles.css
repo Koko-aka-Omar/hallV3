@@ -237,3 +237,6 @@
 #campus-map .maplibregl-ctrl-group{border:1px solid #dce8e2;border-radius:15px;background:#fffffff5;box-shadow:0 6px 22px #133c351c}#campus-map .maplibregl-ctrl-group button{width:44px;height:44px}#campus-map .maplibregl-ctrl-group button+button{border-top-color:#e4ece7}
 #directory-body{scroll-padding-block:8px}
 @media(max-width:600px){.campus-map-heading{top:max(14px,env(safe-area-inset-top));left:12px;font-size:12px;padding:12px 14px}.campus-map-actions{right:12px;top:max(10px,env(safe-area-inset-top));padding:4px}.campus-map-card{left:12px;width:calc(100vw - 24px);padding:16px;border-radius:20px}.directory-heading strong{font-size:18px}#campus-map .maplibregl-ctrl-top-right{right:12px;top:78px}.campus-map-card .eyebrow{font-size:8px}.campus-popup-button{min-height:44px}}
+
+.campus-guide-link{display:flex;align-items:center;justify-content:center;min-height:42px;margin-top:12px;padding:0 14px;border:1px solid #d7e5dd;border-radius:12px;background:#f5f9f7;color:#12695f;text-decoration:none;font-size:12px;font-weight:700;transition:background .16s ease,border-color .16s ease,transform .16s ease}
+.campus-guide-link:hover{background:#edf6f2;border-color:#bdd8cc}.campus-guide-link:active{transform:scale(.985)}.campus-guide-link:focus-visible{outline:3px solid #24b9b0;outline-offset:3px}
