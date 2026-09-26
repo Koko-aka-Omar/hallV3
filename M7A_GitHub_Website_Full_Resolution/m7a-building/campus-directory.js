@@ -4,7 +4,7 @@ export function localized(value, language) {
 
 const mapCoordinate = hall => hall.mapCoordinates || hall.coordinates;
 
-// Connected groups in screen pixels prevent touching pins at any zoom level.
+// Kept for directory/search tests and for future non-footprint checkpoints.
 export function groupNearby(halls, project, radius = 64) {
   const points = halls.map(hall => ({ hall, point: project(mapCoordinate(hall)) }));
   const unseen = new Set(points);
@@ -46,6 +46,7 @@ export function createDirectory({ halls, root, language, isReady, openTour, star
     en: { choose: 'Choose a hall', search: 'Search halls or rooms', empty: 'No matching halls or rooms', browse: 'All halls', available: '360° tour available', soon: 'Tour coming soon', enter: 'Enter 360° tour', loading: 'Preparing 360° view…', rooms: 'Rooms', entrance: 'Hall entrance', collapse: 'Collapse details', expand: 'Expand details', group: 'Nearby halls', select: 'Select a hall', count: n => `${n} halls`, back: 'All halls' },
     ar: { choose: 'اختر مبنى', search: 'ابحث عن مبنى أو قاعة', empty: 'لا توجد مبانٍ أو قاعات مطابقة', browse: 'جميع المباني', available: 'تتوفر جولة بزاوية 360°', soon: 'الجولة متاحة قريبًا', enter: 'دخول الجولة بزاوية 360°', loading: 'جارٍ تجهيز العرض بزاوية 360°…', rooms: 'القاعات', entrance: 'مدخل المبنى', collapse: 'طي التفاصيل', expand: 'عرض التفاصيل', group: 'مبانٍ متقاربة', select: 'اختر مبنى', count: n => `${n} مبانٍ`, back: 'جميع المباني' }
   };
+
   const title = root.querySelector('#directory-title');
   const body = root.querySelector('#directory-body');
   const search = root.querySelector('#hall-search');
@@ -53,7 +54,8 @@ export function createDirectory({ halls, root, language, isReady, openTour, star
   const detail = root.querySelector('#hall-detail');
   const collapse = root.querySelector('#directory-collapse');
   const browse = root.querySelector('#directory-browse');
-  let map = null, markers = [], selected = null, room = null, group = null, collapsed = false;
+  let map = null, selected = null, room = null, group = null, collapsed = false, footprintEventsBound = false;
+
   const text = key => copy[language()][key];
   const label = hall => `${hall.code} · ${localized(hall.name, language())}`;
   const node = (tag, className, value) => {
@@ -61,6 +63,76 @@ export function createDirectory({ halls, root, language, isReady, openTour, star
     if (value) el.textContent = value;
     return el;
   };
+
+  function checkpointData() {
+    return {
+      type: 'FeatureCollection',
+      features: halls.filter(hall => hall.mapOutline?.length >= 4).map(hall => ({
+        type: 'Feature',
+        properties: { id: hall.id, code: hall.code, selected: selected?.id === hall.id ? 1 : 0 },
+        geometry: { type: 'Polygon', coordinates: [hall.mapOutline] }
+      }))
+    };
+  }
+
+  function renderFootprints() {
+    if (!map || !map.isStyleLoaded()) return;
+    const data = checkpointData();
+    const source = map.getSource('hall-checkpoints');
+    if (source) {
+      source.setData(data);
+      return;
+    }
+
+    map.addSource('hall-checkpoints', { type: 'geojson', data });
+
+    map.addLayer({
+      id: 'hall-checkpoint-fill',
+      type: 'fill',
+      source: 'hall-checkpoints',
+      paint: {
+        'fill-color': '#70f0d3',
+        'fill-opacity': ['case', ['==', ['get', 'selected'], 1], 0.24, 0.11]
+      }
+    });
+
+    map.addLayer({
+      id: 'hall-checkpoint-glow',
+      type: 'line',
+      source: 'hall-checkpoints',
+      paint: {
+        'line-color': '#70f0d3',
+        'line-width': ['case', ['==', ['get', 'selected'], 1], 13, 9],
+        'line-opacity': ['case', ['==', ['get', 'selected'], 1], 0.62, 0.42],
+        'line-blur': 7
+      }
+    });
+
+    map.addLayer({
+      id: 'hall-checkpoint-outline',
+      type: 'line',
+      source: 'hall-checkpoints',
+      paint: {
+        'line-color': '#effffd',
+        'line-width': ['case', ['==', ['get', 'selected'], 1], 4, 2.8],
+        'line-opacity': 0.98
+      }
+    });
+
+    if (!footprintEventsBound) {
+      footprintEventsBound = true;
+      map.on('mouseenter', 'hall-checkpoint-fill', () => { map.getCanvas().style.cursor = 'pointer'; });
+      map.on('mouseleave', 'hall-checkpoint-fill', () => { map.getCanvas().style.cursor = ''; });
+      map.on('click', 'hall-checkpoint-fill', event => {
+        const id = event.features?.[0]?.properties?.id;
+        const hall = halls.find(item => item.id === id);
+        if (!hall) return;
+        select(hall);
+        collapse.focus({ preventScroll: true });
+      });
+    }
+  }
+
   function select(hall, selectedRoom = null) {
     selected = hall; room = selectedRoom; group = null; collapsed = false; search.value = '';
     render();
@@ -68,6 +140,7 @@ export function createDirectory({ halls, root, language, isReady, openTour, star
     const offset = card && map?.getContainer().clientWidth <= 600 ? [0, -Math.min(card.offsetHeight / 2, 170)] : [0, 0];
     map?.easeTo({ center: mapCoordinate(hall), offset, duration: 400 });
   }
+
   function renderList() {
     results.replaceChildren();
     const pool = group || halls;
@@ -83,6 +156,7 @@ export function createDirectory({ halls, root, language, isReady, openTour, star
       results.append(button);
     }
   }
+
   function renderDetail() {
     detail.replaceChildren(); detail.hidden = !selected || Boolean(search.value);
     if (detail.hidden) return;
@@ -92,6 +166,7 @@ export function createDirectory({ halls, root, language, isReady, openTour, star
     }
     const target = room?.tour || (!room ? selected.tour : null);
     detail.append(node('p', 'hall-status', target ? text('available') : text('soon')));
+
     if (selected.rooms?.length) {
       const caption = node('p', 'room-label', text('rooms')); caption.id = 'room-picker-label';
       const picker = node('div', 'room-picker');
@@ -103,6 +178,7 @@ export function createDirectory({ halls, root, language, isReady, openTour, star
       const choices = node('div', 'room-choices'); choices.id = 'room-choices'; choices.hidden = true;
       choices.setAttribute('role', 'group'); choices.setAttribute('aria-labelledby', 'room-picker-label');
       const buttons = [];
+
       for (const item of [null, ...selected.rooms]) {
         const option = node('button', 'room-choice'); option.type = 'button';
         const active = (item?.id || '') === (room?.id || ''); option.setAttribute('aria-pressed', String(active));
@@ -115,6 +191,7 @@ export function createDirectory({ halls, root, language, isReady, openTour, star
         option.onclick = () => { room = item; renderDetail(); detail.querySelector('#hall-room')?.focus({ preventScroll: true }); };
         buttons.push(option); choices.append(option);
       }
+
       const setOpen = open => {
         choices.hidden = !open; toggle.setAttribute('aria-expanded', String(open));
         if (open) requestAnimationFrame(() => {
@@ -137,11 +214,13 @@ export function createDirectory({ halls, root, language, isReady, openTour, star
       };
       picker.append(toggle, choices); detail.append(caption, picker);
     }
+
     const button = node('button', 'campus-popup-button'); button.id = 'campus-enter'; button.type = 'button';
     button.disabled = !target || Boolean(target.scene && !isReady());
     button.textContent = !target ? text('soon') : target.scene && !isReady() ? text('loading') : text('enter');
     button.onclick = () => { if (target && !button.disabled) openTour(target); };
     detail.append(button);
+
     if (room && target?.scene && startDirections) {
       const directions = node('button', 'campus-popup-button directions-start', language() === 'ar' ? 'أرشدني إلى القاعة' : 'Show me the way');
       directions.type = 'button'; directions.disabled = !isReady();
@@ -150,52 +229,28 @@ export function createDirectory({ halls, root, language, isReady, openTour, star
       detail.append(node('small', 'hall-status', language() === 'ar' ? 'اتبع المسار من موقعك الحالي في الجولة.' : 'Follow the route from your current tour viewpoint.'));
     }
   }
+
   function render() {
     title.textContent = selected ? label(selected) : group ? text('group') : text('choose');
     search.placeholder = text('search'); search.setAttribute('aria-label', text('search'));
     collapse.textContent = collapsed ? '+' : '−'; collapse.setAttribute('aria-label', text(collapsed ? 'expand' : 'collapse'));
     collapse.setAttribute('aria-expanded', String(!collapsed)); body.hidden = collapsed;
     browse.hidden = !selected && !group; browse.textContent = '‹ ' + text('back');
-    renderList(); renderDetail();
+    renderList(); renderDetail(); renderFootprints();
   }
-  function refreshMarkers() {
-    if (!map) return;
-    markers.forEach(marker => marker.remove()); markers = [];
-    for (const members of groupNearby(halls, coordinate => map.project(coordinate))) {
-      const button = node('button', members.length > 1 ? 'campus-cluster' : 'campus-marker'); button.type = 'button';
-      if (members.length > 1) {
-        button.textContent = String(members.length); button.setAttribute('aria-label', text('count')(members.length));
-      } else {
-        const shape = node('span', 'campus-pin-shape'); shape.append(node('span', '', members[0].code)); button.append(shape);
-        button.setAttribute('aria-label', label(members[0])); button.title = label(members[0]);
-      }
-      button.onclick = () => {
-        if (members.length === 1) { select(members[0]); collapse.focus({ preventScroll: true }); return; }
-        selected = null; room = null; group = members; collapsed = false; search.value = ''; render();
-        // Keep a selectable list even if halls share exactly the same coordinates.
-        const bounds = new maplibregl.LngLatBounds(); members.forEach(hall => bounds.extend(mapCoordinate(hall)));
-        map.fitBounds(bounds, { padding: 100, maxZoom: Math.min(map.getZoom() + 2, 20), duration: 450 });
-        collapse.focus({ preventScroll: true });
-      };
-      const coordinate = members.reduce((sum, hall) => { const point=mapCoordinate(hall); return [sum[0] + point[0] / members.length, sum[1] + point[1] / members.length]; }, [0, 0]);
-      const marker = new maplibregl.Marker({ element: button, anchor: members.length > 1 ? 'center' : 'bottom' }).setLngLat(coordinate).addTo(map);
-      marker.directoryMembers = members; markers.push(marker);
-    }
-  }
-  search.oninput = renderListAndDetail;
-  function renderListAndDetail() { renderList(); renderDetail(); }
+
+  search.oninput = () => { renderList(); renderDetail(); };
   browse.onclick = () => { selected = null; room = null; group = null; search.value = ''; render(); search.focus(); };
   collapse.onclick = () => { collapsed = !collapsed; render(); };
+
   return {
-    attach(nextMap) { map = nextMap; map.on('moveend', refreshMarkers); refreshMarkers(); render(); },
-    update() {
+    attach(nextMap) {
+      map = nextMap;
       render();
-      for (const marker of markers) {
-        const members = marker.directoryMembers;
-        const name = members.length > 1 ? text('count')(members.length) : label(members[0]);
-        marker.getElement().setAttribute('aria-label', name); marker.getElement().title = name;
-      }
+      const mount = () => { renderFootprints(); };
+      if (map.isStyleLoaded()) mount(); else map.once('load', mount);
     },
-    refreshMarkers
+    update() { render(); },
+    refreshMarkers() { renderFootprints(); }
   };
 }
