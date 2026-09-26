@@ -168,6 +168,12 @@ let current=0, object=null, yaw=0, pitch=0, dragging=false, sx=0, sy=0, syaw=0, 
 // Outdoor destinations are buildings; indoor checkpoints stay in LOCATIONS.
 // M7 coordinates supplied by the site owner.
 const CAMPUS_BUILDINGS=HALLS;
+const CAMPUS_MAP_CORNERS=[
+  [55.474472763599636,25.290827666213005],
+  [55.47947276359964,25.290827666213005],
+  [55.47947276359964,25.270141712821964],
+  [55.474472763599636,25.270141712821964]
+];
 const requestedScene=new URLSearchParams(location.search).get('scene');
 const requestedSceneIndex=LOCATIONS.findIndex(loc=>loc.id===requestedScene);
 const INITIAL_SCENE=requestedSceneIndex>=0?requestedSceneIndex:0;
@@ -271,20 +277,35 @@ function initCampusMap(){
   const building=CAMPUS_BUILDINGS[0];
   campusMap=new maplibregl.Map({
     container:'campus-map',
-    style:'https://tiles.openfreemap.org/styles/liberty',
+    style:{
+      version:8,
+      sources:{
+        campus:{
+          type:'image',
+          url:'./campus-map-2026.webp',
+          coordinates:CAMPUS_MAP_CORNERS
+        }
+      },
+      layers:[{
+        id:'official-campus-map',
+        type:'raster',
+        source:'campus',
+        paint:{'raster-opacity':1,'raster-resampling':'linear'}
+      }]
+    },
     center:building.coordinates,
     zoom:17.4,
-    // Align the main campus avenue horizontally; keep this heading during gestures.
-    bearing:124,
+    bearing:0,
     pitch:0,
     maxPitch:0,
     dragRotate:false,
     pitchWithRotate:false,
     touchPitch:false,
-    attributionControl:true
+    attributionControl:false
   });
   campusMap.touchZoomRotate.disableRotation();
   campusMap.keyboard.disableRotation();
+  campusMap.addControl(new maplibregl.AttributionControl({compact:true,customAttribution:'University of Sharjah · Campus Map 2026'}),'bottom-right');
   campusMap.addControl(new maplibregl.NavigationControl({showCompass:false,showZoom:true,visualizePitch:false}),'top-right');
   directory.attach(campusMap);
   updateCampusMap();
