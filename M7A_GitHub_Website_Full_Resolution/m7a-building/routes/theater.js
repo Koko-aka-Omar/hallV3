@@ -165,7 +165,7 @@ export const LOCATIONS=[
         angle: 4.62,
         arrowAngle: 4.62,
         back: true,
-        hotspotAngle: 4.84
+        hotspotAngle: 5.05
       },
       {
         to: 14,
