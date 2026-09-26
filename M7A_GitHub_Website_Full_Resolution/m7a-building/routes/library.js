@@ -113,7 +113,7 @@ export const LOCATIONS=[
       {
         to: 27,
         angle: 3.14,
-        arrowAngle: 3.14,
+        arrowAngle: 2.65,
         hotspotAngle: 2.3,
         hotspotDistance: 0.75
       }
@@ -149,8 +149,9 @@ export const LOCATIONS=[
       {
         to: 27,
         angle: 0,
-        arrowAngle: 0,
-        back: true
+        arrowAngle: 0.28,
+        back: true,
+        hotspotAngle: 0.28
       },
       {
         to: 29,
@@ -169,13 +170,14 @@ export const LOCATIONS=[
       {
         to: 28,
         angle: 0,
-        arrowAngle: 0,
-        back: true
+        arrowAngle: 0.6,
+        back: true,
+        hotspotAngle: 0.62
       },
       {
         to: 30,
         angle: 3.14,
-        arrowAngle: 3.14,
+        arrowAngle: 2.35,
         hotspotAngle: 2.15,
         hotspotDistance: 0.75
       }
@@ -191,13 +193,14 @@ export const LOCATIONS=[
       {
         to: 29,
         angle: 0,
-        arrowAngle: 0,
-        back: true
+        arrowAngle: 0.2,
+        back: true,
+        hotspotAngle: 0.95
       },
       {
         to: 31,
         angle: 3.14,
-        arrowAngle: 3.14,
+        arrowAngle: 1.85,
         hotspotAngle: 1.1,
         hotspotDistance: 0.75
       }
@@ -213,8 +216,9 @@ export const LOCATIONS=[
       {
         to: 30,
         angle: 0,
-        arrowAngle: 0,
-        back: true
+        arrowAngle: 0.3,
+        back: true,
+        hotspotAngle: 1.05
       }
     ]
   },
@@ -228,8 +232,9 @@ export const LOCATIONS=[
       {
         to: 25,
         angle: 2.15,
-        arrowAngle: 2.15,
-        back: true
+        arrowAngle: 1.92,
+        back: true,
+        hotspotAngle: 1.92
       },
       {
         to: 33,
@@ -254,7 +259,8 @@ export const LOCATIONS=[
       {
         to: 34,
         angle: 4.15,
-        arrowAngle: 4.15
+        arrowAngle: 4.36,
+        hotspotAngle: 4.5
       }
     ]
   },

@@ -214,6 +214,7 @@ export const LOCATIONS=[
       {
         to: 16,
         angle: 3.3,
+        arrivalAngle: 3.3,
         arrowAngle: 3.05,
         hotspotAngle: 3.05,
         kind: "stairs",
@@ -452,6 +453,7 @@ export const HOTSPOT_STYLE={
   "theater-hall->theater-entrance-b":[2.05,.78],
   "theater-hall->theater-foyer":[1.85,.76],
   "theater-hall->theater-hall-017":[1.85,.76],
-  "theater-stage-011->theater-stage-012":[1.80,.80],
+  "theater-stage-011->theater-stage-012":[1.30,.64],
+  "theater-stage-011->theater-auditorium-center":[0.9,.42],
   "theater-stage-013->theater-stage-012":[1.80,.80]
 };

@@ -520,7 +520,9 @@ function updateRouteLabel(){
   let selected=null,best=Infinity,position=null;
   for(const root of hotspotRoots){
     if(!root.visible||!root.userData.route)continue;
-    const delta=Math.abs(wrapAngle(root.userData.route.angle-bearing));
+    const route=root.userData.route;
+    const labelAngle=current>=25?(route.hotspotAngle??route.angle):route.angle;
+    const delta=Math.abs(wrapAngle(labelAngle-bearing));
     const hovered=!coarsePointer&&root===hoverHotspot;
     if(!hovered&&delta>0.45)continue;
     labelPoint.copy(root.position).project(camera);
@@ -743,7 +745,7 @@ async function transitionTo(i,selectedRoute=null,fromMap=false){
   const oldViewBearing=-oldYaw;
   const relativeView=wrapAngle(oldViewBearing-bearing);
   const returnRoute=routeFromTo(i,from);
-  const arrivalForward=returnRoute ? returnRoute.angle+Math.PI : (LOCATIONS[i]?.view ?? 0);
+  const arrivalForward=route.arrivalAngle ?? (returnRoute ? returnRoute.angle+Math.PI : (LOCATIONS[i]?.view ?? 0));
   const arrivalYaw=fromMap?-(LOCATIONS[i]?.view??0):-(arrivalForward+relativeView);
   const facingTravel=Math.cos(oldYaw+bearing);
   transitioning=true;el.title='';dragging=false;gesture=null;touches.clear();pinchDistance=null;hoverHotspot=null;routeTip.classList.remove('show');routeTip.setAttribute('aria-hidden','true');updateControls();
