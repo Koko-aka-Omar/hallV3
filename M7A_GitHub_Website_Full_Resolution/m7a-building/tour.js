@@ -274,8 +274,8 @@ function initCampusMap(){
     style:'https://tiles.openfreemap.org/styles/liberty',
     center:building.coordinates,
     zoom:17.4,
-    // Align the main campus avenue horizontally; keep this heading during gestures.
-    bearing:124,
+    // Keep the map north-up so all map labels read horizontally.
+    bearing:0,
     pitch:0,
     maxPitch:0,
     dragRotate:false,
@@ -285,18 +285,6 @@ function initCampusMap(){
   });
   campusMap.touchZoomRotate.disableRotation();
   campusMap.keyboard.disableRotation();
-
-  // Keep all map names and labels horizontal on screen even though the campus map itself is rotated.
-  campusMap.on('style.load',()=>{
-    for(const layer of campusMap.getStyle().layers||[]){
-      if(layer.type!=='symbol'||!layer.layout?.['text-field'])continue;
-      try{
-        campusMap.setLayoutProperty(layer.id,'text-rotation-alignment','viewport');
-        campusMap.setLayoutProperty(layer.id,'text-pitch-alignment','viewport');
-        campusMap.setLayoutProperty(layer.id,'text-keep-upright',true);
-      }catch{}
-    }
-  });
 
   campusMap.addControl(new maplibregl.NavigationControl({showCompass:false,showZoom:true,visualizePitch:false}),'top-right');
   directory.attach(campusMap);
