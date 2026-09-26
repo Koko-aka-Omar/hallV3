@@ -91,7 +91,7 @@ export const LOCATIONS=[
     area: "Theater",
     name: "Exterior View",
     back: null,
-    view: 2.86,
+    view: 3.14,
     routes: [
       {
         to: 12,
@@ -169,6 +169,7 @@ export const LOCATIONS=[
       },
       {
         to: 14,
+        arrivalPitch: -0.25,
         angle: 2.98,
         arrowAngle: 2.98
       }
@@ -180,6 +181,7 @@ export const LOCATIONS=[
     name: "Main Stairs · Top",
     back: 13,
     view: 3.14,
+    viewPitch: -0.25,
     routes: [
       {
         to: 13,
@@ -202,7 +204,8 @@ export const LOCATIONS=[
     area: "Auditorium",
     name: "Main Stairs · Middle",
     back: 14,
-    view: 3.14,
+    view: 3.05,
+    viewPitch: -0.22,
     routes: [
       {
         to: 14,
@@ -255,7 +258,7 @@ export const LOCATIONS=[
     area: "Auditorium",
     name: "Lower Center",
     back: 16,
-    view: 3.14,
+    view: 1.65,
     routes: [
       {
         to: 16,
@@ -276,7 +279,7 @@ export const LOCATIONS=[
     area: "Auditorium",
     name: "Library Stairs · Bottom",
     back: 17,
-    view: 1.95,
+    view: 1.1,
     routes: [
       {
         to: 17,
@@ -302,6 +305,7 @@ export const LOCATIONS=[
     name: "Library Stairs · Middle",
     back: 18,
     view: 3.14,
+    viewPitch: -0.22,
     routes: [
       {
         to: 18,
@@ -330,7 +334,7 @@ export const LOCATIONS=[
     area: "Auditorium",
     name: "Cross Aisle",
     back: 15,
-    view: 3.14,
+    view: 1.8,
     routes: [
       {
         to: 15,
@@ -352,7 +356,8 @@ export const LOCATIONS=[
     area: "Auditorium",
     name: "Library Stairs · Top",
     back: 19,
-    view: 3.14,
+    view: 3.35,
+    viewPitch: -0.25,
     routes: [
       {
         to: 19,
@@ -378,6 +383,7 @@ export const LOCATIONS=[
     routes: [
       {
         to: 21,
+        arrivalPitch: -0.25,
         angle: 3.14,
         arrowAngle: 3.32,
         back: true

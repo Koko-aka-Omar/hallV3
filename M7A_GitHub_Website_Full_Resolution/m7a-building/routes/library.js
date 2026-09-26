@@ -87,6 +87,8 @@ export const LOCATIONS=[
       },
       {
         to: 26,
+        arrivalAngle: 3.0,
+        departureAngle: 3.14,
         angle: 3.14,
         arrowAngle: 3.14
       },
@@ -102,10 +104,12 @@ export const LOCATIONS=[
     area: "Library",
     name: "Study Area 2",
     back: 25,
-    view: 3.14,
+    view: 3.0,
     routes: [
       {
         to: 25,
+        arrivalAngle: 0,
+        departureAngle: 6.17,
         angle: 0,
         arrowAngle: 6.17,
         back: true,
@@ -114,6 +118,8 @@ export const LOCATIONS=[
       },
       {
         to: 27,
+        arrivalAngle: 3.01,
+        departureAngle: 3.0,
         angle: 3.14,
         arrowAngle: 3.0,
         hotspotAngle: 3.0,
@@ -126,10 +132,12 @@ export const LOCATIONS=[
     area: "Library",
     name: "Study Area 3",
     back: 26,
-    view: 3.14,
+    view: 3.01,
     routes: [
       {
         to: 26,
+        arrivalAngle: 6.17,
+        departureAngle: 6.17,
         angle: 0,
         arrowAngle: 0,
         back: true,
@@ -137,6 +145,8 @@ export const LOCATIONS=[
       },
       {
         to: 28,
+        arrivalAngle: 3.35,
+        departureAngle: 3.01,
         angle: 3.14,
         arrowAngle: 3.01,
         hotspotAngle: 3.01,
@@ -149,10 +159,12 @@ export const LOCATIONS=[
     area: "Library",
     name: "Study Area 4",
     back: 27,
-    view: 3.14,
+    view: 3.35,
     routes: [
       {
         to: 27,
+        arrivalAngle: 6.17,
+        departureAngle: 0.28,
         angle: 0,
         arrowAngle: 0.28,
         back: true,
@@ -160,6 +172,8 @@ export const LOCATIONS=[
       },
       {
         to: 29,
+        arrivalAngle: 3.8,
+        departureAngle: 3.35,
         angle: 3.14,
         arrowAngle: 3.35,
         hotspotAngle: 3.35,
@@ -172,10 +186,12 @@ export const LOCATIONS=[
     area: "Library",
     name: "Study Area 5",
     back: 28,
-    view: 3.14,
+    view: 3.8,
     routes: [
       {
         to: 28,
+        arrivalAngle: 0.28,
+        departureAngle: 0.62,
         angle: 0,
         arrowAngle: 0.6,
         back: true,
@@ -183,6 +199,8 @@ export const LOCATIONS=[
       },
       {
         to: 30,
+        arrivalAngle: 2.62,
+        departureAngle: 3.8,
         angle: 3.14,
         arrowAngle: 3.8,
         hotspotAngle: 3.8,
@@ -195,10 +213,12 @@ export const LOCATIONS=[
     area: "Library",
     name: "Study Area 6",
     back: 29,
-    view: 3.14,
+    view: 2.62,
     routes: [
       {
         to: 29,
+        arrivalAngle: 0.62,
+        departureAngle: 5.85,
         angle: 0,
         arrowAngle: 5.85,
         back: true,
@@ -207,6 +227,8 @@ export const LOCATIONS=[
       },
       {
         to: 31,
+        arrivalAngle: 2.85,
+        departureAngle: 2.62,
         angle: 3.14,
         arrowAngle: 2.62,
         hotspotAngle: 2.62,
@@ -219,10 +241,12 @@ export const LOCATIONS=[
     area: "Library",
     name: "Study Area 7",
     back: 30,
-    view: 3.14,
+    view: 2.85,
     routes: [
       {
         to: 30,
+        arrivalAngle: 5.85,
+        departureAngle: 6.05,
         angle: 0,
         arrowAngle: 6.05,
         back: true,
@@ -236,7 +260,7 @@ export const LOCATIONS=[
     area: "Library",
     name: "Study Area 8",
     back: 25,
-    view: 3.14,
+    view: 4.08,
     routes: [
       {
         to: 25,
@@ -257,7 +281,7 @@ export const LOCATIONS=[
     area: "Library",
     name: "Study Area 9",
     back: 32,
-    view: 3.14,
+    view: 4.43,
     routes: [
       {
         to: 32,
@@ -278,7 +302,7 @@ export const LOCATIONS=[
     area: "Library",
     name: "Study Area 10",
     back: 33,
-    view: 3.14,
+    view: 2.15,
     routes: [
       {
         to: 33,

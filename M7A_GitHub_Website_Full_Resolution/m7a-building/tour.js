@@ -632,7 +632,7 @@ shareScene.onclick=async()=>{
 };
 function resetView(){
   const bearing=LOCATIONS[current]?.view ?? LOCATIONS[current]?.routes?.[0]?.angle ?? 0;
-  yaw=-bearing;pitch=0;camera.fov=72;camera.updateProjectionMatrix();camera.rotation.set(pitch,yaw,0);
+  yaw=-bearing;pitch=LOCATIONS[current]?.viewPitch ?? 0;camera.fov=72;camera.updateProjectionMatrix();camera.rotation.set(pitch,yaw,0);
   if(motionEnabled)motionNeedsCalibrate=true;
 }
 function dispose(root){
@@ -743,7 +743,7 @@ async function transitionTo(i,selectedRoute=null,fromMap=false){
   const from=current,oldYaw=yaw,oldPitch=pitch,oldFov=camera.fov;
   const bearing=route.angle;
   const oldViewBearing=-oldYaw;
-  const relativeView=wrapAngle(oldViewBearing-bearing);
+  const relativeView=wrapAngle(oldViewBearing-(route.departureAngle ?? bearing));
   const returnRoute=routeFromTo(i,from);
   const arrivalForward=route.arrivalAngle ?? (returnRoute ? returnRoute.angle+Math.PI : (LOCATIONS[i]?.view ?? 0));
   const arrivalYaw=fromMap?-(LOCATIONS[i]?.view??0):-(arrivalForward+relativeView);
@@ -805,7 +805,7 @@ async function transitionTo(i,selectedRoute=null,fromMap=false){
     }
     clearTimeout(slowLoad);status.textContent='';
     await loadCheckpoint(i,prepared);
-    yaw=arrivalYaw;pitch=fromMap?0:oldPitch;camera.fov=oldFov;camera.updateProjectionMatrix();camera.rotation.set(pitch,yaw,0);
+    yaw=arrivalYaw;pitch=fromMap?(LOCATIONS[i]?.viewPitch ?? 0):(route.arrivalPitch ?? oldPitch);camera.fov=oldFov;camera.updateProjectionMatrix();camera.rotation.set(pitch,yaw,0);
     if(coarsePointer){updateHotspotVisuals(performance.now());renderer.render(scene,camera);}
     await tween(reducedMotion?100:(coarsePointer?180:220),(e,t)=>{
       if(!reducedMotion&&!fromMap){
