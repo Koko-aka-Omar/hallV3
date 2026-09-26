@@ -169,10 +169,10 @@ let current=0, object=null, yaw=0, pitch=0, dragging=false, sx=0, sy=0, syaw=0, 
 // M7 coordinates supplied by the site owner.
 const CAMPUS_BUILDINGS=HALLS;
 const CAMPUS_MAP_CORNERS=[
-  [55.474472763599636,25.290827666213005],
-  [55.47947276359964,25.290827666213005],
-  [55.47947276359964,25.270141712821964],
-  [55.474472763599636,25.270141712821964]
+  [55.48841122384587,25.282745259662605],
+  [55.48841122384587,25.27822411937236],
+  [55.465534303353394,25.27822411937236],
+  [55.465534303353394,25.282745259662605]
 ];
 const requestedScene=new URLSearchParams(location.search).get('scene');
 const requestedSceneIndex=LOCATIONS.findIndex(loc=>loc.id===requestedScene);
@@ -293,7 +293,7 @@ function initCampusMap(){
         paint:{'raster-opacity':1,'raster-resampling':'linear'}
       }]
     },
-    center:building.coordinates,
+    center:building.mapCoordinates||building.coordinates,
     zoom:17.4,
     bearing:0,
     pitch:0,
