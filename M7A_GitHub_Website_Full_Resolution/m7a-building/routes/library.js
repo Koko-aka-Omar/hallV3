@@ -107,15 +107,17 @@ export const LOCATIONS=[
       {
         to: 25,
         angle: 0,
-        arrowAngle: 0,
-        back: true
+        arrowAngle: 6.17,
+        back: true,
+        hotspotAngle: 6.17,
+        hotspotDistance: 1.02
       },
       {
         to: 27,
         angle: 3.14,
-        arrowAngle: 2.65,
-        hotspotAngle: 2.3,
-        hotspotDistance: 0.75
+        arrowAngle: 3.0,
+        hotspotAngle: 3.0,
+        hotspotDistance: 1.05
       }
     ]
   },
@@ -135,7 +137,9 @@ export const LOCATIONS=[
       {
         to: 28,
         angle: 3.14,
-        arrowAngle: 3.14
+        arrowAngle: 3.01,
+        hotspotAngle: 3.01,
+        hotspotDistance: 1.02
       }
     ]
   },
@@ -156,7 +160,9 @@ export const LOCATIONS=[
       {
         to: 29,
         angle: 3.14,
-        arrowAngle: 3.14
+        arrowAngle: 3.35,
+        hotspotAngle: 3.35,
+        hotspotDistance: 1.02
       }
     ]
   },
@@ -177,9 +183,9 @@ export const LOCATIONS=[
       {
         to: 30,
         angle: 3.14,
-        arrowAngle: 2.35,
-        hotspotAngle: 2.15,
-        hotspotDistance: 0.75
+        arrowAngle: 3.8,
+        hotspotAngle: 3.8,
+        hotspotDistance: 1.08
       }
     ]
   },
@@ -193,16 +199,17 @@ export const LOCATIONS=[
       {
         to: 29,
         angle: 0,
-        arrowAngle: 0.2,
+        arrowAngle: 5.85,
         back: true,
-        hotspotAngle: 0.95
+        hotspotAngle: 5.85,
+        hotspotDistance: 1.2
       },
       {
         to: 31,
         angle: 3.14,
-        arrowAngle: 1.85,
-        hotspotAngle: 1.1,
-        hotspotDistance: 0.75
+        arrowAngle: 2.62,
+        hotspotAngle: 2.62,
+        hotspotDistance: 1.02
       }
     ]
   },
@@ -216,9 +223,10 @@ export const LOCATIONS=[
       {
         to: 30,
         angle: 0,
-        arrowAngle: 0.3,
+        arrowAngle: 6.05,
         back: true,
-        hotspotAngle: 1.05
+        hotspotAngle: 6.05,
+        hotspotDistance: 1.2
       }
     ]
   },

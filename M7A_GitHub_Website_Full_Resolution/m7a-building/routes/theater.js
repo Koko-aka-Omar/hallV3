@@ -164,7 +164,8 @@ export const LOCATIONS=[
         to: 12,
         angle: 4.62,
         arrowAngle: 4.62,
-        back: true
+        back: true,
+        hotspotAngle: 4.84
       },
       {
         to: 14,
@@ -245,7 +246,7 @@ export const LOCATIONS=[
       {
         to: 17,
         angle: 4.1,
-        arrowAngle: 4.71
+        arrowAngle: 4.45
       }
     ]
   },
@@ -265,7 +266,8 @@ export const LOCATIONS=[
       {
         to: 18,
         angle: 1.65,
-        arrowAngle: 1.65
+        arrowAngle: 1.65,
+        hotspotDistance: 0.78
       }
     ]
   },
@@ -377,7 +379,7 @@ export const LOCATIONS=[
       {
         to: 21,
         angle: 3.14,
-        arrowAngle: 3.14,
+        arrowAngle: 3.32,
         back: true
       },
       {
@@ -446,14 +448,14 @@ export const LOCATION_AR=[
 
 // Exceptional visual distance/scale overrides. Keys use stable scene IDs.
 export const HOTSPOT_STYLE={
-  "theater-auditorium-rear->theater-auditorium-center":[0.9,.42],
-  "theater-auditorium-center->theater-stage-011":[0.9,.42],
+  "theater-auditorium-rear->theater-auditorium-center":[0.65,.38],
+  "theater-auditorium-center->theater-stage-011":[0.65,.38],
   "theater-stage-014->theater-stage-013":[0.9,.42],
   "theater-stage-016->theater-stage-014":[0.9,.42],
   "theater-hall->theater-entrance-b":[2.05,.78],
   "theater-hall->theater-foyer":[1.85,.76],
   "theater-hall->theater-hall-017":[1.85,.76],
-  "theater-stage-011->theater-stage-012":[1.30,.64],
+  "theater-stage-011->theater-stage-012":[1.00,.64],
   "theater-stage-011->theater-auditorium-center":[0.9,.42],
   "theater-stage-013->theater-stage-012":[1.80,.80]
 };
