@@ -30,7 +30,7 @@ jobs:
       - name: Upload M7A site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: M7A_GitHub_Website_Full_Resolution/m7a-building
+          path: offline-site
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
