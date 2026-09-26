@@ -76,6 +76,7 @@ export const LOCATIONS=[
     id: "library-study-020",
     area: "Library",
     name: "Study Area 1",
+    centerArrival: true,
     back: 24,
     view: 3.14,
     routes: [
@@ -103,6 +104,7 @@ export const LOCATIONS=[
     id: "library-study-021",
     area: "Library",
     name: "Study Area 2",
+    centerArrival: true,
     back: 25,
     view: 3.0,
     routes: [
@@ -131,6 +133,7 @@ export const LOCATIONS=[
     id: "library-study-022",
     area: "Library",
     name: "Study Area 3",
+    centerArrival: true,
     back: 26,
     view: 3.01,
     routes: [
@@ -158,6 +161,7 @@ export const LOCATIONS=[
     id: "library-study-023",
     area: "Library",
     name: "Study Area 4",
+    centerArrival: true,
     back: 27,
     view: 3.35,
     routes: [
@@ -185,6 +189,7 @@ export const LOCATIONS=[
     id: "library-study-024",
     area: "Library",
     name: "Study Area 5",
+    centerArrival: true,
     back: 28,
     view: 3.8,
     routes: [
@@ -212,6 +217,7 @@ export const LOCATIONS=[
     id: "library-study-025",
     area: "Library",
     name: "Study Area 6",
+    centerArrival: true,
     back: 29,
     view: 2.62,
     routes: [
@@ -240,6 +246,7 @@ export const LOCATIONS=[
     id: "library-study-026",
     area: "Library",
     name: "Study Area 7",
+    centerArrival: true,
     back: 30,
     view: 2.85,
     routes: [
@@ -259,6 +266,7 @@ export const LOCATIONS=[
     id: "library-study-027",
     area: "Library",
     name: "Study Area 8",
+    centerArrival: true,
     back: 25,
     view: 4.08,
     routes: [

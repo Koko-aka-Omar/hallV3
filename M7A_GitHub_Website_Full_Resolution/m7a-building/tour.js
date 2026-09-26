@@ -746,7 +746,8 @@ async function transitionTo(i,selectedRoute=null,fromMap=false){
   const relativeView=wrapAngle(oldViewBearing-(route.departureAngle ?? bearing));
   const returnRoute=routeFromTo(i,from);
   const arrivalForward=route.arrivalAngle ?? (returnRoute ? returnRoute.angle+Math.PI : (LOCATIONS[i]?.view ?? 0));
-  const arrivalYaw=fromMap?-(LOCATIONS[i]?.view??0):-(arrivalForward+relativeView);
+  const centerArrival=LOCATIONS[i]?.centerArrival === true;
+  const arrivalYaw=fromMap?-(LOCATIONS[i]?.view??0):centerArrival?-(route.arrivalAngle ?? LOCATIONS[i].view):-(arrivalForward+relativeView);
   const facingTravel=Math.cos(oldYaw+bearing);
   transitioning=true;el.title='';dragging=false;gesture=null;touches.clear();pinchDistance=null;hoverHotspot=null;routeTip.classList.remove('show');routeTip.setAttribute('aria-hidden','true');updateControls();
   document.body.classList.add('moving');app.setAttribute('aria-busy','true');el.style.cursor='progress';
@@ -805,7 +806,7 @@ async function transitionTo(i,selectedRoute=null,fromMap=false){
     }
     clearTimeout(slowLoad);status.textContent='';
     await loadCheckpoint(i,prepared);
-    yaw=arrivalYaw;pitch=fromMap?(LOCATIONS[i]?.viewPitch ?? 0):(route.arrivalPitch ?? oldPitch);camera.fov=oldFov;camera.updateProjectionMatrix();camera.rotation.set(pitch,yaw,0);
+    yaw=arrivalYaw;pitch=(fromMap || centerArrival)?(LOCATIONS[i]?.viewPitch ?? 0):(route.arrivalPitch ?? oldPitch);camera.fov=oldFov;camera.updateProjectionMatrix();camera.rotation.set(pitch,yaw,0);
     if(coarsePointer){updateHotspotVisuals(performance.now());renderer.render(scene,camera);}
     await tween(reducedMotion?100:(coarsePointer?180:220),(e,t)=>{
       if(!reducedMotion&&!fromMap){
