@@ -285,6 +285,19 @@ function initCampusMap(){
   });
   campusMap.touchZoomRotate.disableRotation();
   campusMap.keyboard.disableRotation();
+
+  // Keep all map names and labels horizontal on screen even though the campus map itself is rotated.
+  campusMap.on('style.load',()=>{
+    for(const layer of campusMap.getStyle().layers||[]){
+      if(layer.type!=='symbol'||!layer.layout?.['text-field'])continue;
+      try{
+        campusMap.setLayoutProperty(layer.id,'text-rotation-alignment','viewport');
+        campusMap.setLayoutProperty(layer.id,'text-pitch-alignment','viewport');
+        campusMap.setLayoutProperty(layer.id,'text-keep-upright',true);
+      }catch{}
+    }
+  });
+
   campusMap.addControl(new maplibregl.NavigationControl({showCompass:false,showZoom:true,visualizePitch:false}),'top-right');
   directory.attach(campusMap);
   updateCampusMap();
