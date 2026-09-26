@@ -265,3 +265,33 @@
 html[dir="rtl"] .campus-map-hint{direction:rtl;text-align:right}
 @media(max-width:600px){.campus-map-card{width:calc(100vw - 24px);padding:16px;border-radius:21px}.campus-map-hint{font-size:10px;padding:9px 10px}.checkpoint-key{width:13px;height:13px}}
 @media(prefers-reduced-motion:reduce){.hall-result,.campus-popup-button,.campus-guide-link{transition:none!important}}
+
+/* Campus map last-changed footer */
+.campus-map-footer{
+  position:absolute;
+  z-index:3;
+  right:clamp(16px,3vw,34px);
+  bottom:max(18px,calc(env(safe-area-inset-bottom) + 12px));
+  padding:8px 11px;
+  border:1px solid rgba(201,220,211,.82);
+  border-radius:10px;
+  background:rgba(255,255,255,.86);
+  box-shadow:0 6px 20px rgba(16,62,54,.08);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  color:#56756e;
+  font-size:10px;
+  font-weight:650;
+  line-height:1;
+  letter-spacing:.01em;
+  pointer-events:none;
+}
+html[dir="rtl"] .campus-map-footer{direction:ltr}
+@media(max-width:600px){
+  .campus-map-footer{
+    right:12px;
+    bottom:10px;
+    padding:7px 9px;
+    font-size:9px;
+  }
+}
