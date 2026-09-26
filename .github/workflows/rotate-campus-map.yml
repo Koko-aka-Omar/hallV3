@@ -1,0 +1,56 @@
+name: Rotate campus map horizontal
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - ".github/workflows/rotate-campus-map.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  rotate-map:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install ImageMagick
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y imagemagick
+
+      - name: Rotate official campus map and preserve marker alignment
+        run: |
+          MAP="M7A_GitHub_Website_Full_Resolution/m7a-building/campus-map-2026.webp"
+          TOUR="M7A_GitHub_Website_Full_Resolution/m7a-building/tour.js"
+          convert "$MAP" -rotate 90 "$MAP"
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path("M7A_GitHub_Website_Full_Resolution/m7a-building/tour.js")
+          s=p.read_text()
+          old="""const CAMPUS_MAP_CORNERS=[
+  [55.474472763599636,25.290827666213005],
+  [55.47947276359964,25.290827666213005],
+  [55.47947276359964,25.270141712821964],
+  [55.474472763599636,25.270141712821964]
+];"""
+          new="""const CAMPUS_MAP_CORNERS=[
+  [55.474472763599636,25.270141712821964],
+  [55.474472763599636,25.290827666213005],
+  [55.47947276359964,25.290827666213005],
+  [55.47947276359964,25.270141712821964]
+];"""
+          if old not in s:
+              raise SystemExit("Campus map corners block not found")
+          p.write_text(s.replace(old,new))
+          PY
+
+      - name: Commit horizontal map
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "M7A_GitHub_Website_Full_Resolution/m7a-building/campus-map-2026.webp"                   "M7A_GitHub_Website_Full_Resolution/m7a-building/tour.js"
+          git commit -m "Rotate official campus map horizontal"
+          git push
